@@ -60,7 +60,7 @@ public class AreaControlBuitenachterTest : AreaControlTestBase<AreaControlBuiten
         SetupMocks();
         haContextMock.Setup(x => x.GetState(entities.Switch.SwitchInfinityMirror.EntityId)).Returns(new EntityState() { State = "on" });
         lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.BuitenachterSierverlichting.EntityId), 0)).Returns(null);
-        haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(entities.Switch.SwitchInfinityMirror.EntityId)), null));
+        haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.Switch.SwitchInfinityMirror.EntityId), null));
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
@@ -80,7 +80,7 @@ public class AreaControlBuitenachterTest : AreaControlTestBase<AreaControlBuiten
         SetupMocks();
         haContextMock.Setup(x => x.GetState(entities.Switch.SwitchInfinityMirror.EntityId)).Returns(new EntityState() { State = "off" });
         lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.BuitenachterSierverlichting.EntityId), 1)).Returns(null);
-        haContextMock.Setup(x => x.CallService("switch", "turn_on", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(entities.Switch.SwitchInfinityMirror.EntityId)), null));
+        haContextMock.Setup(x => x.CallService("switch", "turn_on", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.Switch.SwitchInfinityMirror.EntityId), null));
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
@@ -98,7 +98,7 @@ public class AreaControlBuitenachterTest : AreaControlTestBase<AreaControlBuiten
     {
         // Arrange
         SetupMocks();
-        haContextMock.Setup(x => x.CallService("switch", "toggle", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(entities.Switch.BuitenachterFontein.EntityId)), null));
+        haContextMock.Setup(x => x.CallService("switch", "toggle", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.Switch.BuitenachterFontein.EntityId), null));
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 

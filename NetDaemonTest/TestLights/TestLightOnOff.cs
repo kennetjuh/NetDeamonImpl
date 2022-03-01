@@ -16,7 +16,7 @@ public record TestLightOnOff : TestLightBase
                 ColorTemp = ColorTemp,
                 MaxMireds = MaxMireds,
                 MinMireds = MinMireds,
-                SupportedColorModes = ""
+                SupportedColorModes = "onoff"
             };
             return attributes;
         }

@@ -1,9 +1,9 @@
-﻿using Xunit;
-using NetDaemonImpl.Modules;
+﻿using Moq;
 using NetDaemon.HassModel.Entities;
-using Moq;
+using NetDaemonImpl.Modules;
 using NetDaemonInterface;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace NetDaemonTest.Modules
 {

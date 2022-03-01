@@ -65,7 +65,7 @@ public class AreaControlTraphal : AreaControl
         {
             mode = AreaModeEnum.Motion;
 
-            var brightness = lightControl.luxBasedBrightness.GetBrightness(minBrightness, maxBrightness);
+            var brightness = lightControl.LuxBasedBrightness.GetBrightness(minBrightness, maxBrightness);
 
             // Sensor 1 = boven
             if (entityId == entities.BinarySensor.MotionTraphal1.EntityId)

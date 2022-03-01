@@ -41,7 +41,7 @@ public class AreaControlCabineTest : AreaControlTestBase<AreaControlCabine>
                 It.IsAny<double>(),
                 It.IsAny<double>()))
             .Returns(null);
-        haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(CabineSfeer.EntityId)), null));
+        haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == CabineSfeer.EntityId), null));
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
@@ -63,7 +63,7 @@ public class AreaControlCabineTest : AreaControlTestBase<AreaControlCabine>
                 It.IsAny<double>(),
                 It.IsAny<double>()))
             .Returns(true);
-        haContextMock.Setup(x => x.CallService("switch", "turn_on", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(CabineSfeer.EntityId)), null));
+        haContextMock.Setup(x => x.CallService("switch", "turn_on", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == CabineSfeer.EntityId), null));
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
@@ -85,7 +85,7 @@ public class AreaControlCabineTest : AreaControlTestBase<AreaControlCabine>
                 It.IsAny<double>(),
                 It.IsAny<double>()))
             .Returns(false);
-        haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(CabineSfeer.EntityId)), null));
+        haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == CabineSfeer.EntityId), null));
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 

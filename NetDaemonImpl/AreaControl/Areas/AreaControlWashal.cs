@@ -62,7 +62,7 @@ public class AreaControlWashal : AreaControl
         if (mode == AreaModeEnum.Idle)
         {
             mode = AreaModeEnum.Motion;
-            lightControl.SetLight(light, lightControl.luxBasedBrightness.GetBrightness(minBrightness, maxBrightness));
+            lightControl.SetLight(light, lightControl.LuxBasedBrightness.GetBrightness(minBrightness, maxBrightness));
         }
     }
 }

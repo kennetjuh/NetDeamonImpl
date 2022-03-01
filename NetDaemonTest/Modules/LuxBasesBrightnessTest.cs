@@ -1,10 +1,10 @@
-﻿using Xunit;
+﻿using NetDaemon.HassModel.Entities;
 using NetDaemonImpl.Modules;
-using NetDaemon.HassModel.Entities;
+using Xunit;
 
 namespace NetDaemonTest.Modules
 {
-    public class LuxBasesBrightnessTest: ServiceProviderTestBase
+    public class LuxBasesBrightnessTest : ServiceProviderTestBase
     {
         [Fact]
         public void Contructor_NoExceptions()
@@ -46,13 +46,13 @@ namespace NetDaemonTest.Modules
         }
 
         [Theory]
-        [InlineData(1,100,0,1)]
-        [InlineData(1,100,30,17.5)]
-        [InlineData(1,100, 80, 34)]
-        [InlineData(1,100, 150, 50.5)]
-        [InlineData(1,100, 250, 67)]
-        [InlineData(1,100, 750, 83.5)]
-        [InlineData(1,100, 1500, 100)]
+        [InlineData(1, 100, 0, 1)]
+        [InlineData(1, 100, 30, 17.5)]
+        [InlineData(1, 100, 80, 34)]
+        [InlineData(1, 100, 150, 50.5)]
+        [InlineData(1, 100, 250, 67)]
+        [InlineData(1, 100, 750, 83.5)]
+        [InlineData(1, 100, 1500, 100)]
         public void GetBrightness_VariableLuxAndMinAndMax_VerifyResult(int min, int max, int lux, double expected)
         {
             // Arrange 
@@ -66,7 +66,7 @@ namespace NetDaemonTest.Modules
             Assert.Equal(expected, actual);
         }
 
-        [Fact]        
+        [Fact]
         public void GetBrightness_LuxNull_VerifyResult()
         {
             // Arrange 

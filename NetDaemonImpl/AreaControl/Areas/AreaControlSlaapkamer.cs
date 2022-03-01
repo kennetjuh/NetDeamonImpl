@@ -20,7 +20,7 @@ public class AreaControlSlaapkamer : AreaControl
         lightKen = entities.Light.SlaapkamerNachtlampKen;
         lightGreet = entities.Light.SlaapkamerNachtlampGreet;
         modeCycler = new ModeCycler(delayProvider.ModeCycleTimeout,
-            () => 
+            () =>
             {
                 lightControl.SetLight(lightKamer, 0);
                 lightControl.SetLight(lightKen, 1);

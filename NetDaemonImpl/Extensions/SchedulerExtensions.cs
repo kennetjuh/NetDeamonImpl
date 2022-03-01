@@ -1,9 +1,9 @@
 ﻿using NetDaemon.Extensions.Scheduler;
 
 namespace NetDaemonImpl.Extensions;
-public static class NetDaemonSchedulerExtensions
+public static class SchedulerExtensions
 {
-    public static IDisposable RunDaily(this INetDaemonScheduler scheduler, TimeSpan timeOfDay, Action action)
+    public static IDisposable RunDaily(this IScheduler scheduler, TimeSpan timeOfDay, Action action)
     {
         var startTime = scheduler.Now.Date.Add(timeOfDay);
         if (scheduler.Now > startTime)

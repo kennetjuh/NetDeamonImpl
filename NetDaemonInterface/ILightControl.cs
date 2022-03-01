@@ -7,7 +7,7 @@ public interface ILightControl
     /// <summary>
     /// Provide access to the luxBasedBrightness
     /// </summary>
-    public ILuxBasedBrightness luxBasedBrightness { get; }
+    public ILuxBasedBrightness LuxBasedBrightness { get; }
 
     /// <summary>
     /// Add a light to the list of lights which are set to 'cold' when max brightness is reached.

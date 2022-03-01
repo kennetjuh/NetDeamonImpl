@@ -1,4 +1,3 @@
-using NetDaemon.Extensions.Scheduler;
 using NetDaemonInterface;
 
 namespace NetDaemonImpl.apps;
@@ -6,7 +5,7 @@ namespace NetDaemonImpl.apps;
 [NetDaemonApp]
 public class CallServiceEventHandlerApp : MyNetDaemonBaseApp
 {
-    public CallServiceEventHandlerApp(IHaContext haContext, INetDaemonScheduler scheduler, ILogger<DeconzEventHandlerApp> logger,
+    public CallServiceEventHandlerApp(IHaContext haContext, IScheduler scheduler, ILogger<CallServiceEventHandlerApp> logger,
         ITwinkle twinkle)
         : base(haContext, scheduler, logger)
     {

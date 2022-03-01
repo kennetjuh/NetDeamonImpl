@@ -9,5 +9,5 @@ public interface IDelayProvider
     public TimeSpan ManualOffTimeout { get; }
     public TimeSpan MotionOnSequenceDelay { get; }
     public TimeSpan ModeCycleTimeout { get; }
-    public TimeSpan TwinkleDelay { get;}
+    public TimeSpan TwinkleDelay { get; }
 }

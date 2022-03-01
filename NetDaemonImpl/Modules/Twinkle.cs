@@ -39,7 +39,7 @@ namespace NetDaemonImpl.Modules
             };
             cts = new();
 
-            if(seed == null)
+            if (seed == null)
             {
                 seed = (int)DateTime.Now.Ticks;
             }

@@ -57,9 +57,9 @@ public abstract class AreaControlTestBase<T> where T : AreaControl
 
     internal static IEnumerable<object[]> DeconzEventIdValues()
     {
-        foreach (var number in Enum.GetValues(typeof(DeconzEventIdEnum)))
+        foreach (var value in Enum.GetValues(typeof(DeconzEventIdEnum)))
         {
-            yield return new object[] { number };
+            yield return new object[] { value };
         }
     }
 }

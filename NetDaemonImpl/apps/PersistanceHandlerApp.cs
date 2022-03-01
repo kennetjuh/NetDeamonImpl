@@ -1,11 +1,9 @@
-using NetDaemon.Extensions.Scheduler;
-
 namespace NetDaemonImpl.apps;
 
 [NetDaemonApp]
 public class PersistanceHandlerApp : MyNetDaemonBaseApp
 {
-    public PersistanceHandlerApp(IHaContext haContext, INetDaemonScheduler scheduler, ILogger<DeconzEventHandlerApp> logger)
+    public PersistanceHandlerApp(IHaContext haContext, IScheduler scheduler, ILogger<PersistanceHandlerApp> logger)
         : base(haContext, scheduler, logger)
     {
         // Creation is only once but i keep them here just so i know what i created

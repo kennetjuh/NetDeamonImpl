@@ -1,4 +1,3 @@
-using NetDaemon.Extensions.Scheduler;
 using NetDaemonInterface;
 
 namespace NetDaemonImpl.apps;
@@ -11,7 +10,7 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
     private readonly ILightControl lightControl;
     private readonly ILuxBasedBrightness luxBasedBrightness;
 
-    public DayNightHandlerApp(IHaContext haContext, INetDaemonScheduler scheduler, ILogger<DeconzEventHandlerApp> logger,
+    public DayNightHandlerApp(IHaContext haContext, IScheduler scheduler, ILogger<DayNightHandlerApp> logger,
         ILightControl lightControl, ILuxBasedBrightness luxBasedBrightness)
         : base(haContext, scheduler, logger)
     {
@@ -28,10 +27,11 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
         CheckDayNight();
 
         _entities.Sensor.DaynightLastnighttrigger.StateChanges()
-            .Subscribe(x => {
+            .Subscribe(x =>
+            {
                 SetLastNightTrigger();
                 SetLastDayTrigger();
-                });
+            });
 
         SetLastDayTrigger();
         SetLastNightTrigger();
@@ -83,7 +83,7 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
 
         lightControl.SetLight(_entities.Light.BuitenopritWandlamp, 50);
         lightControl.SetLight(_entities.Light.BuitenvoorWandlamp, 50);
-        lightControl.SetLight(_entities.Light.BuitenvoorGrondspots, 255);
+        lightControl.SetLight(_entities.Light.BuitenvoorGrondspots, 1);
 
         lightControl.SetLight(_entities.Light.WoonkamerSfeer1, 1);
         lightControl.SetLight(_entities.Light.WoonkamerSfeer2, 1);
@@ -93,7 +93,7 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
 
         if (_entities.Light.LightWoonWand.IsOn())
         {
-            lightControl.SetLight(_entities.Light.LightWoonWand, 70);
+            lightControl.SetLight(_entities.Light.LightWoonWand, Constants.brightnessWandNight);
         }
     }
 
@@ -114,7 +114,7 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
 
         if (_entities.Light.LightWoonWand.IsOn())
         {
-            lightControl.SetLight(_entities.Light.LightWoonWand, 125);
+            lightControl.SetLight(_entities.Light.LightWoonWand, Constants.brightnessWandDay);
         }
     }
 }

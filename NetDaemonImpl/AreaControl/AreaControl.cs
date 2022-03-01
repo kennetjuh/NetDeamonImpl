@@ -31,7 +31,7 @@ public abstract class AreaControl : IAreaControl
     /// <param name="Delay">The delay</param>
     /// <param name="action">The action</param>
     internal void StartAfterTask(TimeSpan Delay, Action action)
-    {        
+    {
         CTSAfter?.Cancel();
         CTSAfter = new CancellationTokenSource();
         Task.Run(() =>

@@ -1,7 +1,6 @@
 using Moq;
 using NetDaemonImpl.AreaControl.Areas;
 using NetDaemonInterface;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -100,7 +99,7 @@ public class AreaControlWashalTest : AreaControlTestBase<AreaControlWashal>
         // Arrange 
         SetupMocks();
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
-        lightControlMock.Setup(x => x.luxBasedBrightness).Returns(luxBasedBrightnessMock.Object);
+        lightControlMock.Setup(x => x.LuxBasedBrightness).Returns(luxBasedBrightnessMock.Object);
         luxBasedBrightnessMock.Setup(x => x.GetBrightness(10, 255)).Returns(100);
         lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WashalWashal.EntityId), 100)).Returns(null);
 

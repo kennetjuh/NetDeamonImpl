@@ -1,9 +1,11 @@
-﻿using Xunit;
-using NetDaemonImpl.Modules;
+﻿using Microsoft.Extensions.Logging;
 using Moq;
-using NetDaemonInterface;
 using NetDaemon.HassModel.Entities;
+using NetDaemonImpl.Modules;
+using NetDaemonInterface;
+using System.Collections.Generic;
 using System.Linq;
+using Xunit;
 
 namespace NetDaemonTest.Modules
 {
@@ -12,7 +14,23 @@ namespace NetDaemonTest.Modules
         private readonly Mock<ILightControl> lightControlMock = new(MockBehavior.Strict);
         private readonly Mock<ITwinkle> twinkleMock = new(MockBehavior.Strict);
         private readonly Mock<INotify> notifyMock = new(MockBehavior.Strict);
-           
+        private readonly Mock<ILogger<HouseState>> loggerMock = new();
+
+        internal override void VerifyAllMocks()
+        {
+            base.VerifyAllMocks();
+            lightControlMock.VerifyAll();
+            twinkleMock.VerifyAll();
+            notifyMock.VerifyAll();
+        }
+
+        internal override void SetupMocks()
+        {
+            base.SetupMocks();
+            lightControlMock.Reset();
+            twinkleMock.Reset();
+            notifyMock.Reset();
+        }
 
         [Fact]
         public void Contructor_NoExceptions()
@@ -21,7 +39,7 @@ namespace NetDaemonTest.Modules
             SetupMocks();
 
             // Act
-            _ = new HouseState(serviceProviderMock.Object, lightControlMock.Object, twinkleMock.Object, notifyMock.Object);
+            _ = new HouseState(serviceProviderMock.Object, lightControlMock.Object, twinkleMock.Object, notifyMock.Object, loggerMock.Object);
 
             // Assert
             VerifyAllMocks();
@@ -35,14 +53,14 @@ namespace NetDaemonTest.Modules
             SetupMocksAwake();
             haContextMock.Setup(x => x.GetState(entities.Sensor.Daynight.EntityId)).Returns(new EntityState() { State = "Day" });
 
-            var houseState = new HouseState(serviceProviderMock.Object, lightControlMock.Object, twinkleMock.Object, notifyMock.Object);
+            var houseState = new HouseState(serviceProviderMock.Object, lightControlMock.Object, twinkleMock.Object, notifyMock.Object, loggerMock.Object);
 
             // Act
             houseState.HouseStateAwake();
 
             // Assert
             VerifyAllMocks();
-        }        
+        }
 
         [Fact]
         public void HouseState_HouseStateAway_VerifyMocks()
@@ -51,7 +69,7 @@ namespace NetDaemonTest.Modules
             SetupMocks();
             SetupMocksAway();
 
-            var houseState = new HouseState(serviceProviderMock.Object, lightControlMock.Object, twinkleMock.Object, notifyMock.Object);
+            var houseState = new HouseState(serviceProviderMock.Object, lightControlMock.Object, twinkleMock.Object, notifyMock.Object, loggerMock.Object);
 
             // Act
             houseState.HouseStateAway();
@@ -60,7 +78,7 @@ namespace NetDaemonTest.Modules
             VerifyAllMocks();
         }
 
-       
+
         [Fact]
         public void HouseState_HouseStateSleeping_VerifyMocks()
         {
@@ -69,7 +87,7 @@ namespace NetDaemonTest.Modules
             SetupMocksAway();
             SetupMocksSleeping();
 
-            var houseState = new HouseState(serviceProviderMock.Object, lightControlMock.Object, twinkleMock.Object, notifyMock.Object);
+            var houseState = new HouseState(serviceProviderMock.Object, lightControlMock.Object, twinkleMock.Object, notifyMock.Object, loggerMock.Object);
 
             // Act
             houseState.HouseStateSleeping();
@@ -80,53 +98,54 @@ namespace NetDaemonTest.Modules
 
         private void SetupMocksSleeping()
         {
+            haContextMock.Setup(x => x.GetState(entities.DeviceTracker.GsmGreet.EntityId)).Returns(new EntityState() { State = "home"});
+            haContextMock.Setup(x => x.GetState(entities.DeviceTracker.GsmKen.EntityId)).Returns(new EntityState() { State = "Away" });
             haContextMock.Setup(x => x.CallService("netdaemon", "entity_update", null,
-                It.Is<NetdaemonEntityUpdateParameters>(y => y.EntityId == entities.Sensor.Housestate.EntityId && y.State == "Sleeping")));
-            haContextMock.Setup(x => x.CallService("climate", "set_temperature", It.Is<ServiceTarget>(x => x.EntityIds != null &&
-                x.EntityIds.Contains(entities.Climate.Keuken.EntityId)), It.Is<ClimateSetTemperatureParameters>(y => y.Temperature == 15)));
+                It.Is<NetdaemonEntityUpdateParameters>(y => y.EntityId!.ToString() == entities.Sensor.Housestate.EntityId && y.State!.ToString() == "Sleeping")));
+            haContextMock.Setup(x => x.CallService("climate", "set_temperature", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.Climate.Keuken.EntityId),
+                It.Is<ClimateSetTemperatureParameters>(y => y.Temperature == 15)));
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.SlaapkamerNachtlampGreet.EntityId), 1)).Returns(true);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.SlaapkamerNachtlampKen.EntityId), 1)).Returns(true);
-            haContextMock.Setup(x => x.CallService("vacuum", "set_fan_speed", It.Is<ServiceTarget>(x => x.EntityIds != null &&
-                x.EntityIds.Contains(entities.Vacuum.DreameP20294b09RobotCleaner.EntityId)), It.Is<VacuumSetFanSpeedParameters>(y => y.FanSpeed == "Strong")));
-            haContextMock.Setup(x => x.CallService("vacuum", "start", It.Is<ServiceTarget>(x => x.EntityIds != null &&
-                x.EntityIds.Contains(entities.Vacuum.DreameP20294b09RobotCleaner.EntityId)), null));
-            notifyMock.Setup(x => x.NotifyGsm("Pillen", "Vergeet je avondpillen niet :)"));
-
+            haContextMock.Setup(x => x.CallService("vacuum", "set_fan_speed", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.Vacuum.DreameP20294b09RobotCleaner.EntityId),
+                It.Is<VacuumSetFanSpeedParameters>(y => y.FanSpeed == "Strong")));
+            haContextMock.Setup(x => x.CallService("vacuum", "start", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.Vacuum.DreameP20294b09RobotCleaner.EntityId), null));
+            notifyMock.Setup(x => x.NotifyGsmGreet("Pillen", "Vergeet je avondpillen niet :)", It.IsAny<NotifyTagEnum?>(), It.IsAny<List<NotifyActionEnum>?>()));
         }
 
         private void SetupMocksAwake()
         {
             haContextMock.Setup(x => x.CallService("netdaemon", "entity_update", null,
-                            It.Is<NetdaemonEntityUpdateParameters>(y => y.EntityId == entities.Sensor.Housestate.EntityId && y.State == "Awake")));
+                            It.Is<NetdaemonEntityUpdateParameters>(y => y.EntityId!.ToString() == entities.Sensor.Housestate.EntityId && y.State!.ToString() == "Awake")));
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.WoonkamerBoog.EntityId), 125)).Returns(true);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.WoonkamerKamer.EntityId), 0)).Returns(false);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.WoonkamerBureau.EntityId), 0)).Returns(false);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.TabletScreen.EntityId), null)).Returns(false);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.WoonkamerKisten.EntityId), null)).Returns(false);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.LightWoonWand.EntityId), 125)).Returns(false);
-            //haContextMock.Setup(x => x.CallService("switch", "turn_on", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(entities.Switch.BinnenKerst.EntityId)), null));
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.WoonkamerValentijn.EntityId), null)).Returns(false);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.LightWoonWand.EntityId), 50)).Returns(false);
             twinkleMock.Setup(x => x.Start());
         }
 
         private void SetupMocksAway()
         {
             haContextMock.Setup(x => x.CallService("netdaemon", "entity_update", null,
-                It.Is<NetdaemonEntityUpdateParameters>(y => y.EntityId == entities.Sensor.Housestate.EntityId && y.State == "Away")));
+                It.Is<NetdaemonEntityUpdateParameters>(y => y.EntityId!.ToString() == entities.Sensor.Housestate.EntityId && y.State!.ToString() == "Away")));
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.BuitenachterLamp.EntityId), 0)).Returns(true);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.BuitenachterSierverlichting.EntityId), 0)).Returns(true);
-            haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(entities.Switch.SwitchInfinityMirror.EntityId)), null));
-            haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(entities.Switch.BuitenachterFontein.EntityId)), null));
-            haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(entities.Switch.BuitenachterGrondpomp.EntityId)), null));
-            haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(entities.Switch.SwitchVliegenlamp.EntityId)), null));
+            haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.Switch.SwitchInfinityMirror.EntityId), null));
+            haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.Switch.BuitenachterFontein.EntityId), null));
+            haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.Switch.BuitenachterGrondpomp.EntityId), null));
+            haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.Switch.SwitchVliegenlamp.EntityId), null));
 
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.LightCabine.EntityId), 0)).Returns(true);
-            haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(entities.Switch.SwitchSierCabine.EntityId)), null));
+            haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.Switch.SwitchSierCabine.EntityId), null));
 
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.WoonkamerBoog.EntityId), 0)).Returns(true);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.WoonkamerKamer.EntityId), 0)).Returns(true);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.WoonkamerBureau.EntityId), 0)).Returns(true);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.TabletScreen.EntityId), 0)).Returns(true);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.WoonkamerKisten.EntityId), 0)).Returns(true);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.WoonkamerValentijn.EntityId), 0)).Returns(true);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.LightHal.EntityId), 0)).Returns(true);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenKeukenlamp.EntityId), 0)).Returns(true);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.WashalWashal.EntityId), 0)).Returns(true);
@@ -134,9 +153,6 @@ namespace NetDaemonTest.Modules
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.BadkamerLamp.EntityId), 0)).Returns(true);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.SpeelkamerLamp.EntityId), 0)).Returns(true);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.LightWoonWand.EntityId), 0)).Returns(true);
-
-
-            //haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(entities.Switch.BinnenKerst.EntityId)), null));
         }
     }
 }

@@ -1,4 +1,3 @@
-using NetDaemon.Extensions.Scheduler;
 using NetDaemonInterface;
 
 namespace NetDaemonImpl.apps;
@@ -8,7 +7,7 @@ public class CallBackHandlerApp : MyNetDaemonBaseApp
 {
     private readonly IHouseState houseState;
 
-    public CallBackHandlerApp(IHaContext haContext, INetDaemonScheduler scheduler, ILogger<DeconzEventHandlerApp> logger,
+    public CallBackHandlerApp(IHaContext haContext, IScheduler scheduler, ILogger<CallBackHandlerApp> logger,
         ITwinkle twinkle, IHouseState houseState)
         : base(haContext, scheduler, logger)
     {

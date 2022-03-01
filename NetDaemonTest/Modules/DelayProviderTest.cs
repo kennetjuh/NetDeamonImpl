@@ -1,5 +1,5 @@
-﻿using Xunit;
-using NetDaemonImpl.Modules;
+﻿using NetDaemonImpl.Modules;
+using Xunit;
 
 namespace NetDaemonTest.Modules
 {

@@ -1,8 +1,10 @@
 ﻿using Moq;
-using Xunit;
-using NetDaemonImpl.Modules;
 using NetDaemon.HassModel.Entities;
+using NetDaemonImpl.Modules.Notify;
+using NetDaemonInterface;
+using System.Collections.Generic;
 using System.Linq;
+using Xunit;
 
 namespace NetDaemonTest.Modules
 {
@@ -158,10 +160,10 @@ namespace NetDaemonTest.Modules
             // Arrange 
             SetupMocks();
             haContextMock.Setup(x => x.CallService("media_player", "volume_set",
-                It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(entities.MediaPlayer.Hal.EntityId)),
+                It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.MediaPlayer.Hal.EntityId),
                 It.Is<MediaPlayerVolumeSetParameters>(y => y.VolumeLevel == 1)));
             haContextMock.Setup(x => x.CallService("media_player", "volume_set",
-                It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(entities.MediaPlayer.Woonkamer.EntityId)),
+                It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.MediaPlayer.Woonkamer.EntityId),
                 It.Is<MediaPlayerVolumeSetParameters>(y => y.VolumeLevel == 1)));
             haContextMock.Setup(x => x.CallService("tts", "google_translate_say", null,
                 It.Is<TtsGoogleTranslateSayParameters>(y => y.EntityId == entities.MediaPlayer.Hal.EntityId && y.Message == message)));
@@ -175,6 +177,134 @@ namespace NetDaemonTest.Modules
 
             // Assert
             VerifyAllMocks();
+        }
+
+        [Fact]
+        public void NotifyClear_Notify_VerifyMocks()
+        {
+            // Arrange 
+            SetupMocks();
+            haContextMock.Setup(x => x.CallService("notify", "mobile_app_gsm_ken", null,
+                It.Is<NotifyMobileAppGsmKenParameters>(y =>
+                    y.Title == "" &&
+                    y.Message == "clear_notification")));
+
+            var sut = new Notify(serviceProviderMock.Object);
+
+            // Act
+            sut.Clear(NotifyTagEnum.ThermostatChanged);
+
+            // Assert
+            VerifyAllMocks();
+        }
+
+        [Theory]
+        [MemberData(nameof(NotifyTagEnumValues))]
+        public void Notify_NotifyWithTags_VerifyMocks(NotifyTagEnum tag)
+        {
+            // Arrange 
+            NotifyMobileAppGsmKenParameters parameters= new NotifyMobileAppGsmKenParameters();
+            SetupMocks();
+            haContextMock.Setup(x => x.CallService("notify", "mobile_app_gsm_ken", null,
+                It.IsAny<NotifyMobileAppGsmKenParameters>()))
+                .Callback<string,string,ServiceTarget,object>((a, b, c, d) => parameters = (NotifyMobileAppGsmKenParameters)d);
+
+            var sut = new Notify(serviceProviderMock.Object);
+
+            // Act
+            sut.NotifyGsmKen("","",tag, null);
+
+            // Assert
+            AssertRecordNotifyData(parameters.Data as RecordNotifyData, null, tag, null);
+            VerifyAllMocks();
+        }
+
+        [Theory]
+        [MemberData(nameof(NotifyActionEnumValues))]
+        public void Notify_NotifyWithAction_VerifyMocks(NotifyActionEnum action)
+        {
+            // Arrange 
+            NotifyMobileAppGsmKenParameters parameters = new NotifyMobileAppGsmKenParameters();
+            SetupMocks();
+            haContextMock.Setup(x => x.CallService("notify", "mobile_app_gsm_ken", null,
+                It.IsAny<NotifyMobileAppGsmKenParameters>()))
+                .Callback<string, string, ServiceTarget, object>((a, b, c, d) => parameters = (NotifyMobileAppGsmKenParameters)d);
+
+            var sut = new Notify(serviceProviderMock.Object);
+
+            // Act
+            sut.NotifyGsmKen("", "", null, new() { action });
+
+            // Assert
+            AssertRecordNotifyData(parameters.Data as RecordNotifyData, null, null, action);
+            VerifyAllMocks();
+        }
+
+        [Theory]
+        [MemberData(nameof(NotifyActionEnumValues))]
+        public void Notify_HandleNotificationEvent_VerifyMocks(NotifyActionEnum action)
+        {
+            // Arrange 
+            NotifyMobileAppGsmKenParameters parameters = new NotifyMobileAppGsmKenParameters();
+            SetupMocks();    
+            if(!action.ToString().StartsWith("Uri"))
+            {
+                //just a general setup, each action except Uri's will call a service
+                haContextMock.Setup(x => x.CallService(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ServiceTarget>(), It.IsAny<object?>()));
+            }
+
+            var sut = new Notify(serviceProviderMock.Object);
+
+            // Act
+            sut.HandleNotificationEvent(action);
+
+            // Assert
+            VerifyAllMocks();
+        }
+
+        internal static IEnumerable<object[]> NotifyActionEnumValues()
+        {
+            foreach (var value in Enum.GetValues(typeof(NotifyActionEnum)))
+            {
+                yield return new object[] { value };
+            }
+        }
+
+        internal static IEnumerable<object[]> NotifyTagEnumValues()
+        {
+            foreach (var value in Enum.GetValues(typeof(NotifyTagEnum)))
+            {
+                yield return new object[] { value };
+            }
+        }
+
+        private void AssertRecordNotifyData(RecordNotifyData? data, string? channel, NotifyTagEnum? tag, NotifyActionEnum? action)
+        {
+            Assert.NotNull(data);
+            if (data != null)
+            {
+                Assert.Equal("", data.color);
+                Assert.Equal("high", data.priority);
+                Assert.Equal("true", data.sticky);
+                Assert.Equal(0, data.ttl);
+
+                Assert.Equal(tag?.ToString(), data.tag);
+                Assert.Equal(channel, data.channel);
+
+                if (action != null)
+                {
+                    var actionString = action.ToString()!;
+                    if (actionString.StartsWith("Uri"))
+                    {
+                        actionString = "URI";
+                    }
+                    Assert.Equal(actionString, data.actions!.Single().action);
+                }
+                else
+                {
+                    Assert.Null(data.actions);
+                }
+            }
         }
     }
 }

@@ -1,18 +1,19 @@
-using System;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NetDaemon.Runtime;
 using NetDaemon.Extensions.Logging;
 using NetDaemon.Extensions.Scheduler;
 using NetDaemon.Extensions.Tts;
-using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
-using NetDaemonInterface;
+using NetDaemon.Runtime;
 using NetDaemonImpl.Modules;
+using NetDaemonImpl.Modules.Notify;
+using NetDaemonInterface;
+using System.Reflection;
 
 #pragma warning disable CA1812
 
 try
 {
+    Console.WriteLine("Starting v0.0.2");
     await Host.CreateDefaultBuilder(args)
         .UseNetDaemonAppSettings()
         .UseNetDaemonDefaultLogging()

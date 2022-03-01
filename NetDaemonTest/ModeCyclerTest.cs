@@ -1,8 +1,8 @@
-﻿using Xunit;
-using System.Linq;
-using NetDaemonImpl;
+﻿using NetDaemonImpl;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace NetDaemonTest
 {

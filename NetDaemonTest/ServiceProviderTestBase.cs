@@ -1,6 +1,5 @@
-﻿using Moq;
-using Microsoft.Extensions.DependencyInjection;
-using NetDaemon.HassModel.Entities;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Moq;
 
 namespace NetDaemonTest
 {

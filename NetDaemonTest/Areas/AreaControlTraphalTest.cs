@@ -101,7 +101,7 @@ public class AreaControlTraphalTest : AreaControlTestBase<AreaControlTraphal>
         SetupMocks();
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
         delayProviderMock.Setup(x => x.MotionOnSequenceDelay).Returns(TimeSpan.Zero);
-        lightControlMock.Setup(x => x.luxBasedBrightness).Returns(luxBasedBrightnessMock.Object);
+        lightControlMock.Setup(x => x.LuxBasedBrightness).Returns(luxBasedBrightnessMock.Object);
         luxBasedBrightnessMock.Setup(x => x.GetBrightness(10, 255)).Returns(100);
         lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightTraphal1.EntityId), 100)).Returns(null);
         lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightTraphal2.EntityId), 100)).Returns(null);

@@ -20,7 +20,7 @@ public record TestLightBase : LightEntity
     {
         get
         {
-            var state = new EntityState<LightAttributes>(new EntityState() { State = State });           
+            var state = new EntityState<LightAttributes>(new EntityState() { State = State });
             return state;
         }
     }
