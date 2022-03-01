@@ -34,14 +34,14 @@ public class AreaControlWcTest : AreaControlTestBase<AreaControlWc>
     {
         // Arrange
         SetupMocks();
-        lightControlMock.Setup(x => x.luxBasedBrightness).Returns(luxBasedBrightnessMock.Object);
+        lightControlMock.Setup(x => x.LuxBasedBrightness).Returns(luxBasedBrightnessMock.Object);
         luxBasedBrightnessMock.Setup(x => x.GetLux()).Returns(100);
         lightControlMock.Setup(x => x.ButtonDefaultLuxBased(
                 id,
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId),
                 It.IsAny<double>(),
                 It.IsAny<double>()))
-            .Returns(null);
+            .Returns(true);
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
@@ -58,8 +58,8 @@ public class AreaControlWcTest : AreaControlTestBase<AreaControlWc>
         // Arrange
         SetupMocks();
 
-        haContextMock.Setup(x => x.GetState(light.EntityId)).Returns(new TestEntityState() { Brightness = null });
-        lightControlMock.Setup(x => x.luxBasedBrightness).Returns(luxBasedBrightnessMock.Object);
+        haContextMock.Setup(x => x.GetState(light.EntityId)).Returns(new TestEntityStateLightAttributes() { State = "off" });
+        lightControlMock.Setup(x => x.LuxBasedBrightness).Returns(luxBasedBrightnessMock.Object);
         luxBasedBrightnessMock.Setup(x => x.GetLux()).Returns(1);
         lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == singleLight.EntityId), 1)).Returns(true);
 

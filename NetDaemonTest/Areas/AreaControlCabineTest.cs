@@ -12,7 +12,7 @@ public class AreaControlCabineTest : AreaControlTestBase<AreaControlCabine>
     readonly SwitchEntity CabineSfeer;
     public AreaControlCabineTest()
     {
-        light = entities.Light.LightCabine;
+        light = entities.Light.Cabine;
         CabineSfeer = entities.Switch.SwitchSierCabine;
     }
 
@@ -23,7 +23,7 @@ public class AreaControlCabineTest : AreaControlTestBase<AreaControlCabine>
         SetupMocks();
 
         // Act
-        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
+        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, luxBasedBrightnessMock.Object);
 
         // Assert
         VerifyAllMocks();
@@ -40,13 +40,14 @@ public class AreaControlCabineTest : AreaControlTestBase<AreaControlCabine>
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId),
                 It.IsAny<double>(),
                 It.IsAny<double>()))
-            .Returns(null);
-        haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(CabineSfeer.EntityId)), null));
+            .Returns(false);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Cabineplafond.EntityId), 0)).Returns(true);
+        haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == CabineSfeer.EntityId), null));
 
-        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
+        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, luxBasedBrightnessMock.Object);
 
         // Act
-        Sut.ButtonPressed("", id);
+        Sut.ButtonPressed("sensor.button_cabine_battery", id);
 
         // Assert
         VerifyAllMocks();
@@ -63,12 +64,14 @@ public class AreaControlCabineTest : AreaControlTestBase<AreaControlCabine>
                 It.IsAny<double>(),
                 It.IsAny<double>()))
             .Returns(true);
-        haContextMock.Setup(x => x.CallService("switch", "turn_on", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(CabineSfeer.EntityId)), null));
+        luxBasedBrightnessMock.Setup(x => x.GetBrightness(It.IsAny<double>(), It.IsAny<double>())).Returns(50);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Cabineplafond.EntityId), 50)).Returns(true);
+        haContextMock.Setup(x => x.CallService("switch", "turn_on", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == CabineSfeer.EntityId), null));
 
-        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
+        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, luxBasedBrightnessMock.Object);
 
         // Act
-        Sut.ButtonPressed("", DeconzEventIdEnum.Single);
+        Sut.ButtonPressed("sensor.button_cabine_battery", DeconzEventIdEnum.Single);
 
         // Assert
         VerifyAllMocks();
@@ -85,12 +88,13 @@ public class AreaControlCabineTest : AreaControlTestBase<AreaControlCabine>
                 It.IsAny<double>(),
                 It.IsAny<double>()))
             .Returns(false);
-        haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.Contains(CabineSfeer.EntityId)), null));
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Cabineplafond.EntityId), 0)).Returns(true);
+        haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == CabineSfeer.EntityId), null));
 
-        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
+        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, luxBasedBrightnessMock.Object);
 
         // Act
-        Sut.ButtonPressed("", DeconzEventIdEnum.Single);
+        Sut.ButtonPressed("sensor.button_cabine_battery", DeconzEventIdEnum.Single);
 
         // Assert
         VerifyAllMocks();

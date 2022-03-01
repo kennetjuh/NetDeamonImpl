@@ -8,7 +8,7 @@ public class AreaControlVoordeur : AreaControl
 
     public AreaControlVoordeur(IEntities entities, IDelayProvider delayProvider, ILightControl lightControl) : base(entities, delayProvider, lightControl)
     {
-        light = entities.Light.BuitenvoorWandlamp;
+        light = entities.Light.WandlampBuiten;
     }
 
     public override void MotionCleared(string entityId)

@@ -15,12 +15,12 @@ public class AreaControlSlaapkamer : AreaControl
 
     public AreaControlSlaapkamer(IEntities entities, IDelayProvider delayProvider, ILightControl lightControl) : base(entities, delayProvider, lightControl)
     {
-        lightKamer = entities.Light.LightSlaapkamer;
-        lightKamerSingle = entities.Light.LightSlaapkamer2;
-        lightKen = entities.Light.SlaapkamerNachtlampKen;
-        lightGreet = entities.Light.SlaapkamerNachtlampGreet;
+        lightKamer = entities.Light.Slaapkamer;
+        lightKamerSingle = entities.Light.LightSlaapkamer3;
+        lightKen = entities.Light.NachtlampKen;
+        lightGreet = entities.Light.NachtlampGreet;
         modeCycler = new ModeCycler(delayProvider.ModeCycleTimeout,
-            () => 
+            () =>
             {
                 lightControl.SetLight(lightKamer, 0);
                 lightControl.SetLight(lightKen, 1);
@@ -39,7 +39,7 @@ public class AreaControlSlaapkamer : AreaControl
 
     public override void ButtonPressed(string ButtonSensor, DeconzEventIdEnum eventId)
     {
-        if (ButtonSensor == entities.Sensor.ButtonSlaapkamerBatteryLevel.EntityId)
+        if (ButtonSensor == entities.Sensor.ButtonSlaapkamerBattery.EntityId)
         {
             switch (eventId)
             {
@@ -69,7 +69,7 @@ public class AreaControlSlaapkamer : AreaControl
                     break;
             }
         }
-        if (ButtonSensor == entities.Sensor.ButtonSlaapkamerbedBatteryLevel.EntityId)
+        if (ButtonSensor == entities.Sensor.ButtonSlaapkamerbedBattery.EntityId)
         {
             switch (eventId)
             {

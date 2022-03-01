@@ -1,4 +1,6 @@
-﻿namespace NetDaemonTest.TestLights;
+﻿using System.Collections.Generic;
+
+namespace NetDaemonTest.TestLights;
 
 public record TestLightHs : TestLightBase
 {
@@ -16,7 +18,7 @@ public record TestLightHs : TestLightBase
                 ColorTemp = ColorTemp,
                 MaxMireds = MaxMireds,
                 MinMireds = MinMireds,
-                SupportedColorModes = "hs"
+                SupportedColorModes = new List<string> { "hs" }
             };
             return attributes;
         }

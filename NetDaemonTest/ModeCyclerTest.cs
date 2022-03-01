@@ -1,8 +1,8 @@
-﻿using Xunit;
-using System.Linq;
-using NetDaemonImpl;
+﻿using NetDaemonImpl;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace NetDaemonTest
 {
@@ -46,7 +46,7 @@ namespace NetDaemonTest
         }
 
         [Fact]
-        public void ModeCycler_2ActionsCycle2TimesWithDelay_FirstActionExecutedTwice()
+        public async Task ModeCycler_2ActionsCycle2TimesWithDelay_FirstActionExecutedTwiceAsync()
         {
             // Arrange
             var ModesTest = new List<int>();
@@ -63,7 +63,7 @@ namespace NetDaemonTest
 
             // Act
             modeCycler.Cycle();
-            Task.Delay(TimeSpan.FromMilliseconds(1)).Wait();
+            await Task.Delay(TimeSpan.FromMilliseconds(1));
             modeCycler.Cycle();
 
             // Assert

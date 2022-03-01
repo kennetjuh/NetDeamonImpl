@@ -1,18 +1,23 @@
-using System;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NetDaemon.Runtime;
 using NetDaemon.Extensions.Logging;
 using NetDaemon.Extensions.Scheduler;
 using NetDaemon.Extensions.Tts;
-using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
-using NetDaemonInterface;
+using NetDaemon.Runtime;
 using NetDaemonImpl.Modules;
+using NetDaemonImpl.Modules.Notify;
+using NetDaemonInterface;
+using System.Reflection;
 
-#pragma warning disable CA1812
+/*
+ * TODO: Add tests for imagecreator
+ * 
+ * dotnet tool update -g NetDaemon.HassModel.CodeGen
+ */
 
 try
 {
+    Console.WriteLine("Starting v1.74");
     await Host.CreateDefaultBuilder(args)
         .UseNetDaemonAppSettings()
         .UseNetDaemonDefaultLogging()
@@ -31,6 +36,9 @@ try
             services.AddSingleton<ILuxBasedBrightness, LuxBasedBrightness>();
             services.AddSingleton<INotify, Notify>();
             services.AddSingleton<ITwinkle, Twinkle>();
+            services.AddSingleton<IHouseNotificationImageCreator, HouseNotificationImageCreator>();
+            services.AddSingleton<ISettingsProvider, SettingsProvider>();
+            services.AddSingleton<IDayNight, DayNight>();
         })
         .Build()
         .RunAsync()

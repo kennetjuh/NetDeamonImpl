@@ -1,4 +1,5 @@
 using NetDaemon.Extensions.Scheduler;
+using NetDaemon.HassModel.Entities;
 using NetDaemonInterface;
 
 namespace NetDaemonImpl.apps;
@@ -10,23 +11,23 @@ namespace NetDaemonImpl.apps;
 public class WatchDogApp : MyNetDaemonBaseApp
 {
     private readonly ILightControl lightControl;
+    private readonly IDayNight dayNight;
     private IDisposable? watchdogBuitenTask;
-    private readonly int watchdogIntervalSeconds = 60;
 
-    public WatchDogApp(IHaContext haContext, INetDaemonScheduler scheduler, ILogger<DeconzEventHandlerApp> logger,
-        ILightControl lightControl)
-        : base(haContext, scheduler, logger)
+    public WatchDogApp(IHaContext haContext, IScheduler scheduler, ILogger<WatchDogApp> logger,
+        ILightControl lightControl, ISettingsProvider settingsProvider, IDayNight dayNight)
+        : base(haContext, scheduler, logger, settingsProvider)
     {
         this.lightControl = lightControl;
-
-        _entities.Switch.WatchdogBuiten.StateChanges()
+        this.dayNight = dayNight;
+        _entities.InputBoolean.WatchdogBuiten.StateChanges()
             .Where(x => x.Entity.IsOn())
             .Subscribe(x => StartWatchdogBuiten());
-        _entities.Switch.WatchdogBuiten.StateChanges()
+        _entities.InputBoolean.WatchdogBuiten.StateChanges()
            .Where(x => x.Entity.IsOff())
-           .Subscribe(x => watchdogBuitenTask?.Dispose());  
+           .Subscribe(x => watchdogBuitenTask?.Dispose());
 
-        if (_entities.Switch.WatchdogBuiten.IsOn())
+        if (_entities.InputBoolean.WatchdogBuiten.IsOn())
         {
             StartWatchdogBuiten();
         }
@@ -34,25 +35,9 @@ public class WatchDogApp : MyNetDaemonBaseApp
 
     private void StartWatchdogBuiten()
     {
-        watchdogBuitenTask = _scheduler.RunEvery(TimeSpan.FromSeconds(watchdogIntervalSeconds), () => WatchdogBuiten());
-        WatchdogBuiten();
+        watchdogBuitenTask = _scheduler.ScheduleCron("0/1 * * * *", () => dayNight.WatchdogBuiten()); //every minute
+        dayNight.WatchdogBuiten();
     }
 
-    private void WatchdogBuiten()
-    {
-        if (Helper.GetDayNightState(_entities) == DayNightEnum.Day)
-        {
-            lightControl.SetLight(_entities.Light.GrondlampZij, 0);
-            lightControl.SetLight(_entities.Light.BuitenachterFonteinlamp, 0);
-            lightControl.SetLight(_entities.Light.WandlampHut, 0);
-            lightControl.SetLight(_entities.Light.LightHut, 0);
-        }
-        else
-        {
-            lightControl.SetLight(_entities.Light.GrondlampZij, Constants.brightnessBuitenZij);
-            lightControl.SetLight(_entities.Light.BuitenachterFonteinlamp, Constants.brightnessFontein);
-            lightControl.SetLight(_entities.Light.WandlampHut, Constants.brightnessHutWand);
-            lightControl.SetLight(_entities.Light.LightHut, Constants.brightnessHut);
-        }
-    }
+   
 }

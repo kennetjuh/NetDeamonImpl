@@ -38,7 +38,7 @@ public class AreaControlSpeelkamerTest : AreaControlTestBase<AreaControlSpeelkam
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId),
                 It.IsAny<double>(),
                 It.IsAny<double>()))
-            .Returns(null);
+            .Returns(true);
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 

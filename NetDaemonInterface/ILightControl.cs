@@ -7,13 +7,19 @@ public interface ILightControl
     /// <summary>
     /// Provide access to the luxBasedBrightness
     /// </summary>
-    public ILuxBasedBrightness luxBasedBrightness { get; }
+    public ILuxBasedBrightness LuxBasedBrightness { get; }
 
     /// <summary>
     /// Add a light to the list of lights which are set to 'cold' when max brightness is reached.
     /// </summary>
     /// <param name="light">The light to add</param>
     void AddMaxWhiteLight(LightEntity light);
+
+    /// <summary>
+    /// Add a light to the list of lights which are allways set to 'cold'
+    /// </summary>
+    /// <param name="light">The light to add</param>
+    void AddAllwaysWhiteLight(LightEntity light);
 
     /// <summary>
     /// Default button behaviour

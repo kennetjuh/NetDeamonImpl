@@ -1,4 +1,5 @@
-﻿using NetDaemonInterface;
+﻿using NetDaemon.HassModel.Entities;
+using NetDaemonInterface;
 
 namespace NetDaemonImpl.AreaControl.Areas;
 
@@ -14,14 +15,14 @@ public class AreaControlWc : AreaControl
     {
         light = entities.Light.WcWclamp;
         singleLight = entities.Light.Wc1;
-}
+    }
 
     public override void ButtonPressed(string ButtonSensor, DeconzEventIdEnum eventId)
     {
-        var lux = lightControl.luxBasedBrightness.GetLux();
+        var lux = lightControl.LuxBasedBrightness.GetLux();
 
         // When a single click is performed, the light is off and it's dark only turn on a single light
-        if (eventId == DeconzEventIdEnum.Single && lux <= 1 && light.Attributes?.Brightness == null)
+        if (eventId == DeconzEventIdEnum.Single && lux <= 1 && light.IsOff())
         {
             lightControl.SetLight(singleLight, minBrightness);
         }

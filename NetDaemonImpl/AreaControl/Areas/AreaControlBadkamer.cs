@@ -11,7 +11,7 @@ public class AreaControlBadkamer : AreaControl
 
     public AreaControlBadkamer(IEntities entities, IDelayProvider delayProvider, ILightControl lightControl) : base(entities, delayProvider, lightControl)
     {
-        light = entities.Light.BadkamerLamp;
+        light = entities.Light.Badkamer;
     }
 
     public override void ButtonPressed(string ButtonSensor, DeconzEventIdEnum eventId)

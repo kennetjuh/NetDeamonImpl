@@ -9,7 +9,7 @@ public class AreaControlHalBovenTest : AreaControlTestBase<AreaControlHalBoven>
 {
     public AreaControlHalBovenTest()
     {
-        light = entities.Light.LightHalboven;
+        light = entities.Light.Halboven;
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class AreaControlHalBovenTest : AreaControlTestBase<AreaControlHalBoven>
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId),
                 It.IsAny<double>(),
                 It.IsAny<double>()))
-            .Returns(null);
+            .Returns(true);
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 

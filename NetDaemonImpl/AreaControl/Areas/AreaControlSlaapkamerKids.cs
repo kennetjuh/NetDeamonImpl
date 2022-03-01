@@ -11,7 +11,7 @@ public class AreaControlSlaapkamerKids : AreaControl
 
     public AreaControlSlaapkamerKids(IEntities entities, IDelayProvider delayProvider, ILightControl lightControl) : base(entities, delayProvider, lightControl)
     {
-        light = entities.Light.LightSlaapkamerkids;
+        light = entities.Light.Slaapkamerkids;
     }
 
     public override void ButtonPressed(string ButtonSensor, DeconzEventIdEnum eventId)

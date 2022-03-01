@@ -16,7 +16,7 @@ namespace NetDaemonImpl
 
         public static DayNightEnum GetDayNightState(IEntities entities)
         {
-            if (Enum.TryParse(typeof(DayNightEnum), entities.Sensor.Daynight.State, out var result))
+            if (Enum.TryParse(typeof(DayNightEnum), entities.InputText.Daynight.State, out var result))
             {
                 if (result == null)
                 {
@@ -29,7 +29,7 @@ namespace NetDaemonImpl
 
         public static HouseStateEnum GetHouseState(IEntities entities)
         {
-            if (Enum.TryParse(typeof(HouseStateEnum), entities.Sensor.Housestate.State, out var result))
+            if (Enum.TryParse(typeof(HouseStateEnum), entities.InputText.Housestate.State, out var result))
             {
                 if (result == null)
                 {

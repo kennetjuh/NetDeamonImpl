@@ -4,14 +4,19 @@ namespace NetDaemonImpl.AreaControl.Areas;
 
 public class AreaControlTraphal : AreaControl
 {
-    private readonly LightEntity light;
+    private readonly LightEntity LightWand;
+    private readonly LightEntity Light;
 
-    private const double minBrightness = 10;
-    private const double maxBrightness = 255;
+    private const double minBrightnessWand = 50;
+    private const double maxBrightnessWand = 255;
+
+    private const double minBrightness = 1;
+    private const double maxBrightness = 150;
 
     public AreaControlTraphal(IEntities entities, IDelayProvider delayProvider, ILightControl lightControl) : base(entities, delayProvider, lightControl)
     {
-        light = entities.Light.LightTraphal;
+        LightWand = entities.Light.TraphalWand;
+        Light = entities.Light.Traphal;
     }
 
     public override void ButtonPressed(string entityId, DeconzEventIdEnum eventId)
@@ -21,22 +26,20 @@ public class AreaControlTraphal : AreaControl
         StopRunTask();
         mode = AreaModeEnum.Manual;
 
-        // If the result of the button press is the light is on trigger the after for manual mode
-        if (lightControl.ButtonDefaultLuxBased(eventId, light, minBrightness, maxBrightness))
+        if (LightWand.IsOn() && eventId == DeconzEventIdEnum.Single)
         {
-            StartAfterTask(delayProvider.MotionClearManual, () =>
-            {
-                mode = AreaModeEnum.Idle;
-                lightControl.SetLight(light, 0);
-            });
-        }
-        // The light is off, wait for a small timeout before going back to idle
-        else
-        {
+            lightControl.SetLight(Light, 0);
+            lightControl.SetLight(LightWand, 0);
+
             StartAfterTask(delayProvider.ManualOffTimeout, () =>
             {
                 mode = AreaModeEnum.Idle;
             });
+        }
+        else
+        {
+            lightControl.ButtonDefaultLuxBased(eventId, LightWand, minBrightnessWand, maxBrightnessWand);
+            lightControl.ButtonDefaultLuxBased(eventId, Light, minBrightness, maxBrightness);
         }
     }
 
@@ -48,7 +51,8 @@ public class AreaControlTraphal : AreaControl
             StartAfterTask(delayProvider.MotionClear, () =>
             {
                 mode = AreaModeEnum.Idle;
-                lightControl.SetLight(light, 0);
+                lightControl.SetLight(LightWand, 0);
+                lightControl.SetLight(Light, 0);
             });
         }
     }
@@ -65,29 +69,34 @@ public class AreaControlTraphal : AreaControl
         {
             mode = AreaModeEnum.Motion;
 
-            var brightness = lightControl.luxBasedBrightness.GetBrightness(minBrightness, maxBrightness);
+            var brightnessWand = lightControl.LuxBasedBrightness.GetBrightness(minBrightnessWand, maxBrightnessWand);
+            var brightness = lightControl.LuxBasedBrightness.GetBrightness(minBrightness, maxBrightness);
 
             // Sensor 1 = boven
             if (entityId == entities.BinarySensor.MotionTraphal1.EntityId)
             {
                 StartRunTask((Ct) =>
                 {
-                    lightControl.SetLight(entities.Light.LightTraphal3, brightness);
+                    lightControl.SetLight(entities.Light.Traphal3, brightnessWand);
                     DelayRunTaskAndCheckCancellation(delayProvider.MotionOnSequenceDelay, Ct);
-                    lightControl.SetLight(entities.Light.LightTraphal2, brightness);
+                    lightControl.SetLight(entities.Light.Traphal2, brightnessWand);
                     DelayRunTaskAndCheckCancellation(delayProvider.MotionOnSequenceDelay, Ct);
-                    lightControl.SetLight(entities.Light.LightTraphal1, brightness);
+                    lightControl.SetLight(entities.Light.Traphal1, brightnessWand);
+                    DelayRunTaskAndCheckCancellation(delayProvider.MotionOnSequenceDelay, Ct);
+                    lightControl.SetLight(entities.Light.Traphal, brightness);
                 });
             }
             else
             {
                 StartRunTask((Ct) =>
                 {
-                    lightControl.SetLight(entities.Light.LightTraphal1, brightness);
+                    lightControl.SetLight(entities.Light.Traphal, brightness);
                     DelayRunTaskAndCheckCancellation(delayProvider.MotionOnSequenceDelay, Ct);
-                    lightControl.SetLight(entities.Light.LightTraphal2, brightness);
+                    lightControl.SetLight(entities.Light.Traphal1, brightnessWand);
                     DelayRunTaskAndCheckCancellation(delayProvider.MotionOnSequenceDelay, Ct);
-                    lightControl.SetLight(entities.Light.LightTraphal3, brightness);
+                    lightControl.SetLight(entities.Light.Traphal2, brightnessWand);
+                    DelayRunTaskAndCheckCancellation(delayProvider.MotionOnSequenceDelay, Ct);
+                    lightControl.SetLight(entities.Light.Traphal3, brightnessWand);
                 });
             }
 

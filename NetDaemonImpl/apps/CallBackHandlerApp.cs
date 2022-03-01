@@ -1,4 +1,3 @@
-using NetDaemon.Extensions.Scheduler;
 using NetDaemonInterface;
 
 namespace NetDaemonImpl.apps;
@@ -8,14 +7,15 @@ public class CallBackHandlerApp : MyNetDaemonBaseApp
 {
     private readonly IHouseState houseState;
 
-    public CallBackHandlerApp(IHaContext haContext, INetDaemonScheduler scheduler, ILogger<DeconzEventHandlerApp> logger,
-        ITwinkle twinkle, IHouseState houseState)
-        : base(haContext, scheduler, logger)
+    public CallBackHandlerApp(IHaContext haContext, IScheduler scheduler, ILogger<CallBackHandlerApp> logger,
+        ITwinkle twinkle, IHouseState houseState, ISettingsProvider settingsProvider)
+        : base(haContext, scheduler, logger, settingsProvider)
     {
         this.houseState = houseState;
 
         _haContext.RegisterServiceCallBack<ChangeHouseStateData>("ChangeHouseState", (x) => ChangeHouseState(x));
         _haContext.RegisterServiceCallBack<EmptyStateData>("Twinkle", (x) => twinkle.Start());
+        _haContext.RegisterServiceCallBack<EmptyStateData>("TvMode", (x) => houseState.TvMode());
     }
 
     record ChangeHouseStateData(string state);
@@ -29,10 +29,13 @@ public class CallBackHandlerApp : MyNetDaemonBaseApp
                 houseState.HouseStateAwake();
                 break;
             case "Away":
-                houseState.HouseStateAway();
+                houseState.HouseStateAway(HouseStateEnum.Away);
                 break;
             case "Sleeping":
                 houseState.HouseStateSleeping();
+                break;
+            case "Holiday":
+                houseState.HouseStateHoliday();
                 break;
             default:
                 break;

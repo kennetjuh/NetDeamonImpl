@@ -10,7 +10,7 @@ public class AreaControlWashal : AreaControl
 
     public AreaControlWashal(IEntities entities, IDelayProvider delayProvider, ILightControl lightControl) : base(entities, delayProvider, lightControl)
     {
-        light = entities.Light.WashalWashal;
+        light = entities.Light.Washal;
     }
 
     public override void ButtonPressed(string entityId, DeconzEventIdEnum eventId)
@@ -19,17 +19,7 @@ public class AreaControlWashal : AreaControl
         // Button press will always trigger Manual mode
         mode = AreaModeEnum.Manual;
 
-        // If the result of the button press is the light is on trigger the after for manual mode
-        if (lightControl.ButtonDefaultLuxBased(eventId, light, minBrightness, maxBrightness))
-        {
-            StartAfterTask(delayProvider.MotionClearManual, () =>
-            {
-                mode = AreaModeEnum.Idle;
-                lightControl.SetLight(light, 0);
-            });
-        }
-        // The light is off, wait for a small timeout before going back to idle
-        else
+        if (!lightControl.ButtonDefaultLuxBased(eventId, light, minBrightness, maxBrightness))
         {
             StartAfterTask(delayProvider.ManualOffTimeout, () =>
             {
@@ -62,7 +52,7 @@ public class AreaControlWashal : AreaControl
         if (mode == AreaModeEnum.Idle)
         {
             mode = AreaModeEnum.Motion;
-            lightControl.SetLight(light, lightControl.luxBasedBrightness.GetBrightness(minBrightness, maxBrightness));
+            lightControl.SetLight(light, lightControl.LuxBasedBrightness.GetBrightness(minBrightness, maxBrightness));
         }
     }
 }

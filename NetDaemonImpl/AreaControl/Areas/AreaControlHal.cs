@@ -11,7 +11,7 @@ public class AreaControlHal : AreaControl
 
     public AreaControlHal(IEntities entities, IDelayProvider delayProvider, ILightControl lightControl) : base(entities, delayProvider, lightControl)
     {
-        light = entities.Light.LightHal;
+        light = entities.Light.Hal;
     }
 
     public override void ButtonPressed(string entityId, DeconzEventIdEnum eventId)

@@ -1,49 +1,94 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <LangVersion>10.0</LangVersion>
-    <Nullable>enable</Nullable>
- </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net9.0</TargetFramework>
+		<LangVersion>default</LangVersion>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Update="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="apps\**\*.yaml" CopyToPublishDirectory="Always" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="appsettings.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="apps\**\*.yaml" CopyToPublishDirectory="Always" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="NetDaemonInterface\**" />
-    <Compile Remove="NetDaemonTest\**" />
-    <Compile Remove="tests\**" />
-    <EmbeddedResource Remove="NetDaemonInterface\**" />
-    <EmbeddedResource Remove="NetDaemonTest\**" />
-    <None Remove="NetDaemonInterface\**" />
-    <None Remove="NetDaemonTest\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="NetDaemonInterface\**" />
+		<Compile Remove="NetDaemonTest\**" />
+		<Compile Remove="tests\**" />
+		<EmbeddedResource Remove="NetDaemonInterface\**" />
+		<EmbeddedResource Remove="NetDaemonTest\**" />
+		<None Remove="NetDaemonInterface\**" />
+		<None Remove="NetDaemonTest\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="HomeAssistantGenerated.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="JoySoftware.NetDaemon.AppModel" Version="22.3.4" />
-    <PackageReference Include="JoySoftware.NetDaemon.Runtime" Version="22.3.4" />
-    <PackageReference Include="JoySoftware.NetDaemon.HassModel" Version="22.3.4" />
-    <PackageReference Include="JoySoftware.NetDaemon.Client" Version="22.3.4" />
-    <PackageReference Include="JoySoftware.NetDaemon.Extensions.Scheduling" Version="22.3.4" />
-    <PackageReference Include="JoySoftware.NetDaemon.Extensions.Logging" Version="22.3.4" />
-    <PackageReference Include="JoySoftware.NetDaemon.Extensions.Tts" Version="22.3.4" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
-    <PackageReference Include="System.Reactive" Version="5.0.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NetDaemonInterface\NetDaemonInterface.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="HomeAssistantGenerated.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="Resources\arial.ttf" />
+		<None Remove="Resources\arialbd.ttf" />
+		<None Remove="Resources\arialbi.ttf" />
+		<None Remove="Resources\ariali.ttf" />
+		<None Remove="Resources\ARIALN.TTF" />
+		<None Remove="Resources\ARIALNB.TTF" />
+		<None Remove="Resources\ARIALNBI.TTF" />
+		<None Remove="Resources\ARIALNI.TTF" />
+		<None Remove="Resources\ariblk.ttf" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="..\appsettings.json" Link="appsettings.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\arial.ttf" />
+		<EmbeddedResource Include="Resources\arialbd.ttf" />
+		<EmbeddedResource Include="Resources\arialbi.ttf" />
+		<EmbeddedResource Include="Resources\ariali.ttf" />
+		<EmbeddedResource Include="Resources\ARIALN.TTF" />
+		<EmbeddedResource Include="Resources\ARIALNB.TTF" />
+		<EmbeddedResource Include="Resources\ARIALNBI.TTF" />
+		<EmbeddedResource Include="Resources\ARIALNI.TTF" />
+		<EmbeddedResource Include="Resources\ariblk.ttf" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="NetDaemon.AppModel" Version="24.50.0" />
+		<PackageReference Include="NetDaemon.Runtime" Version="24.50.0" />
+		<PackageReference Include="NetDaemon.HassModel" Version="24.50.0" />
+		<PackageReference Include="NetDaemon.Client" Version="24.50.0" />
+		<PackageReference Include="NetDaemon.Extensions.Scheduling" Version="24.50.0" />
+		<PackageReference Include="NetDaemon.Extensions.Logging" Version="24.50.0" />
+		<PackageReference Include="NetDaemon.Extensions.Tts" Version="24.50.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+		<PackageReference Include="SkiaSharp" Version="3.116.1" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.116.1" />
+		<PackageReference Include="System.Reactive" Version="6.0.1" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\NetDaemonInterface\NetDaemonInterface.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="Resource.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resource.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Update="Resource.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resource.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
 
 
 </Project>

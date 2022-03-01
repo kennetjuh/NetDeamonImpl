@@ -27,7 +27,14 @@ public class AreaControlKeuken : AreaControl
                 }
                 else if (isOff)
                 {
-                    lightControl.SetLight(light, 10);
+                    if (Helper.GetDayNightState(entities) == DayNightEnum.Night)
+                    {
+                        lightControl.SetLight(light, 1);
+                    }
+                    else
+                    {
+                        lightControl.SetLight(light, 10);
+                    }
                 }
                 else
                 {
@@ -37,7 +44,14 @@ public class AreaControlKeuken : AreaControl
             case DeconzEventIdEnum.Double:
                 if (isTwinkeActive || isOff)
                 {
-                    lightControl.SetLight(light, 50);
+                    if (Helper.GetDayNightState(entities) == DayNightEnum.Night)
+                    {
+                        lightControl.SetLight(light, 1);
+                    }
+                    else
+                    {
+                        lightControl.SetLight(light, 20);
+                    }
                 }
                 else
                 {

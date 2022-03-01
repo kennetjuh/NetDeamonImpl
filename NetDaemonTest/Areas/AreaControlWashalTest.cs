@@ -1,7 +1,6 @@
 using Moq;
 using NetDaemonImpl.AreaControl.Areas;
 using NetDaemonInterface;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -11,7 +10,7 @@ public class AreaControlWashalTest : AreaControlTestBase<AreaControlWashal>
 {
     public AreaControlWashalTest()
     {
-        light = entities.Light.WashalWashal;
+        light = entities.Light.Washal;
     }
 
     [Fact]
@@ -32,8 +31,6 @@ public class AreaControlWashalTest : AreaControlTestBase<AreaControlWashal>
     {
         // Arrange
         SetupMocks();
-        delayProviderMock.Setup(x => x.MotionClearManual).Returns(TimeSpan.FromMilliseconds(1));
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == light.EntityId), 0));
         lightControlMock.Setup(x => x.ButtonDefaultLuxBased(
                 DeconzEventIdEnum.Single,
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId),
@@ -48,17 +45,15 @@ public class AreaControlWashalTest : AreaControlTestBase<AreaControlWashal>
 
         // Assert
         Assert.Equal(AreaModeEnum.Manual, Sut.GetPrivate<AreaModeEnum>("mode"));
-        Task.Delay(TimeSpan.FromMilliseconds(100)).Wait();
-        Assert.Equal(AreaModeEnum.Idle, Sut.GetPrivate<AreaModeEnum>("mode"));
         VerifyAllMocks();
     }
 
     [Fact]
-    public void ButtonPressed_SingleClickLightGoesOff_VerifyMocks()
+    public async Task ButtonPressed_SingleClickLightGoesOff_VerifyMocks()
     {
         // Arrange
         SetupMocks();
-        delayProviderMock.Setup(x => x.ManualOffTimeout).Returns(TimeSpan.FromMilliseconds(1));
+        delayProviderMock.Setup(x => x.ManualOffTimeout).Returns(TimeSpan.FromMilliseconds(50));
         lightControlMock.Setup(x => x.ButtonDefaultLuxBased(
                 DeconzEventIdEnum.Single,
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId),
@@ -73,7 +68,7 @@ public class AreaControlWashalTest : AreaControlTestBase<AreaControlWashal>
 
         // Assert
         Assert.Equal(AreaModeEnum.Manual, Sut.GetPrivate<AreaModeEnum>("mode"));
-        Task.Delay(TimeSpan.FromMilliseconds(100)).Wait();
+        await Task.Delay(TimeSpan.FromMilliseconds(100));
         Assert.Equal(AreaModeEnum.Idle, Sut.GetPrivate<AreaModeEnum>("mode"));
         VerifyAllMocks();
     }
@@ -100,9 +95,9 @@ public class AreaControlWashalTest : AreaControlTestBase<AreaControlWashal>
         // Arrange 
         SetupMocks();
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
-        lightControlMock.Setup(x => x.luxBasedBrightness).Returns(luxBasedBrightnessMock.Object);
+        lightControlMock.Setup(x => x.LuxBasedBrightness).Returns(luxBasedBrightnessMock.Object);
         luxBasedBrightnessMock.Setup(x => x.GetBrightness(10, 255)).Returns(100);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WashalWashal.EntityId), 100)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Washal.EntityId), 100)).Returns(true);
 
         // Act
         Sut.MotionDetected("");
@@ -129,18 +124,18 @@ public class AreaControlWashalTest : AreaControlTestBase<AreaControlWashal>
     }
 
     [Fact]
-    public void MotionCleared_ModeMotion_VerifyMocks()
+    public async Task MotionCleared_ModeMotion_VerifyMocksAsync()
     {
         // Arrange 
         SetupMocks();
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
         Sut.SetPrivate("mode", AreaModeEnum.Motion);
         delayProviderMock.Setup(x => x.MotionClear).Returns(TimeSpan.FromMilliseconds(1));
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WashalWashal.EntityId), 0)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Washal.EntityId), 0)).Returns(true);
 
         // Act
         Sut.MotionCleared("");
-        Task.Delay(TimeSpan.FromMilliseconds(100)).Wait();
+        await Task.Delay(TimeSpan.FromMilliseconds(100));
 
         // Assert
         VerifyAllMocks();

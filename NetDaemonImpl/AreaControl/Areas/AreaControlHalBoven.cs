@@ -11,7 +11,7 @@ public class AreaControlHalBoven : AreaControl
 
     public AreaControlHalBoven(IEntities entities, IDelayProvider delayProvider, ILightControl lightControl) : base(entities, delayProvider, lightControl)
     {
-        light = entities.Light.LightHalboven;
+        light = entities.Light.Halboven;
     }
 
     public override void ButtonPressed(string ButtonSensor, DeconzEventIdEnum eventId)

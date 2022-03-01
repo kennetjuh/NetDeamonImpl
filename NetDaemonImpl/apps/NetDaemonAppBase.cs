@@ -1,4 +1,4 @@
-﻿using NetDaemon.Extensions.Scheduler;
+﻿using NetDaemonInterface;
 
 namespace NetDaemonImpl.apps;
 
@@ -9,17 +9,18 @@ namespace NetDaemonImpl.apps;
 public class MyNetDaemonBaseApp
 {
     internal readonly IHaContext _haContext;
-    internal readonly INetDaemonScheduler _scheduler;
-    internal readonly ILogger<DeconzEventHandlerApp> _logger;
+    internal readonly IScheduler _scheduler;
+    internal readonly ILogger _logger;
+    internal readonly ISettingsProvider _settingsProvider;
     internal readonly IEntities _entities;
     internal readonly IServices _services;
 
-    public MyNetDaemonBaseApp(IHaContext haContext, INetDaemonScheduler scheduler, ILogger<DeconzEventHandlerApp> logger)
+    public MyNetDaemonBaseApp(IHaContext haContext, IScheduler scheduler, ILogger logger, ISettingsProvider settingsProvider)
     {
         _haContext = haContext;
         _scheduler = scheduler;
         _logger = logger;
-
+        _settingsProvider = settingsProvider;
         _entities = new Entities(haContext);
         _services = new Services(haContext);
     }

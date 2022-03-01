@@ -1,6 +1,5 @@
-using NetDaemon.Extensions.Scheduler;
-using NetDaemon.HassModel.Entities;
 using NetDaemonInterface;
+using System.Text.Json.Serialization;
 
 namespace NetDaemonImpl.apps;
 
@@ -9,70 +8,62 @@ public class NotifyHandlerApp : MyNetDaemonBaseApp
 {
     private readonly INotify notify;
 
-    public NotifyHandlerApp(IHaContext haContext, INetDaemonScheduler scheduler, ILogger<DeconzEventHandlerApp> logger,
-        INotify notify)
-        : base(haContext, scheduler, logger)
+    private record notificationEventDataElement
+    {
+        [JsonPropertyName("title")]
+        public string? Title { get; init; }
+
+        [JsonPropertyName("message")]
+        public string? Message { get; init; }
+
+        [JsonPropertyName("action")]
+        public string? Action { get; init; }
+
+        [JsonPropertyName("device_id")]
+        public string? DeviceId { get; init; }
+    }
+
+    public NotifyHandlerApp(IHaContext haContext, IScheduler scheduler, ILogger<NotifyHandlerApp> logger, INotify notify, ISettingsProvider settingsProvider)
+        : base(haContext, scheduler, logger, settingsProvider)
     {
         this.notify = notify;
-
-        _entities.MediaPlayer.Hal.StateChanges()
-            .Where(x => x.New?.State == "off")
-            .Throttle(TimeSpan.FromSeconds(5))
-            .Subscribe(x => _entities.MediaPlayer.Hal.VolumeSet(0.7));
-
-        _entities.MediaPlayer.Woonkamer.StateChanges()
-            .Where(x => x.New?.State == "off")
-            .Throttle(TimeSpan.FromSeconds(5))
-            .Subscribe(x => _entities.MediaPlayer.Woonkamer.VolumeSet(0.8));
-
-        _scheduler.RunDaily(TimeSpan.FromHours(18), () =>
+        _haContext.Events.Where(x => x.EventType == "mobile_app_notification_action")
+        .Subscribe(x =>
         {
-            notify.NotifyHouse("Attentie, Damon en Caitlyn jullie mogen je bed aan zetten.");
+            HandleNotificationEvent(x);
         });
-
-        _entities.Person.Greet.StateChanges()
-            .Subscribe(x => LocationChangedGreet(x));
-
-        _entities.Person.Ken.StateChanges()
-            .Subscribe(x => LocationChangedKen(x));
-
-        _entities.Sensor.TempKeukenSetpoint.StateChanges()
-            .Subscribe(x => notify.NotifyGsmKen("Thermostaat", $"setpoint {x.New?.State}"));
     }
 
-    private void LocationChangedKen(StateChange<PersonEntity, EntityState<PersonAttributes>> x)
+    private void HandleNotificationEvent(Event x)
     {
-        if (x.Old == null)
-        {
-            return;
-        }
+        //Event {
+        //  DataElement = {
+        //      "title": "Test",
+        //      "message": "Test",
+        //      "action_1_title": "Action 1",
+        //      "action_1_key": "Action1",
+        //      "action": "Action1",
+        //      "device_id": "22a04b947225e0c2"
+        //      },
+        //  EventType = mobile_app_notification_action,
+        //  Origin = REMOTE, TimeFired = 17-2-2022 15:21:49 }}
 
-        if (x.Old.State == _entities.Zone.WerkKen.Attributes?.FriendlyName && DateTime.Now.Hour > 13)
+        if (x.DataElement.HasValue)
         {
-            notify.NotifyGsmGreet("Ken lokatie", "Ken is vertrokken vanuit werk");
-            notify.NotifyHouse("Attentie, Ken is vertrokken vanuit werk");
-            return;
-        }
-    }
+            var notificationEventDataElement = System.Text.Json.JsonSerializer.Deserialize<notificationEventDataElement>(x.DataElement.Value);
 
-    private void LocationChangedGreet(StateChange<PersonEntity, EntityState<PersonAttributes>> x)
-    {
-        if (x.Old == null)
-        {
-            return;
-        }
+            if (notificationEventDataElement == null || notificationEventDataElement.Action == null)
+            {
+                _logger.LogWarning($"Unable to parse notification event: {x.DataElement.Value}");
+                return;
+            }
 
-        if (x.Old.State == _entities.Zone.WerkGreet.Attributes?.FriendlyName && DateTime.Now.Hour > 13)
-        {
-            notify.NotifyGsmKen("Greet lokatie", "Greet is vertrokken vanuit werk");
-            notify.NotifyHouse("Attentie, Great is vertrokken vanuit werk");
-            return;
-        }
-        if (x.Old.State == _entities.Zone.IjzerenMan.Attributes?.FriendlyName)
-        {
-            notify.NotifyGsmKen("Greet lokatie", "Greet is vertrokken vanuit de ijzeren man");
-            notify.NotifyHouse("Attentie, Great is vertrokken vanuit de ijzeren man");
-            return;
+            _logger.LogInformation($"{notificationEventDataElement.Action}");
+
+            if (Enum.TryParse<NotifyActionEnum>(notificationEventDataElement.Action, out var result))
+            {
+                notify.HandleNotificationEvent(result);
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ public class AreaControlSlaapkamerKidsTest : AreaControlTestBase<AreaControlSlaa
 {
     public AreaControlSlaapkamerKidsTest()
     {
-        light = entities.Light.LightSlaapkamerkids;
+        light = entities.Light.Slaapkamerkids;
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class AreaControlSlaapkamerKidsTest : AreaControlTestBase<AreaControlSlaa
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId),
                 It.IsAny<double>(),
                 It.IsAny<double>()))
-            .Returns(null);
+            .Returns(true);
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 

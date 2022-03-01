@@ -7,17 +7,30 @@ namespace NetDaemonImpl.Modules;
 public class LightControl : ILightControl
 {
     private readonly List<LightEntity> lightEntitiesMaxWhite = new();
-    public ILuxBasedBrightness luxBasedBrightness { get; private set; }
+    private readonly List<LightEntity> lightEntitiesAllwaysWhite = new();
+    public ILuxBasedBrightness LuxBasedBrightness { get; private set; }
+    private ILogger<LightControl> Logger { get; }
+    private readonly Entities Entities;
+    private readonly Services Services;
 
-    public LightControl(ILuxBasedBrightness luxBasedBrightness)
+    public LightControl(IServiceProvider provider, ILuxBasedBrightness luxBasedBrightness, ILogger<LightControl> logger)
     {
-        this.luxBasedBrightness = luxBasedBrightness;
+        Logger = logger;
+        LuxBasedBrightness = luxBasedBrightness;
+        var haContext = DiHelper.GetHaContext(provider);
+        Entities = new Entities(haContext);
+        Services = new Services(haContext);
     }
 
     /// <inheritdoc/> 
     public void AddMaxWhiteLight(LightEntity light)
     {
         lightEntitiesMaxWhite.Add(light);
+    }
+
+    public void AddAllwaysWhiteLight(LightEntity light)
+    {
+        lightEntitiesAllwaysWhite.Add(light);
     }
 
     /// <inheritdoc/> 
@@ -52,10 +65,10 @@ public class LightControl : ILightControl
     }
 
     internal bool ButtonSingleClickLuxBased(LightEntity light, double minBrightness, double maxBrightness)
-    { 
+    {
         return light.IsOn()
             ? SetLight(light, 0)
-            : SetLight(light, luxBasedBrightness.GetBrightness(minBrightness, maxBrightness));
+            : SetLight(light, LuxBasedBrightness.GetBrightness(minBrightness, maxBrightness));
     }
 
     internal bool ButtonDoubleClick(LightEntity light)
@@ -79,12 +92,18 @@ public class LightControl : ILightControl
     /// <inheritdoc/>   
     public bool SetLight(LightEntity light, double? brightness = null)
     {
-        var supportedModes = light.Attributes?.SupportedColorModes?.ToString();
-        var colorTemp = light.Attributes?.MaxMireds;
+        var supportedModes = light.Attributes?.SupportedColorModes;
+        var colorTemp = lightEntitiesAllwaysWhite.Any(x => x.EntityId == light.EntityId) ? light.Attributes?.MinMireds : light.Attributes?.MaxMireds;
         var currentBrightness = light.Attributes?.Brightness;
         var currentColorTemp = light.Attributes?.ColorTemp;
 
-        if (supportedModes != null && supportedModes.Contains("color_temp"))
+        if (supportedModes == null)
+        {
+            Logger.LogWarning($"Entity {light.EntityId} has no supported modes");
+            return false;
+        }
+
+        if (supportedModes.Contains("color_temp"))
         {
             if (!brightness.HasValue)
             {
@@ -118,7 +137,25 @@ public class LightControl : ILightControl
                 }
             }
         }
-        else
+        else if (supportedModes.Contains("brightness"))
+        {
+            if (!brightness.HasValue)
+            {
+                light.TurnOn();
+                return true;
+            }
+            else if (brightness == 0)
+            {
+                light.TurnOff();
+                return false;
+            }
+            else
+            {
+                light.TurnOn(brightness: (long)brightness);
+                return true;
+            }
+        }
+        else if (supportedModes.Contains("onoff"))
         {
             if (brightness == 0)
             {
@@ -131,15 +168,20 @@ public class LightControl : ILightControl
                 return true;
             }
         }
+        else
+        {
+            Logger.LogWarning($"Entity {light.EntityId} has no known supported modes");
+            return false;
+        }
     }
 
     public bool SetLight(LightEntity light, double? brightness, string colorName)
     {
-        var supportedModes = light.Attributes?.SupportedColorModes?.ToString();
-
+        var supportedModes = light.Attributes?.SupportedColorModes;
 
         if (supportedModes == null || !supportedModes.Contains("hs"))
         {
+            Logger.LogWarning($"Entity {light.EntityId} has no 'hs' mode");
             return false;
         }
 
