@@ -54,6 +54,8 @@ public class DayNightHandlerAppTest : TestBase
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.HalbovenSfeer.EntityId),50)).Returns(null);
         HaMock.TriggerStateChange(Entities.Light.LightWoonWand, "on");
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.LightWoonWand.EntityId), Constants.brightnessWandDay)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.BuitenzijHutsier.EntityId), 0)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.LightHut.EntityId), 0)).Returns(null);
 
         // Act
         var app = Context.GetApp<DayNightHandlerApp>();
@@ -92,6 +94,8 @@ public class DayNightHandlerAppTest : TestBase
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.HalbovenSfeer.EntityId), 1)).Returns(null);
         HaMock.TriggerStateChange(Entities.Light.LightWoonWand, "on");
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.LightWoonWand.EntityId), Constants.brightnessWandNight)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.BuitenzijHutsier.EntityId), 1)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.LightHut.EntityId), Constants.brightnessHut)).Returns(null);
 
         // Act
         var app = Context.GetApp<DayNightHandlerApp>();

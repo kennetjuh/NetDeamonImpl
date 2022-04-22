@@ -9,11 +9,9 @@ using NetDaemonImpl.Modules.Notify;
 using NetDaemonInterface;
 using System.Reflection;
 
-#pragma warning disable CA1812
-
 try
 {
-    Console.WriteLine("Starting v0.0.2");
+    Console.WriteLine("Starting v0.0.8");
     await Host.CreateDefaultBuilder(args)
         .UseNetDaemonAppSettings()
         .UseNetDaemonDefaultLogging()

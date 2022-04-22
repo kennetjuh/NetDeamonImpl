@@ -2,6 +2,7 @@ using NetDaemon.HassModel.Entities;
 using NetDaemonInterface;
 using System.Collections.Generic;
 using NetDaemon.Extensions.Scheduler;
+using System.Globalization;
 
 namespace NetDaemonImpl.apps;
 
@@ -16,11 +17,24 @@ public class NotifyApp : MyNetDaemonBaseApp
     {
         this.notify = notify;
 
-        
-        _scheduler.ScheduleCron("0 18 * * *", () => // every day at 18:00
+        _scheduler.ScheduleCron("45 7 * * 1", () => //At 07:45 on Monday.
         {
-            notify.NotifyHouse("Attentie, Damon en Caitlyn jullie mogen je bed aan zetten.");
+            var cal = new CultureInfo("nl-NL").Calendar;
+            int week = cal.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+            if (week % 2 == 1) //only on uneven weeks
+            {
+                notify.NotifyGsmGreet("", "Vergeet je laptop niet");
+                notify.NotifyHouse("Attentie, Greet vergeet je laptop niet");
+            }
         });
+        
+        //_scheduler.ScheduleCron("0 18 * * *", () => // every day at 18:00
+        //{
+        //    notify.NotifyHouse("Attentie, Damon en Caitlyn jullie mogen je bed aan zetten.");
+        //});
+
+        _entities.Sensor.PowerTariff.StateChanges()
+            .Subscribe(x => notify.NotifyGsmKen("", $"Energy tarif: {x.New?.State}", NotifyTagEnum.PowerTarifChanged));
 
         _entities.Person.Greet.StateChanges()
             .Subscribe(x => LocationChangedGreet(x));

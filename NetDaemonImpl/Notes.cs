@@ -11,6 +11,8 @@ make watchdogs event based in stead of schedular based
 
 /*
 Notification ideas
+"House notification" (a collection of interresting stuff (setpoint, power tariff etc) in one notification)
+
 
 light on for long (speelkamer)
 both gsm's not home but home status is not away

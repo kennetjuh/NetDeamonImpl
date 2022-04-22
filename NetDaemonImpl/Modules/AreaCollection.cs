@@ -27,6 +27,7 @@ public class AreaCollection : IAreaCollection
         collection.Add(AreaControlEnum.Keuken, new AreaControlKeuken(entities, delayProvider, lightControl, twinkle));
         collection.Add(AreaControlEnum.Slaapkamer, new AreaControlSlaapkamer(entities, delayProvider, lightControl));
         collection.Add(AreaControlEnum.BuitenAchter, new AreaControlBuitenAchter(entities, delayProvider, lightControl));
+        collection.Add(AreaControlEnum.Hut, new AreaControlHut(entities, delayProvider, lightControl));
     }
 
     public IAreaControl GetArea(AreaControlEnum area)

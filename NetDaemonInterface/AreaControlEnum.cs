@@ -15,5 +15,6 @@ public enum AreaControlEnum
     Voordeur,
     Washal,
     Wc,
-    Woonkamer
+    Woonkamer,
+    Hut
 }

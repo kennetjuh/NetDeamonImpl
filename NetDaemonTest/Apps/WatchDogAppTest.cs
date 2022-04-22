@@ -95,7 +95,6 @@ public class WatchDogAppTest : TestBase
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.GrondlampZij.EntityId), 0)).Returns(null);
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.BuitenachterFonteinlamp.EntityId), 0)).Returns(null);
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.WandlampHut.EntityId), 0)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.LightHut.EntityId), 0)).Returns(null);
     }
 
     private void SetupNightMocks()
@@ -103,6 +102,5 @@ public class WatchDogAppTest : TestBase
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.GrondlampZij.EntityId), Constants.brightnessBuitenZij)).Returns(null);
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.BuitenachterFonteinlamp.EntityId), Constants.brightnessFontein)).Returns(null);
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.WandlampHut.EntityId), Constants.brightnessHutWand)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.LightHut.EntityId), Constants.brightnessHut)).Returns(null);
     }
 }

@@ -95,6 +95,9 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
         {
             lightControl.SetLight(_entities.Light.LightWoonWand, Constants.brightnessWandNight);
         }
+
+        lightControl.SetLight(_entities.Light.LightHut, Constants.brightnessHut);
+        lightControl.SetLight(_entities.Light.BuitenzijHutsier, 1);
     }
 
     private void Day()
@@ -116,5 +119,8 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
         {
             lightControl.SetLight(_entities.Light.LightWoonWand, Constants.brightnessWandDay);
         }
+
+        lightControl.SetLight(_entities.Light.LightHut, 0);
+        lightControl.SetLight(_entities.Light.BuitenzijHutsier, 0);
     }
 }

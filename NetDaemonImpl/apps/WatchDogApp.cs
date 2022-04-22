@@ -44,14 +44,12 @@ public class WatchDogApp : MyNetDaemonBaseApp
             lightControl.SetLight(_entities.Light.GrondlampZij, 0);
             lightControl.SetLight(_entities.Light.BuitenachterFonteinlamp, 0);
             lightControl.SetLight(_entities.Light.WandlampHut, 0);
-            lightControl.SetLight(_entities.Light.LightHut, 0);
         }
         else
         {
             lightControl.SetLight(_entities.Light.GrondlampZij, Constants.brightnessBuitenZij);
             lightControl.SetLight(_entities.Light.BuitenachterFonteinlamp, Constants.brightnessFontein);
             lightControl.SetLight(_entities.Light.WandlampHut, Constants.brightnessHutWand);
-            lightControl.SetLight(_entities.Light.LightHut, Constants.brightnessHut);
         }
     }
 }

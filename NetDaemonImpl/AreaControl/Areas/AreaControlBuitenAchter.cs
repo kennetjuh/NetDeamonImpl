@@ -9,8 +9,8 @@ public class AreaControlBuitenAchter : AreaControl
     private readonly SwitchEntity switchInfinity;
     private readonly SwitchEntity switchfontein;
 
-    private const double minBrightness = 10;
-    private const double maxBrightness = 255;
+    //private const double minBrightness = 10;
+    //private const double maxBrightness = 255;
 
     public AreaControlBuitenAchter(IEntities entities, IDelayProvider delayProvider, ILightControl lightControl) : base(entities, delayProvider, lightControl)
     {
@@ -22,12 +22,13 @@ public class AreaControlBuitenAchter : AreaControl
 
     public override void ButtonPressed(string ButtonSensor, DeconzEventIdEnum eventId)
     {
-        if (ButtonSensor == entities.Sensor.ButtonBuitenachterlampBatteryLevel.EntityId)
-        {
-            lightControl.ButtonDefaultLuxBased(eventId, lightBuiten, minBrightness, maxBrightness);
-        }
+        //if (ButtonSensor == entities.Sensor.ButtonBuitenachterlampBatteryLevel.EntityId)
+        //{
+        //    lightControl.ButtonDefaultLuxBased(eventId, lightBuiten, minBrightness, maxBrightness);
+        //}
         if (ButtonSensor == entities.Sensor.ButtonBuitenachterBatteryLevel.EntityId ||
-            ButtonSensor == entities.Sensor.ButtonBuitenachterzithoekBatteryLevel.EntityId)
+            ButtonSensor == entities.Sensor.ButtonBuitenachterzithoekBatteryLevel.EntityId ||
+            ButtonSensor == entities.Sensor.ButtonBuitenachterlampBatteryLevel.EntityId)
         {
             switch (eventId)
             {

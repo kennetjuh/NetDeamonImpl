@@ -28,32 +28,9 @@ public class AreaControlBuitenachterTest : AreaControlTestBase<AreaControlBuiten
     }
 
     [Theory]
-    [MemberData(nameof(DeconzEventIdValues))]
-    public void BuitenachterlampButtonPressed_VerifyMocks(DeconzEventIdEnum id)
-    {
-        // Arrange
-        light = entities.Light.BuitenachterLamp;
-
-        SetupMocks();
-        lightControlMock.Setup(x => x.ButtonDefaultLuxBased(
-                id,
-                It.Is<LightEntity>(x => x.EntityId == light.EntityId),
-                It.IsAny<double>(),
-                It.IsAny<double>()))
-            .Returns(null);
-
-        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
-
-        // Act
-        Sut.ButtonPressed(entities.Sensor.ButtonBuitenachterlampBatteryLevel.EntityId, id);
-
-        // Assert
-        VerifyAllMocks();
-    }
-
-    [Theory]
     [InlineData("sensor.button_buitenachterzithoek_battery_level")]
     [InlineData("sensor.button_buitenachter_battery_level")]
+    [InlineData("sensor.button_buitenachterlamp_battery_level")]
     public void ButtonSingleClick_LightIsOn_VerifyMocks(string button)
     {
         // Arrange

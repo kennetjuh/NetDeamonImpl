@@ -29,7 +29,7 @@ public class NotifyAppTest : TestBase
         // Arrange
         ResetAllMocks();
         Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(17).AddMinutes(59).ToUniversalTime().Ticks);
-        NotifyMock.Setup(x => x.NotifyHouse("Attentie, Damon en Caitlyn jullie mogen je bed aan zetten."));
+        //NotifyMock.Setup(x => x.NotifyHouse("Attentie, Damon en Caitlyn jullie mogen je bed aan zetten."));
 
         // Act
         var app = Context.GetApp<NotifyApp>();
@@ -56,11 +56,26 @@ public class NotifyAppTest : TestBase
     }
 
     [Fact]
+    public void NotifyApp_PowerTarifChange_VerifyCalls()
+    {
+        // Arrange
+        ResetAllMocks();
+        NotifyMock.Setup(x => x.NotifyGsmKen("", "Energy tarif: Test", NotifyTagEnum.PowerTarifChanged, It.IsAny<List<NotifyActionEnum>>()));
+
+        // Act
+        var app = Context.GetApp<NotifyApp>();
+        HaMock.TriggerStateChange(Entities.Sensor.PowerTariff, "Test");
+
+        // Assert
+        VerifyAllMocks();
+    }
+
+    [Fact]
     public void NotifyApp_LocationChangeKenWerkAfterTime_VerifyCalls()
     {
         // Arrange
         ResetAllMocks();
-        Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(15).ToUniversalTime().Ticks);
+        Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(16).ToUniversalTime().Ticks);
         HaMock.TriggerStateChange(Entities.Zone.WerkKen, "WerkKen", new ZoneAttributes {FriendlyName = "Werk Ken" });
         HaMock.TriggerStateChange(Entities.Person.Ken, Entities.Zone.WerkKen.Attributes?.FriendlyName!);
         NotifyMock.Setup(x=>x.NotifyGsmGreet("Ken lokatie", "Ken is vertrokken vanuit werk",null,null));
@@ -98,7 +113,7 @@ public class NotifyAppTest : TestBase
     {
         // Arrange
         ResetAllMocks();
-        Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(15).ToUniversalTime().Ticks);
+        Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(16).ToUniversalTime().Ticks);
         HaMock.TriggerStateChange(Entities.Zone.WerkGreet, "WerkGreet", new ZoneAttributes {FriendlyName = "Werk Greet" });
         HaMock.TriggerStateChange(Entities.Person.Greet, Entities.Zone.WerkGreet.Attributes?.FriendlyName!);
         NotifyMock.Setup(x => x.NotifyGsmKen("Greet lokatie", "Greet is vertrokken vanuit werk", null, null));

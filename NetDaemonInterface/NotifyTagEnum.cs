@@ -8,4 +8,5 @@ public enum NotifyTagEnum
     OpenCloseAchterdeur,
     OpenCloseTuindeur,
     OpenCloseAchterdeurgarage,
+    PowerTarifChanged,
 }
