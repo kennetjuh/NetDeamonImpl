@@ -10,7 +10,7 @@ public class AreaControlWashalTest : AreaControlTestBase<AreaControlWashal>
 {
     public AreaControlWashalTest()
     {
-        light = entities.Light.WashalWashal;
+        light = entities.Light.Washal;
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public class AreaControlWashalTest : AreaControlTestBase<AreaControlWashal>
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
         lightControlMock.Setup(x => x.LuxBasedBrightness).Returns(luxBasedBrightnessMock.Object);
         luxBasedBrightnessMock.Setup(x => x.GetBrightness(10, 255)).Returns(100);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WashalWashal.EntityId), 100)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Washal.EntityId), 100)).Returns(null);
 
         // Act
         Sut.MotionDetected("");
@@ -135,7 +135,7 @@ public class AreaControlWashalTest : AreaControlTestBase<AreaControlWashal>
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
         Sut.SetPrivate("mode", AreaModeEnum.Motion);
         delayProviderMock.Setup(x => x.MotionClear).Returns(TimeSpan.FromMilliseconds(1));
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WashalWashal.EntityId), 0)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Washal.EntityId), 0)).Returns(null);
 
         // Act
         Sut.MotionCleared("");

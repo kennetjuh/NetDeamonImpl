@@ -1,8 +1,10 @@
 using Moq;
+using NetDaemon.HassModel.Entities;
 using NetDaemonImpl;
 using NetDaemonImpl.apps;
 using NetDaemonTest.Apps.Helpers;
 using Xunit;
+using System.Linq;
 
 namespace NetDaemonTest.Apps;
 
@@ -44,14 +46,16 @@ public class DayNightHandlerAppTest : TestBase
             It.Is<NetdaemonEntityUpdateParameters>(y => y.EntityId!.ToString() == Entities.Sensor.Daynight.EntityId &&
                                                         y.State!.ToString()=="Day")));
 
+        HaMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Switch.BuitenvoorGrondspots.EntityId), null));
+
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.BuitenopritWandlamp.EntityId),0)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.BuitenvoorWandlamp.EntityId),0)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.BuitenvoorGrondspots.EntityId),0)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.WoonkamerSfeer1.EntityId),50)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.WoonkamerSfeer2.EntityId),50)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.KeukenSfeer.EntityId),50)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.HalSfeer.EntityId),50)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.HalbovenSfeer.EntityId),50)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.WandlampBuiten.EntityId),0)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.SfeerlampKamer1.EntityId),50)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.SfeerlampKamer2.EntityId),50)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.SfeerlampKeuken.EntityId),50)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.SfeerlampHal.EntityId),50)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.SfeerlampBoven.EntityId),50)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.LightSpeelkamerSfeer.EntityId),50)).Returns(null);
         HaMock.TriggerStateChange(Entities.Light.LightWoonWand, "on");
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.LightWoonWand.EntityId), Constants.brightnessWandDay)).Returns(null);
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y=>y.EntityId == Entities.Light.BuitenzijHutsier.EntityId), 0)).Returns(null);
@@ -84,17 +88,19 @@ public class DayNightHandlerAppTest : TestBase
             It.Is<NetdaemonEntityUpdateParameters>(y => y.EntityId!.ToString() == Entities.Sensor.Daynight.EntityId &&
                                                         y.State!.ToString() == "Night")));
 
+        HaMock.Setup(x => x.CallService("switch", "turn_on", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Switch.BuitenvoorGrondspots.EntityId), null));
+
+
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.BuitenopritWandlamp.EntityId), 50)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.BuitenvoorWandlamp.EntityId), 50)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.BuitenvoorGrondspots.EntityId), 1)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.WoonkamerSfeer1.EntityId), 1)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.WoonkamerSfeer2.EntityId), 1)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.KeukenSfeer.EntityId), 1)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.HalSfeer.EntityId), 1)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.HalbovenSfeer.EntityId), 1)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.WandlampBuiten.EntityId), 50)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.SfeerlampKamer1.EntityId), 1)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.SfeerlampKamer2.EntityId), 1)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.SfeerlampKeuken.EntityId), 1)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.SfeerlampHal.EntityId), 1)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.SfeerlampBoven.EntityId), 1)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.LightSpeelkamerSfeer.EntityId), 1)).Returns(null);
         HaMock.TriggerStateChange(Entities.Light.LightWoonWand, "on");
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.LightWoonWand.EntityId), Constants.brightnessWandNight)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.BuitenzijHutsier.EntityId), 1)).Returns(null);
         LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.LightHut.EntityId), Constants.brightnessHut)).Returns(null);
 
         // Act

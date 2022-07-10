@@ -18,8 +18,8 @@ namespace NetDaemonTest.Modules
             // Arrange 
             SetupMocks();
             lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.SpeelkamerLamp.EntityId)));
-            lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.WoonkamerBureau.EntityId)));
-            lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.WoonkamerKamer.EntityId)));
+            lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.Bureaulamp.EntityId)));
+            lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.Kamerlamp.EntityId)));
             delayProviderMock.Setup(x => x.ModeCycleTimeout).Returns(TimeSpan.Zero);
 
             // Act

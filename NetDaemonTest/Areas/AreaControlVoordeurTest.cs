@@ -12,7 +12,7 @@ public class AreaControlVoordeurTest : AreaControlTestBase<AreaControlVoordeur>
 {
     public AreaControlVoordeurTest()
     {
-        light = entities.Light.BuitenvoorWandlamp;
+        light = entities.Light.WandlampBuiten;
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class AreaControlVoordeurTest : AreaControlTestBase<AreaControlVoordeur>
         // Arrange 
         SetupMocks();
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
-        haContextMock.Setup(x => x.GetState(entities.Light.BuitenvoorWandlamp.EntityId)).Returns(new EntityState() { State = "off" });
+        haContextMock.Setup(x => x.GetState(entities.Light.WandlampBuiten.EntityId)).Returns(new EntityState() { State = "off" });
 
         // Act
         Sut.MotionDetected("");
@@ -50,8 +50,8 @@ public class AreaControlVoordeurTest : AreaControlTestBase<AreaControlVoordeur>
         // Arrange 
         SetupMocks();
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
-        haContextMock.Setup(x => x.GetState(entities.Light.BuitenvoorWandlamp.EntityId)).Returns(new EntityState() { State = "on" });
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.BuitenvoorWandlamp.EntityId), Constants.brightnessWandVoorMotion)).Returns(null);
+        haContextMock.Setup(x => x.GetState(entities.Light.WandlampBuiten.EntityId)).Returns(new EntityState() { State = "on" });
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WandlampBuiten.EntityId), Constants.brightnessWandVoorMotion)).Returns(null);
 
         // Act
         Sut.MotionDetected("");
@@ -85,7 +85,7 @@ public class AreaControlVoordeurTest : AreaControlTestBase<AreaControlVoordeur>
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
         Sut.SetPrivate("mode", AreaModeEnum.Motion);
         delayProviderMock.Setup(x => x.MotionClear).Returns(TimeSpan.FromMilliseconds(1));
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.BuitenvoorWandlamp.EntityId), Constants.brightnessWandVoor)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WandlampBuiten.EntityId), Constants.brightnessWandVoor)).Returns(null);
 
         // Act
         Sut.MotionCleared("");

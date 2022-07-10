@@ -17,16 +17,16 @@ public class NotifyApp : MyNetDaemonBaseApp
     {
         this.notify = notify;
 
-        _scheduler.ScheduleCron("45 7 * * 1", () => //At 07:45 on Monday.
-        {
-            var cal = new CultureInfo("nl-NL").Calendar;
-            int week = cal.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-            if (week % 2 == 1) //only on uneven weeks
-            {
-                notify.NotifyGsmGreet("", "Vergeet je laptop niet");
-                notify.NotifyHouse("Attentie, Greet vergeet je laptop niet");
-            }
-        });
+        //_scheduler.ScheduleCron("45 7 * * 1", () => //At 07:45 on Monday.
+        //{
+        //    var cal = new CultureInfo("nl-NL").Calendar;
+        //    int week = cal.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+        //    if (week % 2 == 1) //only on uneven weeks
+        //    {
+        //        notify.NotifyGsmGreet("", "Vergeet je laptop niet");
+        //        notify.NotifyHouse("Attentie, Greet vergeet je laptop niet");
+        //    }
+        //});
         
         //_scheduler.ScheduleCron("0 18 * * *", () => // every day at 18:00
         //{

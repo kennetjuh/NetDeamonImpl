@@ -10,7 +10,7 @@ public class AreaControlWashal : AreaControl
 
     public AreaControlWashal(IEntities entities, IDelayProvider delayProvider, ILightControl lightControl) : base(entities, delayProvider, lightControl)
     {
-        light = entities.Light.WashalWashal;
+        light = entities.Light.Washal;
     }
 
     public override void ButtonPressed(string entityId, DeconzEventIdEnum eventId)

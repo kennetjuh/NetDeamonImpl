@@ -17,18 +17,18 @@ public class AreaControlBuitenAchter : AreaControl
         lightBuiten = entities.Light.BuitenachterLamp;
         lightSier = entities.Light.BuitenachterSierverlichting;
         switchInfinity = entities.Switch.SwitchInfinityMirror;
-        switchfontein = entities.Switch.BuitenachterFontein;
+        switchfontein = entities.Switch.SwitchFontein;
     }
 
     public override void ButtonPressed(string ButtonSensor, DeconzEventIdEnum eventId)
     {
-        //if (ButtonSensor == entities.Sensor.ButtonBuitenachterlampBatteryLevel.EntityId)
+        //if (ButtonSensor == entities.Sensor.ButtonBuitenachterlampBattery.EntityId)
         //{
         //    lightControl.ButtonDefaultLuxBased(eventId, lightBuiten, minBrightness, maxBrightness);
         //}
-        if (ButtonSensor == entities.Sensor.ButtonBuitenachterBatteryLevel.EntityId ||
-            ButtonSensor == entities.Sensor.ButtonBuitenachterzithoekBatteryLevel.EntityId ||
-            ButtonSensor == entities.Sensor.ButtonBuitenachterlampBatteryLevel.EntityId)
+        if (ButtonSensor == entities.Sensor.ButtonBuitenachterBattery.EntityId ||
+            ButtonSensor == entities.Sensor.ButtonBuitenachterzithoekBattery.EntityId ||
+            ButtonSensor == entities.Sensor.ButtonBuitenachterlampBattery.EntityId)
         {
             switch (eventId)
             {

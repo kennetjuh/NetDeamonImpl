@@ -28,9 +28,9 @@ public class AreaControlBuitenachterTest : AreaControlTestBase<AreaControlBuiten
     }
 
     [Theory]
-    [InlineData("sensor.button_buitenachterzithoek_battery_level")]
-    [InlineData("sensor.button_buitenachter_battery_level")]
-    [InlineData("sensor.button_buitenachterlamp_battery_level")]
+    [InlineData("sensor.button_buitenachterzithoek_battery")]
+    [InlineData("sensor.button_buitenachter_battery")]
+    [InlineData("sensor.button_buitenachterlamp_battery")]
     public void ButtonSingleClick_LightIsOn_VerifyMocks(string button)
     {
         // Arrange
@@ -49,8 +49,8 @@ public class AreaControlBuitenachterTest : AreaControlTestBase<AreaControlBuiten
     }
 
     [Theory]
-    [InlineData("sensor.button_buitenachterzithoek_battery_level")]
-    [InlineData("sensor.button_buitenachter_battery_level")]
+    [InlineData("sensor.button_buitenachterzithoek_battery")]
+    [InlineData("sensor.button_buitenachter_battery")]
     public void ButtonSingleClick_LightIsOff_VerifyMocks(string button)
     {
         // Arrange
@@ -69,13 +69,13 @@ public class AreaControlBuitenachterTest : AreaControlTestBase<AreaControlBuiten
     }
 
     [Theory]
-    [InlineData("sensor.button_buitenachterzithoek_battery_level")]
-    [InlineData("sensor.button_buitenachter_battery_level")]
+    [InlineData("sensor.button_buitenachterzithoek_battery")]
+    [InlineData("sensor.button_buitenachter_battery")]
     public void ButtondoubleClick_VerifyMocks(string button)
     {
         // Arrange
         SetupMocks();
-        haContextMock.Setup(x => x.CallService("switch", "toggle", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.Switch.BuitenachterFontein.EntityId), null));
+        haContextMock.Setup(x => x.CallService("switch", "toggle", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.Switch.SwitchFontein.EntityId), null));
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
@@ -87,8 +87,8 @@ public class AreaControlBuitenachterTest : AreaControlTestBase<AreaControlBuiten
     }
 
     [Theory]
-    [InlineData("sensor.button_buitenachterzithoek_battery_level")]
-    [InlineData("sensor.button_buitenachter_battery_level")]
+    [InlineData("sensor.button_buitenachterzithoek_battery")]
+    [InlineData("sensor.button_buitenachter_battery")]
     public void ButtonlongPress_LightIsOn_VerifyMocks(string button)
     {
         // Arrange
@@ -106,8 +106,8 @@ public class AreaControlBuitenachterTest : AreaControlTestBase<AreaControlBuiten
     }
 
     [Theory]
-    [InlineData("sensor.button_buitenachterzithoek_battery_level")]
-    [InlineData("sensor.button_buitenachter_battery_level")]
+    [InlineData("sensor.button_buitenachterzithoek_battery")]
+    [InlineData("sensor.button_buitenachter_battery")]
     public void ButtonlongPress_LightIsOff_VerifyMocks(string button)
     {
         // Arrange

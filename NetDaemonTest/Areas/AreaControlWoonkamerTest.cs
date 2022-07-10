@@ -17,8 +17,8 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
     {
         // Arrange 
         SetupMocks();
-        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WoonkamerKamer.EntityId)));
-        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WoonkamerBureau.EntityId)));
+        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Kamerlamp.EntityId)));
+        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Bureaulamp.EntityId)));
 
         // Act
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, houseStateMock.Object);
@@ -32,10 +32,10 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
     public void BoogButtonPressed_VerifyMocks(DeconzEventIdEnum id)
     {
         // Arrange
-        light = entities.Light.WoonkamerBoog;
+        light = entities.Light.Booglamp;
         SetupMocks();
-        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WoonkamerKamer.EntityId)));
-        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WoonkamerBureau.EntityId)));
+        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Kamerlamp.EntityId)));
+        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Bureaulamp.EntityId)));
         lightControlMock.Setup(x => x.ButtonDefaultLuxBased(
                 id,
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId),
@@ -46,7 +46,7 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, houseStateMock.Object);
 
         // Act
-        Sut.ButtonPressed(entities.Sensor.ButtonBooglampBatteryLevel.EntityId, id);
+        Sut.ButtonPressed(entities.Sensor.ButtonBooglampBattery.EntityId, id);
 
         // Assert
         VerifyAllMocks();
@@ -57,11 +57,11 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
     public void KamerButtonPressed_VerifyMocks(DeconzEventIdEnum id)
     {
         // Arrange
-        light = entities.Light.WoonkamerKamer;
+        light = entities.Light.Kamerlamp;
 
         SetupMocks();
-        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WoonkamerKamer.EntityId)));
-        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WoonkamerBureau.EntityId)));
+        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Kamerlamp.EntityId)));
+        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Bureaulamp.EntityId)));
         lightControlMock.Setup(x => x.ButtonDefault(
                 id,
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId)))
@@ -70,7 +70,7 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, houseStateMock.Object);
 
         // Act
-        Sut.ButtonPressed(entities.Sensor.ButtonKamerlampBatteryLevel.EntityId, id);
+        Sut.ButtonPressed(entities.Sensor.ButtonKamerlampBattery.EntityId, id);
 
         // Assert
         VerifyAllMocks();
@@ -81,11 +81,11 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
     public void BureauButtonPressed_VerifyMocks(DeconzEventIdEnum id)
     {
         // Arrange
-        light = entities.Light.WoonkamerBureau;
+        light = entities.Light.Bureaulamp;
 
         SetupMocks();
-        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WoonkamerKamer.EntityId)));
-        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WoonkamerBureau.EntityId)));
+        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Kamerlamp.EntityId)));
+        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Bureaulamp.EntityId)));
         lightControlMock.Setup(x => x.ButtonDefault(
                 id,
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId)))
@@ -94,7 +94,7 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, houseStateMock.Object);
 
         // Act
-        Sut.ButtonPressed(entities.Sensor.ButtonBureaulampBatteryLevel.EntityId, id);
+        Sut.ButtonPressed(entities.Sensor.ButtonBureaulampBattery.EntityId, id);
 
         // Assert
         VerifyAllMocks();
@@ -107,8 +107,8 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
         // Arrange        
 
         SetupMocks();
-        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WoonkamerKamer.EntityId)));
-        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.WoonkamerBureau.EntityId)));
+        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Kamerlamp.EntityId)));
+        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Bureaulamp.EntityId)));
         switch (id)
         {
             case DeconzEventIdEnum.Single:
@@ -125,7 +125,7 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, houseStateMock.Object);
 
         // Act
-        Sut.ButtonPressed(entities.Sensor.ButtonWoonkamerBatteryLevel.EntityId, id);
+        Sut.ButtonPressed(entities.Sensor.ButtonWoonkamerBattery.EntityId, id);
 
         // Assert
         VerifyAllMocks();

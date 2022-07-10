@@ -82,14 +82,15 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
         _entities.Sensor.Daynight.SetState(_services, DayNightEnum.Night.ToString());
 
         lightControl.SetLight(_entities.Light.BuitenopritWandlamp, 50);
-        lightControl.SetLight(_entities.Light.BuitenvoorWandlamp, 50);
-        lightControl.SetLight(_entities.Light.BuitenvoorGrondspots, 1);
+        lightControl.SetLight(_entities.Light.WandlampBuiten, 50);
+        _entities.Switch.BuitenvoorGrondspots.TurnOn();
 
-        lightControl.SetLight(_entities.Light.WoonkamerSfeer1, 1);
-        lightControl.SetLight(_entities.Light.WoonkamerSfeer2, 1);
-        lightControl.SetLight(_entities.Light.KeukenSfeer, 1);
-        lightControl.SetLight(_entities.Light.HalSfeer, 1);
-        lightControl.SetLight(_entities.Light.HalbovenSfeer, 1);
+        lightControl.SetLight(_entities.Light.SfeerlampKamer1, 1);
+        lightControl.SetLight(_entities.Light.SfeerlampKamer2, 1);
+        lightControl.SetLight(_entities.Light.SfeerlampKeuken, 1);
+        lightControl.SetLight(_entities.Light.SfeerlampHal, 1);
+        lightControl.SetLight(_entities.Light.SfeerlampBoven, 1);
+        lightControl.SetLight(_entities.Light.LightSpeelkamerSfeer, 1);
 
         if (_entities.Light.LightWoonWand.IsOn())
         {
@@ -97,7 +98,6 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
         }
 
         lightControl.SetLight(_entities.Light.LightHut, Constants.brightnessHut);
-        lightControl.SetLight(_entities.Light.BuitenzijHutsier, 1);
     }
 
     private void Day()
@@ -106,14 +106,15 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
         _entities.Sensor.Daynight.SetState(_services, DayNightEnum.Day.ToString());
 
         lightControl.SetLight(_entities.Light.BuitenopritWandlamp, 0);
-        lightControl.SetLight(_entities.Light.BuitenvoorWandlamp, 0);
-        lightControl.SetLight(_entities.Light.BuitenvoorGrondspots, 0);
+        lightControl.SetLight(_entities.Light.WandlampBuiten, 0);
+        _entities.Switch.BuitenvoorGrondspots.TurnOff();
 
-        lightControl.SetLight(_entities.Light.WoonkamerSfeer1, 50);
-        lightControl.SetLight(_entities.Light.WoonkamerSfeer2, 50);
-        lightControl.SetLight(_entities.Light.KeukenSfeer, 50);
-        lightControl.SetLight(_entities.Light.HalSfeer, 50);
-        lightControl.SetLight(_entities.Light.HalbovenSfeer, 50);
+        lightControl.SetLight(_entities.Light.SfeerlampKamer1, 50);
+        lightControl.SetLight(_entities.Light.SfeerlampKamer2, 50);
+        lightControl.SetLight(_entities.Light.SfeerlampKeuken, 50);
+        lightControl.SetLight(_entities.Light.SfeerlampHal, 50);
+        lightControl.SetLight(_entities.Light.SfeerlampBoven, 50);
+        lightControl.SetLight(_entities.Light.LightSpeelkamerSfeer, 50);
 
         if (_entities.Light.LightWoonWand.IsOn())
         {
