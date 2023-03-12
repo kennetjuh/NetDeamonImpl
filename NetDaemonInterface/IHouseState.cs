@@ -5,5 +5,6 @@
         void HouseStateAwake();
         void HouseStateAway();
         void HouseStateSleeping();
+        void HouseStateHoliday();
     }
 }

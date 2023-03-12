@@ -18,7 +18,7 @@ namespace NetDaemonImpl.Modules.Notify
             var actions = new List<NotifyAction>()
             {
                 new NotifyAction(NotifyActionEnum.Thermostat15, "Set to 15", ()=>Entities.Climate.Keuken.SetTemperature(15)),
-                new NotifyAction(NotifyActionEnum.Thermostat21, "Set to 21", ()=>Entities.Climate.Keuken.SetTemperature(21)),
+                new NotifyAction(NotifyActionEnum.Thermostat20, "Set to 20", ()=>Entities.Climate.Keuken.SetTemperature(20)),
                 new NotifyAction(NotifyActionEnum.UriThermostat, "More", $"entityId:{Entities.Climate.Keuken.EntityId}"),
                 new NotifyAction(NotifyActionEnum.OpenCloseVoordeurOmroepen, "Omroepen", ()=>notify.NotifyHouse("De voordeur staat al lange tijd open")),
                 new NotifyAction(NotifyActionEnum.OpenCloseAchterdeurgarageOmroepen, "Omroepen", ()=>notify.NotifyHouse("De achterdeur in de garage staat al lange tijd open")),

@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <LangVersion>10.0</LangVersion>
-    <Nullable>enable</Nullable>
+        <TargetFramework>net7.0</TargetFramework>
+        <LangVersion>11.0</LangVersion>
+        <Nullable>enable</Nullable>
  </PropertyGroup>
 
   <ItemGroup>
@@ -29,20 +29,65 @@
   <ItemGroup>
     <Compile Remove="HomeAssistantGenerated.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="JoySoftware.NetDaemon.AppModel" Version="22.27.2" />
-    <PackageReference Include="JoySoftware.NetDaemon.Runtime" Version="22.27.2" />
-    <PackageReference Include="JoySoftware.NetDaemon.HassModel" Version="22.27.2" />
-    <PackageReference Include="JoySoftware.NetDaemon.Client" Version="22.27.2" />
-    <PackageReference Include="JoySoftware.NetDaemon.Extensions.Scheduling" Version="22.27.2" />
-    <PackageReference Include="JoySoftware.NetDaemon.Extensions.Logging" Version="22.27.2" />
-    <PackageReference Include="JoySoftware.NetDaemon.Extensions.Tts" Version="22.27.2" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+    <None Remove="Resources\arial.ttf" />
+    <None Remove="Resources\arialbd.ttf" />
+    <None Remove="Resources\arialbi.ttf" />
+    <None Remove="Resources\ariali.ttf" />
+    <None Remove="Resources\ARIALN.TTF" />
+    <None Remove="Resources\ARIALNB.TTF" />
+    <None Remove="Resources\ARIALNBI.TTF" />
+    <None Remove="Resources\ARIALNI.TTF" />
+    <None Remove="Resources\ariblk.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\appsettings.json" Link="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\arial.ttf" />
+    <EmbeddedResource Include="Resources\arialbd.ttf" />
+    <EmbeddedResource Include="Resources\arialbi.ttf" />
+    <EmbeddedResource Include="Resources\ariali.ttf" />
+    <EmbeddedResource Include="Resources\ARIALN.TTF" />
+    <EmbeddedResource Include="Resources\ARIALNB.TTF" />
+    <EmbeddedResource Include="Resources\ARIALNBI.TTF" />
+    <EmbeddedResource Include="Resources\ARIALNI.TTF" />
+    <EmbeddedResource Include="Resources\ariblk.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="JoySoftware.NetDaemon.AppModel" Version="23.9.0" />
+    <PackageReference Include="JoySoftware.NetDaemon.Runtime" Version="23.9.0" />
+    <PackageReference Include="JoySoftware.NetDaemon.HassModel" Version="23.9.0" />
+    <PackageReference Include="JoySoftware.NetDaemon.Client" Version="23.9.0" />
+    <PackageReference Include="JoySoftware.NetDaemon.Extensions.Scheduling" Version="23.9.0" />
+    <PackageReference Include="JoySoftware.NetDaemon.Extensions.Logging" Version="23.9.0" />
+    <PackageReference Include="JoySoftware.NetDaemon.Extensions.Tts" Version="23.9.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
+    <PackageReference Include="SkiaSharp" Version="2.88.3" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.3" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetDaemonInterface\NetDaemonInterface.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 

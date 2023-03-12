@@ -30,8 +30,8 @@ public class DeconzEventHandlerApp : MyNetDaemonBaseApp
     }
 
     public DeconzEventHandlerApp(IHaContext haContext, IScheduler scheduler, ILogger<DeconzEventHandlerApp> logger,
-        IAreaCollection areaCollection)
-        : base(haContext, scheduler, logger)
+        IAreaCollection areaCollection, ISettingsProvider settingsProvider)
+        : base(haContext, scheduler, logger, settingsProvider)
     {
         mapping = new(_entities);
         _haContext.Events

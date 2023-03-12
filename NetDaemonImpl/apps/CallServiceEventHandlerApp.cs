@@ -6,8 +6,8 @@ namespace NetDaemonImpl.apps;
 public class CallServiceEventHandlerApp : MyNetDaemonBaseApp
 {
     public CallServiceEventHandlerApp(IHaContext haContext, IScheduler scheduler, ILogger<CallServiceEventHandlerApp> logger,
-        ITwinkle twinkle)
-        : base(haContext, scheduler, logger)
+        ITwinkle twinkle, ISettingsProvider settingsProvider)
+        : base(haContext, scheduler, logger, settingsProvider)
     {
         //{
         //"event_type": "call_service",

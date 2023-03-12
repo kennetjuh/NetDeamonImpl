@@ -11,8 +11,8 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
     private readonly ILuxBasedBrightness luxBasedBrightness;
 
     public DayNightHandlerApp(IHaContext haContext, IScheduler scheduler, ILogger<DayNightHandlerApp> logger,
-        ILightControl lightControl, ILuxBasedBrightness luxBasedBrightness)
-        : base(haContext, scheduler, logger)
+        ILightControl lightControl, ILuxBasedBrightness luxBasedBrightness, ISettingsProvider settingsProvider)
+        : base(haContext, scheduler, logger, settingsProvider)
     {
         this.lightControl = lightControl;
         this.luxBasedBrightness = luxBasedBrightness;
@@ -34,7 +34,7 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
             });
 
         SetLastDayTrigger();
-        SetLastNightTrigger();
+        SetLastNightTrigger();        
     }
 
     private void SetLastDayTrigger()
@@ -45,7 +45,7 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
 
     private void LastDayTrigger()
     {
-        //_entities.Switch.BuitenvoorKerst.TurnOff();
+        //_entities.Switch.SwitchHalloween.TurnOff();
     }
 
     private void SetLastNightTrigger()
@@ -56,7 +56,7 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
 
     private void LastNightTrigger()
     {
-        //_entities.Switch.BuitenvoorKerst.TurnOn();
+        //_entities.Light.SwitchBuiten.TurnOn();
     }
 
     private void CheckDayNight()
@@ -88,9 +88,9 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
         lightControl.SetLight(_entities.Light.SfeerlampKamer1, 1);
         lightControl.SetLight(_entities.Light.SfeerlampKamer2, 1);
         lightControl.SetLight(_entities.Light.SfeerlampKeuken, 1);
-        lightControl.SetLight(_entities.Light.SfeerlampHal, 1);
+        lightControl.SetLight(_entities.Light.SfeerlampHal, _settingsProvider.BrightnessSfeerlampHalNight);
         lightControl.SetLight(_entities.Light.SfeerlampBoven, 1);
-        lightControl.SetLight(_entities.Light.LightSpeelkamerSfeer, 1);
+        lightControl.SetLight(_entities.Light.LightSpeelkamerSfeer, _settingsProvider.BrightnessSfeerlampSpeelkamerNight);
 
         if (_entities.Light.LightWoonWand.IsOn())
         {
@@ -112,9 +112,9 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
         lightControl.SetLight(_entities.Light.SfeerlampKamer1, 50);
         lightControl.SetLight(_entities.Light.SfeerlampKamer2, 50);
         lightControl.SetLight(_entities.Light.SfeerlampKeuken, 50);
-        lightControl.SetLight(_entities.Light.SfeerlampHal, 50);
+        lightControl.SetLight(_entities.Light.SfeerlampHal, _settingsProvider.BrightnessSfeerlampHalDay);
         lightControl.SetLight(_entities.Light.SfeerlampBoven, 50);
-        lightControl.SetLight(_entities.Light.LightSpeelkamerSfeer, 50);
+        lightControl.SetLight(_entities.Light.LightSpeelkamerSfeer, _settingsProvider.BrightnessSfeerlampSpeelkamerDay);
 
         if (_entities.Light.LightWoonWand.IsOn())
         {

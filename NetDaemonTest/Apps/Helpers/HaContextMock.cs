@@ -43,7 +43,7 @@ public class HaContextMock : Mock<HaContextMockImpl>
         var newState = new EntityState { State = newStatevalue };
         if (attributes != null)
         {
-            newState = newState.WithAttributes(attributes);
+            newState = newState with { AttributesJson = attributes.AsJsonElement() };
         }
 
         TriggerStateChange(entity.EntityId, newState);
@@ -71,13 +71,6 @@ public class HaContextMock : Mock<HaContextMockImpl>
 
 public static class TestExtensions
 {
-    public static EntityState WithAttributes(this EntityState entityState, object attributes)
-    {
-        var copy = entityState with { };
-        entityState.GetType().GetProperty("AttributesJson", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(copy, attributes.AsJsonElement());
-        return copy;
-    }
-
     public static JsonElement AsJsonElement(this object value)
     {
         var jsonString = JsonSerializer.Serialize(value);

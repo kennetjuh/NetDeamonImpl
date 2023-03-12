@@ -29,15 +29,15 @@ namespace NetDaemonTest.Modules
         {
             // Arrange 
             SetupMocks();
-            haContextMock.Setup(x => x.CallService("notify", "mobile_app_gsm_ken", null,
-                It.Is<NotifyMobileAppGsmKenParameters>(y =>
+            haContextMock.Setup(x => x.CallService("notify", "mobile_app_a53", null,
+                It.Is<NotifyMobileAppA53Parameters>(y =>
                     y.Title == title &&
                     y.Message == message)));
 
             var sut = new Notify(serviceProviderMock.Object);
 
             // Act
-            sut.NotifyGsmKen(title, message);
+            sut.NotifyGsmKen(title, message, NotifyPriorityEnum.high);
 
             // Assert
             VerifyAllMocks();
@@ -57,7 +57,7 @@ namespace NetDaemonTest.Modules
             var sut = new Notify(serviceProviderMock.Object);
 
             // Act
-            sut.NotifyGsmGreet(title, message);
+            sut.NotifyGsmGreet(title, message, NotifyPriorityEnum.high);
 
             // Assert
             VerifyAllMocks();
@@ -70,8 +70,8 @@ namespace NetDaemonTest.Modules
         {
             // Arrange 
             SetupMocks();
-            haContextMock.Setup(x => x.CallService("notify", "mobile_app_gsm_ken", null,
-                It.Is<NotifyMobileAppGsmKenParameters>(y =>
+            haContextMock.Setup(x => x.CallService("notify", "mobile_app_a53", null,
+                It.Is<NotifyMobileAppA53Parameters>(y =>
                     y.Title == message &&
                     y.Message == "TTS")));
 
@@ -114,15 +114,15 @@ namespace NetDaemonTest.Modules
                 It.Is<NotifyMobileAppGsmGreetParameters>(y =>
                     y.Title == title &&
                     y.Message == message)));
-            haContextMock.Setup(x => x.CallService("notify", "mobile_app_gsm_ken", null,
-                It.Is<NotifyMobileAppGsmKenParameters>(y =>
+            haContextMock.Setup(x => x.CallService("notify", "mobile_app_a53", null,
+                It.Is<NotifyMobileAppA53Parameters>(y =>
                     y.Title == title &&
                     y.Message == message)));
 
             var sut = new Notify(serviceProviderMock.Object);
 
             // Act
-            sut.NotifyGsm(title, message);
+            sut.NotifyGsm(title, message, NotifyPriorityEnum.high);
 
             // Assert
             VerifyAllMocks();
@@ -138,8 +138,8 @@ namespace NetDaemonTest.Modules
                     y.Title != null &&
                     y.Title.Contains("alarm") &&
                     y.Message == "TTS")));
-            haContextMock.Setup(x => x.CallService("notify", "mobile_app_gsm_ken", null,
-                It.Is<NotifyMobileAppGsmKenParameters>(y =>
+            haContextMock.Setup(x => x.CallService("notify", "mobile_app_a53", null,
+                It.Is<NotifyMobileAppA53Parameters>(y =>
                     y.Title != null &&
                     y.Title.Contains("alarm") &&
                     y.Message == "TTS")));
@@ -184,15 +184,15 @@ namespace NetDaemonTest.Modules
         {
             // Arrange 
             SetupMocks();
-            haContextMock.Setup(x => x.CallService("notify", "mobile_app_gsm_ken", null,
-                It.Is<NotifyMobileAppGsmKenParameters>(y =>
+            haContextMock.Setup(x => x.CallService("notify", "mobile_app_a53", null,
+                It.Is<NotifyMobileAppA53Parameters>(y =>
                     y.Title == "" &&
                     y.Message == "clear_notification")));
 
             var sut = new Notify(serviceProviderMock.Object);
 
             // Act
-            sut.Clear(NotifyTagEnum.ThermostatChanged);
+            sut.Clear(NotifyTagEnum.OpenCloseTuindeur);
 
             // Assert
             VerifyAllMocks();
@@ -203,19 +203,39 @@ namespace NetDaemonTest.Modules
         public void Notify_NotifyWithTags_VerifyMocks(NotifyTagEnum tag)
         {
             // Arrange 
-            NotifyMobileAppGsmKenParameters parameters= new NotifyMobileAppGsmKenParameters();
+            NotifyMobileAppA53Parameters parameters= new NotifyMobileAppA53Parameters();
             SetupMocks();
-            haContextMock.Setup(x => x.CallService("notify", "mobile_app_gsm_ken", null,
-                It.IsAny<NotifyMobileAppGsmKenParameters>()))
-                .Callback<string,string,ServiceTarget,object>((a, b, c, d) => parameters = (NotifyMobileAppGsmKenParameters)d);
+            haContextMock.Setup(x => x.CallService("notify", "mobile_app_a53", null,
+                It.IsAny<NotifyMobileAppA53Parameters>()))
+                .Callback<string,string,ServiceTarget,object>((a, b, c, d) => parameters = (NotifyMobileAppA53Parameters)d);
 
             var sut = new Notify(serviceProviderMock.Object);
 
             // Act
-            sut.NotifyGsmKen("","",tag, null);
+            sut.NotifyGsmKen("","",NotifyPriorityEnum.high, tag, null);
 
             // Assert
-            AssertRecordNotifyData(parameters.Data as RecordNotifyData, null, tag, null);
+            AssertRecordNotifyData(parameters.Data as RecordNotifyData, "default", null, NotifyPriorityEnum.high, tag, null);
+            VerifyAllMocks();
+        }
+
+        [Fact]
+        public void Notify_NotifyHouseState_VerifyMocks()
+        {
+            // Arrange 
+            NotifyMobileAppA53Parameters parameters = new NotifyMobileAppA53Parameters();
+            SetupMocks();
+            haContextMock.Setup(x => x.CallService("notify", "mobile_app_a53", null,
+                It.IsAny<NotifyMobileAppA53Parameters>()))
+                .Callback<string, string, ServiceTarget, object>((a, b, c, d) => parameters = (NotifyMobileAppA53Parameters)d);
+
+            var sut = new Notify(serviceProviderMock.Object);
+
+            // Act
+            sut.NotifyHouseStateGsmKen("", "", "image", NotifyPriorityEnum.high, null);
+
+            // Assert
+            AssertRecordNotifyData(parameters.Data as RecordNotifyData, "default", "image", NotifyPriorityEnum.high,NotifyTagEnum.HouseStateChanged, null);
             VerifyAllMocks();
         }
 
@@ -224,19 +244,19 @@ namespace NetDaemonTest.Modules
         public void Notify_NotifyWithAction_VerifyMocks(NotifyActionEnum action)
         {
             // Arrange 
-            NotifyMobileAppGsmKenParameters parameters = new NotifyMobileAppGsmKenParameters();
+            NotifyMobileAppA53Parameters parameters = new NotifyMobileAppA53Parameters();
             SetupMocks();
-            haContextMock.Setup(x => x.CallService("notify", "mobile_app_gsm_ken", null,
-                It.IsAny<NotifyMobileAppGsmKenParameters>()))
-                .Callback<string, string, ServiceTarget, object>((a, b, c, d) => parameters = (NotifyMobileAppGsmKenParameters)d);
+            haContextMock.Setup(x => x.CallService("notify", "mobile_app_a53", null,
+                It.IsAny<NotifyMobileAppA53Parameters>()))
+                .Callback<string, string, ServiceTarget, object>((a, b, c, d) => parameters = (NotifyMobileAppA53Parameters)d);
 
             var sut = new Notify(serviceProviderMock.Object);
 
             // Act
-            sut.NotifyGsmKen("", "", null, new() { action });
+            sut.NotifyGsmKen("", "",NotifyPriorityEnum.high, null, new() { action });
 
             // Assert
-            AssertRecordNotifyData(parameters.Data as RecordNotifyData, null, null, action);
+            AssertRecordNotifyData(parameters.Data as RecordNotifyData, "default", null, NotifyPriorityEnum.high, null, action);
             VerifyAllMocks();
         }
 
@@ -245,7 +265,7 @@ namespace NetDaemonTest.Modules
         public void Notify_HandleNotificationEvent_VerifyMocks(NotifyActionEnum action)
         {
             // Arrange 
-            NotifyMobileAppGsmKenParameters parameters = new NotifyMobileAppGsmKenParameters();
+            NotifyMobileAppA53Parameters parameters = new NotifyMobileAppA53Parameters();
             SetupMocks();    
             if(!action.ToString().StartsWith("Uri"))
             {
@@ -262,7 +282,7 @@ namespace NetDaemonTest.Modules
             VerifyAllMocks();
         }
 
-        internal static IEnumerable<object[]> NotifyActionEnumValues()
+        public static IEnumerable<object[]> NotifyActionEnumValues()
         {
             foreach (var value in Enum.GetValues(typeof(NotifyActionEnum)))
             {
@@ -270,7 +290,7 @@ namespace NetDaemonTest.Modules
             }
         }
 
-        internal static IEnumerable<object[]> NotifyTagEnumValues()
+        public static IEnumerable<object[]> NotifyTagEnumValues()
         {
             foreach (var value in Enum.GetValues(typeof(NotifyTagEnum)))
             {
@@ -278,7 +298,7 @@ namespace NetDaemonTest.Modules
             }
         }
 
-        private void AssertRecordNotifyData(RecordNotifyData? data, string? channel, NotifyTagEnum? tag, NotifyActionEnum? action)
+        private void AssertRecordNotifyData(RecordNotifyData? data, string? channel, string? image, NotifyPriorityEnum priority, NotifyTagEnum? tag, NotifyActionEnum? action)
         {
             Assert.NotNull(data);
             if (data != null)
@@ -290,6 +310,8 @@ namespace NetDaemonTest.Modules
 
                 Assert.Equal(tag?.ToString(), data.tag);
                 Assert.Equal(channel, data.channel);
+                Assert.Equal(image, data.image);
+                Assert.Equal(priority.ToString(), data.importance);
 
                 if (action != null)
                 {

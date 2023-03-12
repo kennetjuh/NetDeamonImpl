@@ -1,10 +1,12 @@
+using NetDaemonInterface;
+
 namespace NetDaemonImpl.apps;
 
 [NetDaemonApp]
 public class IdleSettingApp : MyNetDaemonBaseApp
 {
-    public IdleSettingApp(IHaContext haContext, IScheduler scheduler, ILogger<IdleSettingApp> logger)
-        : base(haContext, scheduler, logger)
+    public IdleSettingApp(IHaContext haContext, IScheduler scheduler, ILogger<IdleSettingApp> logger, ISettingsProvider settingsProvider)
+        : base(haContext, scheduler, logger, settingsProvider)
     {
         _entities.Vacuum.DreameP20294b09RobotCleaner.StateChanges()
             .Throttle(TimeSpan.FromMinutes(5), scheduler)

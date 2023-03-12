@@ -46,7 +46,7 @@ public class AreaControlCabineTest : AreaControlTestBase<AreaControlCabine>
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
         // Act
-        Sut.ButtonPressed("", id);
+        Sut.ButtonPressed("sensor.button_cabine_battery", id);
 
         // Assert
         VerifyAllMocks();
@@ -68,7 +68,7 @@ public class AreaControlCabineTest : AreaControlTestBase<AreaControlCabine>
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
         // Act
-        Sut.ButtonPressed("", DeconzEventIdEnum.Single);
+        Sut.ButtonPressed("sensor.button_cabine_battery", DeconzEventIdEnum.Single);
 
         // Assert
         VerifyAllMocks();
@@ -90,7 +90,7 @@ public class AreaControlCabineTest : AreaControlTestBase<AreaControlCabine>
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
         // Act
-        Sut.ButtonPressed("", DeconzEventIdEnum.Single);
+        Sut.ButtonPressed("sensor.button_cabine_battery", DeconzEventIdEnum.Single);
 
         // Assert
         VerifyAllMocks();

@@ -3,7 +3,7 @@
 public enum NotifyActionEnum
 {
     Thermostat15,
-    Thermostat21,
+    Thermostat20,
     UriThermostat,
     OpenCloseVoordeurOmroepen,
     OpenCloseAchterdeurgarageOmroepen,

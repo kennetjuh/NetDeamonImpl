@@ -63,6 +63,12 @@ public class TestContext : IServiceProvider
         _serviceCollection.AddSingleton(_ => new Mock<ITwinkle>(MockBehavior.Strict));
         _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ITwinkle>>().Object);
 
+        _serviceCollection.AddSingleton(_ => new Mock<IHouseNotificationImageCreator>(MockBehavior.Strict));
+        _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<IHouseNotificationImageCreator>>().Object);
+
+        _serviceCollection.AddSingleton(_ => new Mock<ISettingsProvider>(MockBehavior.Strict));
+        _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ISettingsProvider>>().Object);
+
         _serviceProvider = _serviceCollection.BuildServiceProvider();
     }
 

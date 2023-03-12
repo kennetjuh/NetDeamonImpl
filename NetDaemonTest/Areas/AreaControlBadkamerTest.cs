@@ -9,7 +9,7 @@ public class AreaControlBadkamerTest : AreaControlTestBase<AreaControlBadkamer>
 {
     public AreaControlBadkamerTest()
     {
-        light = entities.Light.BadkamerLamp;
+        light = entities.Light.LightBadkamer;
     }
 
     [Fact]

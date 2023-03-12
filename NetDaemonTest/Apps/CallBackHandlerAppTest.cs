@@ -125,4 +125,21 @@ public class CallBackHandlerAppTest : TestBase
         // Assert
         VerifyAllMocks();
     }
+
+    [Fact]
+    public void CallBackHandlerApp_ChangeHouseStateHoliday_VerifyCalls()
+    {
+        // Arrange
+        ResetAllMocks();
+        HaMock.Setup(x => x.CallService("netdaemon", "register_service", null, It.IsAny<object?>()));
+        HouseStateMock.Setup(x => x.HouseStateHoliday());
+
+        // Act
+        var app = Context.GetApp<CallBackHandlerApp>();
+        var changeHouseStateEvent = JsonSerializer.Deserialize<Event>(GetCallChangeHouseStateEvent("Holiday"))!;
+        HaMock.TriggerEvent(changeHouseStateEvent);
+
+        // Assert
+        VerifyAllMocks();
+    }
 }

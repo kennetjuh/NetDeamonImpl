@@ -86,7 +86,7 @@ public class LightControl : ILightControl
     /// <inheritdoc/>   
     public bool SetLight(LightEntity light, double? brightness = null)
     {
-        var supportedModes = light.Attributes?.SupportedColorModes?.ToString();
+        var supportedModes = light.Attributes?.SupportedColorModes;
         var colorTemp = light.Attributes?.MaxMireds;
         var currentBrightness = light.Attributes?.Brightness;
         var currentColorTemp = light.Attributes?.ColorTemp;
@@ -171,7 +171,7 @@ public class LightControl : ILightControl
 
     public bool SetLight(LightEntity light, double? brightness, string colorName)
     {
-        var supportedModes = light.Attributes?.SupportedColorModes?.ToString();
+        var supportedModes = light.Attributes?.SupportedColorModes;
 
         if (supportedModes == null || !supportedModes.Contains("hs"))
         {

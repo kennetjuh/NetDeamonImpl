@@ -19,6 +19,8 @@ public class AreaControlWoonkamer : AreaControl
         kamer = entities.Light.Kamerlamp;
         lightControl.AddMaxWhiteLight(bureau);
         lightControl.AddMaxWhiteLight(kamer);
+        lightControl.AddMaxWhiteLight(boog);
+
     }
 
     public override void ButtonPressed(string ButtonSensor, DeconzEventIdEnum eventId)

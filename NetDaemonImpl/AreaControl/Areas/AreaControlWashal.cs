@@ -19,18 +19,8 @@ public class AreaControlWashal : AreaControl
         // Button press will always trigger Manual mode
         mode = AreaModeEnum.Manual;
 
-        // If the result of the button press is the light is on trigger the after for manual mode
-        if (lightControl.ButtonDefaultLuxBased(eventId, light, minBrightness, maxBrightness))
-        {
-            StartAfterTask(delayProvider.MotionClearManual, () =>
-            {
-                mode = AreaModeEnum.Idle;
-                lightControl.SetLight(light, 0);
-            });
-        }
-        // The light is off, wait for a small timeout before going back to idle
-        else
-        {
+        if (!lightControl.ButtonDefaultLuxBased(eventId, light, minBrightness, maxBrightness))
+        {    
             StartAfterTask(delayProvider.ManualOffTimeout, () =>
             {
                 mode = AreaModeEnum.Idle;

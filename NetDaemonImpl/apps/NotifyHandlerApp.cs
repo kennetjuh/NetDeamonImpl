@@ -23,8 +23,8 @@ public class NotifyHandlerApp : MyNetDaemonBaseApp
         public string? DeviceId { get; init; }
     }
     
-    public NotifyHandlerApp(IHaContext haContext, IScheduler scheduler, ILogger<NotifyHandlerApp> logger, INotify notify)
-        : base(haContext, scheduler, logger)
+    public NotifyHandlerApp(IHaContext haContext, IScheduler scheduler, ILogger<NotifyHandlerApp> logger, INotify notify, ISettingsProvider settingsProvider)
+        : base(haContext, scheduler, logger, settingsProvider)
     {
         this.notify = notify;
         _haContext.Events.Where(x => x.EventType == "mobile_app_notification_action")

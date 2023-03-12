@@ -9,8 +9,8 @@ namespace NetDaemonImpl.apps;
 public class MotionEventHandlerApp : MyNetDaemonBaseApp
 {
     public MotionEventHandlerApp(IHaContext haContext, IScheduler scheduler, ILogger<MotionEventHandlerApp> logger,
-        IAreaCollection areaCollection)
-        : base(haContext, scheduler, logger)
+        IAreaCollection areaCollection, ISettingsProvider settingsProvider)
+        : base(haContext, scheduler, logger, settingsProvider)
     {
         _entities.BinarySensor.MotionWashal.StateChanges()
             .Where(x => x.New?.State == "on")

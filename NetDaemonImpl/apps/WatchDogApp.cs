@@ -13,8 +13,8 @@ public class WatchDogApp : MyNetDaemonBaseApp
     private IDisposable? watchdogBuitenTask;
 
     public WatchDogApp(IHaContext haContext, IScheduler scheduler, ILogger<WatchDogApp> logger,
-        ILightControl lightControl)
-        : base(haContext, scheduler, logger)
+        ILightControl lightControl, ISettingsProvider settingsProvider)
+        : base(haContext, scheduler, logger, settingsProvider)
     {
         this.lightControl = lightControl;
 

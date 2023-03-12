@@ -17,6 +17,7 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
     {
         // Arrange 
         SetupMocks();
+        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Booglamp.EntityId)));
         lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Kamerlamp.EntityId)));
         lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Bureaulamp.EntityId)));
 
@@ -34,6 +35,7 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
         // Arrange
         light = entities.Light.Booglamp;
         SetupMocks();
+        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Booglamp.EntityId)));
         lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Kamerlamp.EntityId)));
         lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Bureaulamp.EntityId)));
         lightControlMock.Setup(x => x.ButtonDefaultLuxBased(
@@ -60,6 +62,7 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
         light = entities.Light.Kamerlamp;
 
         SetupMocks();
+        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Booglamp.EntityId)));
         lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Kamerlamp.EntityId)));
         lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Bureaulamp.EntityId)));
         lightControlMock.Setup(x => x.ButtonDefault(
@@ -84,6 +87,7 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
         light = entities.Light.Bureaulamp;
 
         SetupMocks();
+        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Booglamp.EntityId)));
         lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Kamerlamp.EntityId)));
         lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Bureaulamp.EntityId)));
         lightControlMock.Setup(x => x.ButtonDefault(
@@ -107,6 +111,7 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
         // Arrange        
 
         SetupMocks();
+        lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Booglamp.EntityId)));
         lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Kamerlamp.EntityId)));
         lightControlMock.Setup(x => x.AddMaxWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Bureaulamp.EntityId)));
         switch (id)

@@ -31,8 +31,6 @@ namespace NetDaemonImpl.Modules
             LightControl.SetLight(Entities.Light.Bureaulamp, 0);
             LightControl.SetLight(Entities.Light.BdfM107Screen);
             LightControl.SetLight(Entities.Light.WoonkamerKisten);
-            LightControl.SetLight(Entities.Light.WoonkamerValentijn);
-
 
             if (Helper.GetDayNightState(Entities) == DayNightEnum.Day)
             {
@@ -45,7 +43,6 @@ namespace NetDaemonImpl.Modules
                 LightControl.SetLight(Entities.Light.Booglamp, Constants.brightnessBoogNight);
             }
 
-            //Entities.Switch.BinnenKerst.TurnOn();
             Twinkle.Start();
         }
 
@@ -59,7 +56,6 @@ namespace NetDaemonImpl.Modules
             LightControl.SetLight(Entities.Light.BuitenachterLamp, 0);
             LightControl.SetLight(Entities.Light.BuitenachterSierverlichting, 0);
             Entities.Switch.SwitchInfinityMirror.TurnOff();
-            Entities.Switch.SwitchFontein.TurnOff();
             Entities.Switch.BuitenachterGrondpomp.TurnOff();
             Entities.Switch.SwitchVliegenlamp.TurnOff();
 
@@ -77,12 +73,9 @@ namespace NetDaemonImpl.Modules
             LightControl.SetLight(Entities.Light.KeukenKeukenlamp, 0);
             LightControl.SetLight(Entities.Light.Washal, 0);
             LightControl.SetLight(Entities.Light.WcWclamp, 0);
-            LightControl.SetLight(Entities.Light.BadkamerLamp, 0);
+            LightControl.SetLight(Entities.Light.LightBadkamer, 0);
             LightControl.SetLight(Entities.Light.SpeelkamerLamp, 0);
             LightControl.SetLight(Entities.Light.LightWoonWand, 0);
-            LightControl.SetLight(Entities.Light.WoonkamerValentijn, 0);
-
-            //Entities.Switch.BinnenKerst.TurnOff();
         }
 
         public void HouseStateSleeping()
@@ -101,12 +94,20 @@ namespace NetDaemonImpl.Modules
 
             if (Entities.DeviceTracker.GsmGreet.State == "home")
             {
-                Notify.NotifyGsmGreet("Pillen", "Vergeet je avondpillen niet :)");
+                Notify.NotifyGsmGreet("Pillen", "Vergeet je avondpillen niet :)", NotifyPriorityEnum.high);
             }
             if (Entities.DeviceTracker.GsmKen.State == "home")
             {
-                Notify.NotifyGsmKen("Pillen", "Vergeet je avondpillen niet :)");
+                Notify.NotifyGsmKen("Pillen", "Vergeet je avondpillen niet :)", NotifyPriorityEnum.high);
             }
+        }
+
+        public void HouseStateHoliday()
+        {
+            HouseStateAway();
+            Logger.LogInformation("Holiday");
+
+            Entities.Sensor.Housestate.SetState(Services, HouseStateEnum.Holiday.ToString());
         }
     }
 }

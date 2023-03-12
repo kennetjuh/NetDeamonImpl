@@ -8,7 +8,7 @@ public class AreaControlCabine : AreaControl
     private readonly SwitchEntity lightSier;
 
     private const double minBrightness = 50;
-    private const double maxBrightness = 255;
+    private const double maxBrightness = 150;
 
     public AreaControlCabine(IEntities entities, IDelayProvider delayProvider, ILightControl lightControl) : base(entities, delayProvider, lightControl)
     {
@@ -18,14 +18,47 @@ public class AreaControlCabine : AreaControl
 
     public override void ButtonPressed(string ButtonSensor, DeconzEventIdEnum eventId)
     {
-        var isOn = lightControl.ButtonDefaultLuxBased(eventId, light, minBrightness, maxBrightness);
-        if (isOn)
+        if (ButtonSensor == entities.Sensor.ButtonCabineBattery.EntityId)
         {
-            lightSier.TurnOn();
+            var isOn = lightControl.ButtonDefaultLuxBased(eventId, light, minBrightness, maxBrightness);
+            if (isOn)
+            {
+                lightSier.TurnOn();
+            }
+            else
+            {
+                lightSier.TurnOff();
+            }
         }
-        else
+        if(ButtonSensor == entities.Sensor.ButtonCabine1Battery.EntityId)
         {
-            lightSier.TurnOff();
+            if(eventId == DeconzEventIdEnum.Single)
+            {
+                if(light.IsOff() && lightSier.IsOff())
+                {        
+                    lightControl.SetLight(light, lightControl.LuxBasedBrightness.GetBrightness(minBrightness, maxBrightness));
+                    lightSier.TurnOn();
+                }
+                else if(light.IsOff() && lightSier.IsOn())
+                {
+                    lightControl.SetLight(light, lightControl.LuxBasedBrightness.GetBrightness(minBrightness, maxBrightness));
+                }
+                else
+                {
+                    light.TurnOff();
+                }
+            }
+            else if (eventId == DeconzEventIdEnum.Double)
+            {
+                lightSier.TurnOn();
+                lightControl.SetLight(light, 255, "darkorange");
+
+            }
+            else if (eventId == DeconzEventIdEnum.LongPress)
+            {
+                lightSier.TurnOn();
+                lightControl.SetLight(light, 255, "blue");
+            }
         }
     }
 }

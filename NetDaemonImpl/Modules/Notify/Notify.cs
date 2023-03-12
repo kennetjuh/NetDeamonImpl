@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace NetDaemonImpl.Modules.Notify;
-
 public class Notify : INotify
 {
     private readonly IHaContext HaContext;
@@ -28,29 +27,35 @@ public class Notify : INotify
         Services.Tts.GoogleTranslateSay(new() { EntityId = Entities.MediaPlayer.Woonkamer.EntityId, Message = message });
     }
 
-    public void NotifyGsm(string title, string message, NotifyTagEnum? tag = null, List<NotifyActionEnum>? actions = null)
+    public void NotifyGsm(string title, string message, NotifyPriorityEnum prority, NotifyTagEnum? tag = null, List<NotifyActionEnum>? actions = null)
     {
-        NotifyGsmKen(title, message);
-        NotifyGsmGreet(title, message);
+        NotifyGsmKen(title, message, prority, tag, actions);
+        NotifyGsmGreet(title, message, prority, tag, actions);
     }
 
-    public void NotifyGsmKen(string title, string message, NotifyTagEnum? tag = null, List<NotifyActionEnum>? actions = null)
+    public void NotifyGsmKen(string title, string message, NotifyPriorityEnum prority, NotifyTagEnum? tag = null, List<NotifyActionEnum>? actions = null)
     {
-        var data = ConstructData(false, tag, actions);
-        Services.Notify.MobileAppGsmKen(new() { Title = title, Message = message, Data = data });
+        var data = ConstructData(null, false, prority, tag, actions);
+        Services.Notify.MobileAppA53(new() { Title = title, Message = message, Data = data });
     }
 
     public void NotifyGsmKenTTS(string message)
     {
         var title = message;
         message = "TTS";
-        var data = ConstructData(true);
-        Services.Notify.MobileAppGsmKen(new() { Title = title, Message = message, Data = data });
+        var data = ConstructData(null, true);
+        Services.Notify.MobileAppA53(new() { Title = title, Message = message, Data = data });
     }
 
-    public void NotifyGsmGreet(string title, string message, NotifyTagEnum? tag = null, List<NotifyActionEnum>? actions = null)
+    public void NotifyHouseStateGsmKen(string title, string message, string image, NotifyPriorityEnum priority, List<NotifyActionEnum>? actions = null)
     {
-        var data = ConstructData(false, tag, actions);
+        var data = ConstructData(image, false, priority, NotifyTagEnum.HouseStateChanged, actions);
+        Services.Notify.MobileAppA53(new() { Title = title, Message = message, Data = data });
+    }
+
+    public void NotifyGsmGreet(string title, string message, NotifyPriorityEnum prority, NotifyTagEnum? tag = null, List<NotifyActionEnum>? actions = null)
+    {
+        var data = ConstructData(null, false, prority, tag, actions);
         Services.Notify.MobileAppGsmGreet(new() { Title = title, Message = message, Data = data });
     }
 
@@ -58,7 +63,7 @@ public class Notify : INotify
     {
         var title = message;
         message = "TTS";
-        var data = ConstructData(true);
+        var data = ConstructData(null, true);
         Services.Notify.MobileAppGsmGreet(new() { Title = title, Message = message, Data = data });
     }
 
@@ -71,10 +76,10 @@ public class Notify : INotify
 
     public void HandleNotificationEvent(NotifyActionEnum action)
     {
-        notifyActions.Actions[action]?.Action?.Invoke();      
+        notifyActions.Actions[action]?.Action?.Invoke();
     }
 
-    private RecordNotifyData ConstructData(bool tts = false, NotifyTagEnum? tag = null, List<NotifyActionEnum>? actions = null)
+    private RecordNotifyData ConstructData(string? image = null, bool tts = false, NotifyPriorityEnum priority = NotifyPriorityEnum.high, NotifyTagEnum? tag = null, List<NotifyActionEnum>? actions = null)
     {
         //construct the data here
 
@@ -84,8 +89,15 @@ public class Notify : INotify
             ttl = 0,
             tag = tag.HasValue ? tag.ToString() : null,
             color = "",
-            sticky= "true"
+            sticky = "true",
+            channel = priority == NotifyPriorityEnum.high ? "default": "silent",
+            importance = priority.ToString()
         };
+
+        if (!string.IsNullOrEmpty(image))
+        {
+            data.image = image;
+        }
 
         if (tts)
         {
@@ -102,7 +114,7 @@ public class Notify : INotify
 
     public void Clear(NotifyTagEnum tag)
     {
-        var data = ConstructData(false, tag, null);
-        Services.Notify.MobileAppGsmKen(new() { Title = "", Message = "clear_notification", Data = data });
+        var data = ConstructData(null, false, NotifyPriorityEnum.high, tag, null);
+        Services.Notify.MobileAppA53(new() { Title = "", Message = "clear_notification", Data = data });
     }
 }

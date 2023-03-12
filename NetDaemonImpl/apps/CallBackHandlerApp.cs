@@ -8,8 +8,8 @@ public class CallBackHandlerApp : MyNetDaemonBaseApp
     private readonly IHouseState houseState;
 
     public CallBackHandlerApp(IHaContext haContext, IScheduler scheduler, ILogger<CallBackHandlerApp> logger,
-        ITwinkle twinkle, IHouseState houseState)
-        : base(haContext, scheduler, logger)
+        ITwinkle twinkle, IHouseState houseState, ISettingsProvider settingsProvider)
+        : base(haContext, scheduler, logger, settingsProvider)
     {
         this.houseState = houseState;
 
@@ -32,6 +32,9 @@ public class CallBackHandlerApp : MyNetDaemonBaseApp
                 break;
             case "Sleeping":
                 houseState.HouseStateSleeping();
+                break;
+            case "Holiday":
+                houseState.HouseStateHoliday();
                 break;
             default:
                 break;

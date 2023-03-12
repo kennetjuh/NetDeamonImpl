@@ -26,7 +26,7 @@ namespace NetDaemonTest.Modules
 
             // Assert
             Assert.Equal(TimeSpan.FromMinutes(1), delayProvider.MotionClear);
-            Assert.Equal(TimeSpan.FromMinutes(5), delayProvider.MotionClearManual);
+            Assert.Equal(TimeSpan.FromMinutes(10), delayProvider.MotionClearManual);
             Assert.Equal(TimeSpan.FromSeconds(5), delayProvider.ManualOffTimeout);
             Assert.Equal(TimeSpan.FromSeconds(1), delayProvider.MotionOnSequenceDelay);
             Assert.Equal(TimeSpan.FromSeconds(5), delayProvider.ModeCycleTimeout);

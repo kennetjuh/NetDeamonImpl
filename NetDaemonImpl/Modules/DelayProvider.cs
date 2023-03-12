@@ -6,7 +6,7 @@ namespace NetDaemonImpl.Modules
     {
         public TimeSpan MotionClear => TimeSpan.FromMinutes(1);
 
-        public TimeSpan MotionClearManual => TimeSpan.FromMinutes(5);
+        public TimeSpan MotionClearManual => TimeSpan.FromMinutes(10);
 
         public TimeSpan ManualOffTimeout => TimeSpan.FromSeconds(5);
 
