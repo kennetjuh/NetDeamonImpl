@@ -31,11 +31,11 @@ public class IdleSettingApp : MyNetDaemonBaseApp
         _entities.MediaPlayer.Woonkamer.StateChanges()
             .Throttle(TimeSpan.FromSeconds(5), scheduler)
             .Where(x => x.New?.State == "off")
-            .Subscribe(x => _entities.MediaPlayer.Woonkamer.VolumeSet(0.8));
+            .Subscribe(x => _entities.MediaPlayer.Woonkamer.VolumeSet(0.7));
 
         if (_entities.MediaPlayer.Woonkamer.State == "off")
         {
-            _entities.MediaPlayer.Woonkamer.VolumeSet(0.8);
+            _entities.MediaPlayer.Woonkamer.VolumeSet(0.7);
         }
     }
 }

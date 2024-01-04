@@ -12,7 +12,7 @@ public class AreaControlCabine : AreaControl
 
     public AreaControlCabine(IEntities entities, IDelayProvider delayProvider, ILightControl lightControl) : base(entities, delayProvider, lightControl)
     {
-        light = entities.Light.LightCabine;
+        light = entities.Light.Cabine;
         lightSier = entities.Switch.SwitchSierCabine;
     }
 

@@ -1,5 +1,6 @@
 using Moq;
 using NetDaemonImpl.apps;
+using NetDaemonInterface;
 using NetDaemonTest.Apps.Helpers;
 using System.Text.Json;
 using Xunit;
@@ -98,7 +99,7 @@ public class CallBackHandlerAppTest : TestBase
         // Arrange
         ResetAllMocks();
         HaMock.Setup(x => x.CallService("netdaemon", "register_service", null, It.IsAny<object?>()));
-        HouseStateMock.Setup(x => x.HouseStateAway());
+        HouseStateMock.Setup(x => x.HouseStateAway(HouseStateEnum.Away));
 
         // Act
         var app = Context.GetApp<CallBackHandlerApp>();

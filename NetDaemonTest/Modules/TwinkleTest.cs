@@ -91,23 +91,23 @@ namespace NetDaemonTest.Modules
             // Arrange 
             delayProviderMock.Setup(x => x.TwinkleDelay).Returns(TimeSpan.FromMilliseconds(1000));
             var sut = new Twinkle(serviceProviderMock.Object, lightControlMock.Object, delayProviderMock.Object, 1);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM1.EntityId), 1)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM2.EntityId), 1)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM3.EntityId), 1)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM4.EntityId), 1)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM5.EntityId), 1)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS1.EntityId), 1)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS2.EntityId), 1)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS3.EntityId), 1)).Returns(null);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM1.EntityId), 1)).Returns(true);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM2.EntityId), 1)).Returns(true);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM3.EntityId), 1)).Returns(true);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM4.EntityId), 1)).Returns(true);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM5.EntityId), 1)).Returns(true);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS1.EntityId), 1)).Returns(true);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS2.EntityId), 1)).Returns(true);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS3.EntityId), 1)).Returns(true);
             haContextMock.Setup(x => x.GetState(entities.Sensor.Daynight.EntityId)).Returns(new EntityState() { State = "Day" });
-            //lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM1.EntityId), 0)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM2.EntityId), 0)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM3.EntityId), 0)).Returns(null);
-            //lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM4.EntityId), 0)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM5.EntityId), 0)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS1.EntityId), 0)).Returns(null);
-            //lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS2.EntityId), 0)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS3.EntityId), 0)).Returns(null);
+            //lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM1.EntityId), 0)).Returns(false);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM2.EntityId), 0)).Returns(false);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM3.EntityId), 0)).Returns(false);
+            //lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM4.EntityId), 0)).Returns(false);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM5.EntityId), 0)).Returns(false);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS1.EntityId), 0)).Returns(false);
+            //lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS2.EntityId), 0)).Returns(false);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS3.EntityId), 0)).Returns(false);
 
 
             // Act
@@ -127,23 +127,23 @@ namespace NetDaemonTest.Modules
             // Arrange 
             delayProviderMock.Setup(x => x.TwinkleDelay).Returns(TimeSpan.FromMilliseconds(1000));
             var sut = new Twinkle(serviceProviderMock.Object, lightControlMock.Object, delayProviderMock.Object, 1);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM1.EntityId), 1)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM2.EntityId), 1)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM3.EntityId), 1)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM4.EntityId), 1)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM5.EntityId), 1)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS1.EntityId), 1)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS2.EntityId), 1)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS3.EntityId), 1)).Returns(null);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM1.EntityId), 1)).Returns(true);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM2.EntityId), 1)).Returns(true);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM3.EntityId), 1)).Returns(true);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM4.EntityId), 1)).Returns(true);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM5.EntityId), 1)).Returns(true);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS1.EntityId), 1)).Returns(true);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS2.EntityId), 1)).Returns(true);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS3.EntityId), 1)).Returns(true);
             haContextMock.Setup(x => x.GetState(entities.Sensor.Daynight.EntityId)).Returns(new EntityState() { State = "Night" });
-            //lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM1.EntityId), 0)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM2.EntityId), 0)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM3.EntityId), 0)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM4.EntityId), 0)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM5.EntityId), 0)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS1.EntityId), 0)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS2.EntityId), 0)).Returns(null);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS3.EntityId), 0)).Returns(null);
+            //lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM1.EntityId), 0)).Returns(false);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM2.EntityId), 0)).Returns(false);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM3.EntityId), 0)).Returns(false);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM4.EntityId), 0)).Returns(false);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenM5.EntityId), 0)).Returns(false);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS1.EntityId), 0)).Returns(false);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS2.EntityId), 0)).Returns(false);
+            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.KeukenS3.EntityId), 0)).Returns(false);
 
 
             // Act

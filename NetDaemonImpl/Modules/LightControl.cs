@@ -7,6 +7,7 @@ namespace NetDaemonImpl.Modules;
 public class LightControl : ILightControl
 {
     private readonly List<LightEntity> lightEntitiesMaxWhite = new();
+    private readonly List<LightEntity> lightEntitiesAllwaysWhite = new();
     public ILuxBasedBrightness LuxBasedBrightness { get; private set; }
     private ILogger<LightControl> Logger { get; }
     private readonly Entities Entities;
@@ -25,6 +26,11 @@ public class LightControl : ILightControl
     public void AddMaxWhiteLight(LightEntity light)
     {
         lightEntitiesMaxWhite.Add(light);
+    }
+
+    public void AddAllwaysWhiteLight(LightEntity light)
+    {
+        lightEntitiesAllwaysWhite.Add(light);
     }
 
     /// <inheritdoc/> 
@@ -87,7 +93,7 @@ public class LightControl : ILightControl
     public bool SetLight(LightEntity light, double? brightness = null)
     {
         var supportedModes = light.Attributes?.SupportedColorModes;
-        var colorTemp = light.Attributes?.MaxMireds;
+        var colorTemp = lightEntitiesAllwaysWhite.Any(x => x.EntityId == light.EntityId)? light.Attributes?.MinMireds : light.Attributes?.MaxMireds;
         var currentBrightness = light.Attributes?.Brightness;
         var currentColorTemp = light.Attributes?.ColorTemp;
 

@@ -3,7 +3,7 @@
     public interface IHouseState
     {
         void HouseStateAwake();
-        void HouseStateAway();
+        void HouseStateAway(HouseStateEnum state);
         void HouseStateSleeping();
         void HouseStateHoliday();
     }

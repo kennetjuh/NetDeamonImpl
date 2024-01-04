@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <LangVersion>11.0</LangVersion>
         <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -9,18 +9,22 @@
   <ItemGroup>
     <Compile Include="..\HomeAssistantGenerated.cs" Link="HomeAssistantGenerated.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="JoySoftware.NetDaemon.AppModel" Version="23.9.0" />
-    <PackageReference Include="JoySoftware.NetDaemon.Client" Version="23.9.0" />
-    <PackageReference Include="JoySoftware.NetDaemon.Extensions.Logging" Version="23.9.0" />
-    <PackageReference Include="JoySoftware.NetDaemon.Extensions.Tts" Version="23.9.0" />
-    <PackageReference Include="JoySoftware.NetDaemon.HassModel" Version="23.9.0" />
-    <PackageReference Include="JoySoftware.NetDaemon.Extensions.Scheduling" Version="23.9.0" />
-    <PackageReference Include="JoySoftware.NetDaemon.HassModel.Integration" Version="23.9.0" />
-    <PackageReference Include="JoySoftware.NetDaemon.Runtime" Version="23.9.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-    <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
-    <PackageReference Include="System.Reactive" Version="5.0.0" />
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="JoySoftware.NetDaemon.AppModel" Version="23.44.1" />
+    <PackageReference Include="JoySoftware.NetDaemon.Client" Version="23.44.1" />
+    <PackageReference Include="JoySoftware.NetDaemon.Extensions.Logging" Version="23.44.1" />
+    <PackageReference Include="JoySoftware.NetDaemon.Extensions.Tts" Version="23.44.1" />
+    <PackageReference Include="JoySoftware.NetDaemon.HassModel" Version="23.44.1" />
+    <PackageReference Include="JoySoftware.NetDaemon.Extensions.Scheduling" Version="23.44.1" />
+    <PackageReference Include="JoySoftware.NetDaemon.HassModel.Integration" Version="23.44.1" />
+    <PackageReference Include="JoySoftware.NetDaemon.Runtime" Version="23.44.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="System.Reactive" Version="6.0.0" />
   </ItemGroup>
 
 </Project>

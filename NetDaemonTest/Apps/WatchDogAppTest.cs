@@ -92,15 +92,15 @@ public class WatchDogAppTest : TestBase
 
     private void SetupDayMocks()
     {
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.GrondlampZij.EntityId), 0)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.BuitenachterFonteinlamp.EntityId), 0)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.WandlampHut.EntityId), 0)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.GrondlampZij.EntityId), 0)).Returns(false);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.BuitenachterFonteinlamp.EntityId), 0)).Returns(false);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.WandlampHut.EntityId), 0)).Returns(false);
     }
 
     private void SetupNightMocks()
     {
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.GrondlampZij.EntityId), Constants.brightnessBuitenZij)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.BuitenachterFonteinlamp.EntityId), Constants.brightnessFontein)).Returns(null);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.WandlampHut.EntityId), Constants.brightnessHutWand)).Returns(null);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.GrondlampZij.EntityId), Constants.brightnessBuitenZij)).Returns(true);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.BuitenachterFonteinlamp.EntityId), Constants.brightnessFontein)).Returns(true);
+        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.WandlampHut.EntityId), Constants.brightnessHutWand)).Returns(true);
     }
 }

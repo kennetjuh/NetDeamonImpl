@@ -44,8 +44,8 @@ public class TimerAppTest : TestBase
     //{
     //    // Arrange
     //    ResetAllMocks();
-        
-    //    Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(21).AddMinutes(59).ToUniversalTime().Ticks);
+
+    //    Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(19).AddMinutes(59).ToUniversalTime().Ticks);
     //    HaMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Switch.SwitchZwembad.EntityId), null));
 
 
@@ -65,11 +65,11 @@ public class TimerAppTest : TestBase
         HaMock.TriggerStateChange(Entities.Sensor.Housestate.EntityId, new EntityState() { State = "Holiday" });
         HaMock.Setup(x => x.CallService("vacuum", "set_fan_speed", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Vacuum.DreameP20294b09RobotCleaner.EntityId), It.IsAny<object>()));
         HaMock.Setup(x => x.CallService("vacuum", "start", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Vacuum.DreameP20294b09RobotCleaner.EntityId), null));
-        Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(19).AddMinutes(59).ToUniversalTime().Ticks);
+        Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(20).AddMinutes(59).ToUniversalTime().Ticks);
 
         // Act
         var app = Context.GetApp<TimerApp>();
-        Scheduler.AdvanceBy(TimeSpan.FromHours(2).Ticks);
+        Scheduler.AdvanceBy(TimeSpan.FromHours(1).Ticks);
 
         // Assert
         VerifyAllMocks();
@@ -81,11 +81,11 @@ public class TimerAppTest : TestBase
         // Arrange
         ResetAllMocks();
         HaMock.TriggerStateChange(Entities.Sensor.Housestate.EntityId, new EntityState() { State = "Awake" });
-        Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(19).AddMinutes(59).ToUniversalTime().Ticks);
+        Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(20).AddMinutes(59).ToUniversalTime().Ticks);
 
         // Act
         var app = Context.GetApp<TimerApp>();
-        Scheduler.AdvanceBy(TimeSpan.FromHours(2).Ticks);
+        Scheduler.AdvanceBy(TimeSpan.FromHours(1).Ticks);
 
         // Assert
         VerifyAllMocks();

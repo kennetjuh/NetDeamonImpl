@@ -21,8 +21,8 @@ public class Notify : INotify
 
     public void NotifyHouse(string message)
     {
-        Entities.MediaPlayer.Hal.VolumeSet(1);
-        Entities.MediaPlayer.Woonkamer.VolumeSet(1);
+        //Entities.MediaPlayer.Hal.VolumeSet(1);
+        //Entities.MediaPlayer.Woonkamer.VolumeSet(1);
         Services.Tts.GoogleTranslateSay(new() { EntityId = Entities.MediaPlayer.Hal.EntityId, Message = message });
         Services.Tts.GoogleTranslateSay(new() { EntityId = Entities.MediaPlayer.Woonkamer.EntityId, Message = message });
     }

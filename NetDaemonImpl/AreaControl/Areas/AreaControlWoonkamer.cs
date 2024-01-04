@@ -45,7 +45,7 @@ public class AreaControlWoonkamer : AreaControl
                     houseState.HouseStateAwake();
                     break;
                 case DeconzEventIdEnum.Double:
-                    houseState.HouseStateAway();
+                    houseState.HouseStateAway(HouseStateEnum.Away);
                     break;
                 case DeconzEventIdEnum.LongPress:
                     houseState.HouseStateSleeping();

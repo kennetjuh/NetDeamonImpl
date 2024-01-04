@@ -14,7 +14,7 @@ public class AreaControlTraphalTest : AreaControlTestBase<AreaControlTraphal>
 
     public AreaControlTraphalTest()
     {
-        lightWand = entities.Light.LightTraphal;
+        lightWand = entities.Light.TraphalWand;
         light = entities.Light.Traphal;
     }
 
@@ -108,12 +108,12 @@ public class AreaControlTraphalTest : AreaControlTestBase<AreaControlTraphal>
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
         delayProviderMock.Setup(x => x.MotionOnSequenceDelay).Returns(TimeSpan.Zero);
         lightControlMock.Setup(x => x.LuxBasedBrightness).Returns(luxBasedBrightnessMock.Object);
-        luxBasedBrightnessMock.Setup(x => x.GetBrightness(10, 255)).Returns(100);
-        luxBasedBrightnessMock.Setup(x => x.GetBrightness(1, 50)).Returns(50);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightTraphal1.EntityId), 100)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightTraphal2.EntityId), 100)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightTraphal3.EntityId), 100)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Traphal.EntityId), 50)).Returns(null);
+        luxBasedBrightnessMock.Setup(x => x.GetBrightness(50, 255)).Returns(100);
+        luxBasedBrightnessMock.Setup(x => x.GetBrightness(1, 150)).Returns(50);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Traphal1.EntityId), 100)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Traphal2.EntityId), 100)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Traphal3.EntityId), 100)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Traphal.EntityId), 50)).Returns(true);
 
         // Act
         Sut.MotionDetected(EntityId);
@@ -148,7 +148,7 @@ public class AreaControlTraphalTest : AreaControlTestBase<AreaControlTraphal>
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
         Sut.SetPrivate("mode", AreaModeEnum.Motion);
         delayProviderMock.Setup(x => x.MotionClear).Returns(TimeSpan.FromMilliseconds(1));
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightTraphal.EntityId), 0)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.TraphalWand.EntityId), 0)).Returns(false);
 
         // Act
         Sut.MotionCleared("");

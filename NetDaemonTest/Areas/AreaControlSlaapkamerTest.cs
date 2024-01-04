@@ -11,7 +11,7 @@ public class AreaControlSlaapkamerTest : AreaControlTestBase<AreaControlSlaapkam
 {
     public AreaControlSlaapkamerTest()
     {
-        light = entities.Light.LightSlaapkamer;
+        light = entities.Light.Slaapkamer;
     }
 
     [Fact]
@@ -35,7 +35,7 @@ public class AreaControlSlaapkamerTest : AreaControlTestBase<AreaControlSlaapkam
         SetupMocks();
         delayProviderMock.Setup(x => x.ModeCycleTimeout).Returns(TimeSpan.FromMilliseconds(100));
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
-        haContextMock.Setup(x => x.GetState(entities.Light.LightSlaapkamer.EntityId)).Returns(new EntityState() { State = "off" });
+        haContextMock.Setup(x => x.GetState(entities.Light.Slaapkamer.EntityId)).Returns(new EntityState() { State = "off" });
         haContextMock.Setup(x => x.GetState(entities.Light.NachtlampKen.EntityId)).Returns(new EntityState() { State = "off" });
         haContextMock.Setup(x => x.GetState(entities.Light.NachtlampGreet.EntityId)).Returns(new EntityState() { State = "off" });
 
@@ -43,9 +43,9 @@ public class AreaControlSlaapkamerTest : AreaControlTestBase<AreaControlSlaapkam
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId),
                 It.IsAny<double>(),
                 It.IsAny<double>()))
-            .Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 1)).Returns(null);
+            .Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 1)).Returns(true);
 
         // Act
         Sut.ButtonPressed(entities.Sensor.ButtonSlaapkamerBattery.EntityId, DeconzEventIdEnum.Single);
@@ -61,12 +61,12 @@ public class AreaControlSlaapkamerTest : AreaControlTestBase<AreaControlSlaapkam
         SetupMocks();
         delayProviderMock.Setup(x => x.ModeCycleTimeout).Returns(TimeSpan.FromMilliseconds(100));
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
-        haContextMock.Setup(x => x.GetState(entities.Light.LightSlaapkamer.EntityId)).Returns(new EntityState() { State = "on" });
+        haContextMock.Setup(x => x.GetState(entities.Light.Slaapkamer.EntityId)).Returns(new EntityState() { State = "on" });
 
 
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightSlaapkamer.EntityId), 0)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 0)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 0)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Slaapkamer.EntityId), 0)).Returns(false);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 0)).Returns(false);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 0)).Returns(false);
 
         // Act
         Sut.ButtonPressed(entities.Sensor.ButtonSlaapkamerBattery.EntityId, DeconzEventIdEnum.Single);
@@ -85,9 +85,9 @@ public class AreaControlSlaapkamerTest : AreaControlTestBase<AreaControlSlaapkam
         delayProviderMock.Setup(x => x.ModeCycleTimeout).Returns(TimeSpan.FromMilliseconds(100));
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
-        lightControlMock.Setup(x => x.ButtonDefault(id, It.Is<LightEntity>(x => x.EntityId == light.EntityId))).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 1)).Returns(null);
+        lightControlMock.Setup(x => x.ButtonDefault(id, It.Is<LightEntity>(x => x.EntityId == light.EntityId))).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 1)).Returns(true);
 
         // Act
         Sut.ButtonPressed(entities.Sensor.ButtonSlaapkamerBattery.EntityId, id);
@@ -103,12 +103,12 @@ public class AreaControlSlaapkamerTest : AreaControlTestBase<AreaControlSlaapkam
         SetupMocks();
         delayProviderMock.Setup(x => x.ModeCycleTimeout).Returns(TimeSpan.FromMilliseconds(100));
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
-        haContextMock.Setup(x => x.GetState(entities.Light.LightSlaapkamer.EntityId)).Returns(new EntityState() { State = "off" });
+        haContextMock.Setup(x => x.GetState(entities.Light.Slaapkamer.EntityId)).Returns(new EntityState() { State = "off" });
         haContextMock.Setup(x => x.GetState(entities.Light.NachtlampKen.EntityId)).Returns(new EntityState() { State = "off" });
         haContextMock.Setup(x => x.GetState(entities.Light.NachtlampGreet.EntityId)).Returns(new EntityState() { State = "off" });
 
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 1)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 1)).Returns(true);
 
         // Act
         Sut.ButtonPressed(entities.Sensor.ButtonSlaapkamerbedBattery.EntityId, DeconzEventIdEnum.Single);
@@ -124,9 +124,9 @@ public class AreaControlSlaapkamerTest : AreaControlTestBase<AreaControlSlaapkam
         SetupMocks();
         delayProviderMock.Setup(x => x.ModeCycleTimeout).Returns(TimeSpan.FromMilliseconds(100));
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
-        haContextMock.Setup(x => x.GetState(entities.Light.LightSlaapkamer.EntityId)).Returns(new EntityState() { State = "on" });
+        haContextMock.Setup(x => x.GetState(entities.Light.Slaapkamer.EntityId)).Returns(new EntityState() { State = "on" });
 
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightSlaapkamer.EntityId), 0)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Slaapkamer.EntityId), 0)).Returns(true);
 
         // Act
         Sut.ButtonPressed(entities.Sensor.ButtonSlaapkamerbedBattery.EntityId, DeconzEventIdEnum.Single);
@@ -142,11 +142,11 @@ public class AreaControlSlaapkamerTest : AreaControlTestBase<AreaControlSlaapkam
         SetupMocks();
         delayProviderMock.Setup(x => x.ModeCycleTimeout).Returns(TimeSpan.FromMilliseconds(100));
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
-        haContextMock.Setup(x => x.GetState(entities.Light.LightSlaapkamer.EntityId)).Returns(new EntityState() { State = "off" });
+        haContextMock.Setup(x => x.GetState(entities.Light.Slaapkamer.EntityId)).Returns(new EntityState() { State = "off" });
         haContextMock.Setup(x => x.GetState(entities.Light.NachtlampKen.EntityId)).Returns(new EntityState() { State = "on" });
 
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 0)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 0)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 0)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 0)).Returns(true);
 
         // Act
         Sut.ButtonPressed(entities.Sensor.ButtonSlaapkamerbedBattery.EntityId, DeconzEventIdEnum.Single);
@@ -163,9 +163,9 @@ public class AreaControlSlaapkamerTest : AreaControlTestBase<AreaControlSlaapkam
         delayProviderMock.Setup(x => x.ModeCycleTimeout).Returns(TimeSpan.FromMilliseconds(100));
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightSlaapkamer.EntityId), 5)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 1)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Slaapkamer.EntityId), 5)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 1)).Returns(true);
 
         // Act
         Sut.ButtonPressed(entities.Sensor.ButtonSlaapkamerbedBattery.EntityId, DeconzEventIdEnum.LongPress);
@@ -182,9 +182,9 @@ public class AreaControlSlaapkamerTest : AreaControlTestBase<AreaControlSlaapkam
         delayProviderMock.Setup(x => x.ModeCycleTimeout).Returns(TimeSpan.FromMilliseconds(100));
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightSlaapkamer.EntityId), 0)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 0)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Slaapkamer.EntityId), 0)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 0)).Returns(true);
 
         // Act
         Sut.ButtonPressed(entities.Sensor.ButtonSlaapkamerbedBattery.EntityId, DeconzEventIdEnum.Double);
@@ -201,12 +201,12 @@ public class AreaControlSlaapkamerTest : AreaControlTestBase<AreaControlSlaapkam
         delayProviderMock.Setup(x => x.ModeCycleTimeout).Returns(TimeSpan.FromMilliseconds(100));
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightSlaapkamer.EntityId), 0)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 0)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Slaapkamer.EntityId), 0)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 0)).Returns(true);
 
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 0)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightSlaapkamer2.EntityId), 1)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 0)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightSlaapkamer3.EntityId), 1)).Returns(true);
 
         // Act
         Sut.ButtonPressed(entities.Sensor.ButtonSlaapkamerbedBattery.EntityId, DeconzEventIdEnum.Double);
@@ -224,14 +224,14 @@ public class AreaControlSlaapkamerTest : AreaControlTestBase<AreaControlSlaapkam
         delayProviderMock.Setup(x => x.ModeCycleTimeout).Returns(TimeSpan.FromMilliseconds(100));
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightSlaapkamer.EntityId), 0)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 0)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Slaapkamer.EntityId), 0)).Returns(false);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 0)).Returns(false);
 
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 0)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightSlaapkamer2.EntityId), 1)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 0)).Returns(false);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightSlaapkamer3.EntityId), 1)).Returns(true);
 
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightSlaapkamer2.EntityId), 50, "red")).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightSlaapkamer3.EntityId), 50, "red")).Returns(true);
 
         // Act
         Sut.ButtonPressed(entities.Sensor.ButtonSlaapkamerbedBattery.EntityId, DeconzEventIdEnum.Double);
@@ -250,9 +250,9 @@ public class AreaControlSlaapkamerTest : AreaControlTestBase<AreaControlSlaapkam
         delayProviderMock.Setup(x => x.ModeCycleTimeout).Returns(TimeSpan.FromMilliseconds(1));
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.LightSlaapkamer.EntityId), 0)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(null);
-        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 0)).Returns(null);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Slaapkamer.EntityId), 0)).Returns(false);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampKen.EntityId), 1)).Returns(true);
+        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.NachtlampGreet.EntityId), 0)).Returns(false);
 
         // Act
         Sut.ButtonPressed(entities.Sensor.ButtonSlaapkamerbedBattery.EntityId, DeconzEventIdEnum.Double);

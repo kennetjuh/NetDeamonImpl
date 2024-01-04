@@ -19,17 +19,6 @@ public class NotifyApp : MyNetDaemonBaseApp
     {
         this.notify = notify;
 
-        //_scheduler.ScheduleCron("45 7 * * 1", () => //At 07:45 on Monday.
-        //{
-        //    var cal = new CultureInfo("nl-NL").Calendar;
-        //    int week = cal.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-        //    if (week % 2 == 1) //only on uneven weeks
-        //    {
-        //        notify.NotifyGsmGreet("", "Vergeet je laptop niet");
-        //        notify.NotifyHouse("Attentie, Greet vergeet je laptop niet");
-        //    }
-        //});
-
         thermostatActions = new List<NotifyActionEnum> { NotifyActionEnum.Thermostat15, NotifyActionEnum.Thermostat20, NotifyActionEnum.UriThermostat };
 
         houseNotificationImageCreator.AddFormattedText(5, 10, 10, "Ken: {0}", () => _entities.Person.Ken.State?.ToString());
@@ -124,7 +113,7 @@ public class NotifyApp : MyNetDaemonBaseApp
             {
                 return;
             }
-            var title = state.New!.Attributes!.Message;
+            var title = state.New!.Attributes!.FriendlyName;
             if (title == null)
             {
                 return;

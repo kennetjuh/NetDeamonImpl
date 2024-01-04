@@ -38,7 +38,7 @@ public class AreaControlHutTest : AreaControlTestBase<AreaControlHut>
         lightControlMock.Setup(x => x.ButtonDefault(
                 id,
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId)))
-            .Returns(null);
+            .Returns(false);
         haContextMock.Setup(x => x.CallService("light", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == sfeer.EntityId), It.IsAny<LightTurnOffParameters>()));
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);

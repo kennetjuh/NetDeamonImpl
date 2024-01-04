@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Moq;
+using NetDaemon.HassModel.Entities;
 using NetDaemonImpl;
 using NetDaemonImpl.Modules;
 using NetDaemonInterface;
@@ -27,36 +28,18 @@ public class LightControlTest : ServiceProviderTestBase
 
     internal override void SetupMocks()
     {
-        base.SetupMocks();
+        base.SetupMocks();        
         luxBasedBrightnessMock.Reset();
     }
 
     public LightControlTest()
     {        
-        testLightColortemp = new TestLightColorTemp(haContextMock.Object, "TestLight");
-        testLightOnOff = new TestLightOnOff(haContextMock.Object, "TestLight");
-        testLightHs = new TestLightHs(haContextMock.Object, "TestLight");
-        testLightBrightness = new TestLightBrightness(haContextMock.Object, "TestLight");
-    }
+        testLightColortemp = new TestLightColorTemp(haContextMock.Object, "Light.testLightColortemp");
+        testLightOnOff = new TestLightOnOff(haContextMock.Object, "Light.testLightOnOff");
+        testLightHs = new TestLightHs(haContextMock.Object, "Light.testLightHs");
+        testLightBrightness = new TestLightBrightness(haContextMock.Object, "Light.testLightBrightness");
+    }  
 
-    private void VerifyServiceCallOnTestLight(TestLightBase light, string service, double? brightness, double? colorTemp = null, string? colorName = null)
-    {
-        Assert.Single(light.ServiceCalls);
-        var serviceCall = light.ServiceCalls.Single();
-        Assert.Equal(service, serviceCall.Item1);
-        if (service == "turn_on")
-        {
-            Assert.Equal(brightness, (long?)(serviceCall.Item2?.GetType().GetProperty("Brightness")?.GetValue(serviceCall.Item2, null)));
-            if (colorTemp != null)
-            {
-                Assert.Equal(colorTemp, (long?)(serviceCall.Item2?.GetType().GetProperty("ColorTemp")?.GetValue(serviceCall.Item2, null)));
-            }
-            if (colorName != null)
-            {
-                Assert.Equal(colorName, (string?)(serviceCall.Item2?.GetType().GetProperty("ColorName")?.GetValue(serviceCall.Item2, null)));
-            }
-        }
-    }
 
     [Fact]
     public void Contructor_NoExceptions()
@@ -76,6 +59,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x=>x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.IsAny<LightTurnOnParameters>()));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.State = "off";
 
@@ -84,7 +70,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", null);
         Assert.True(retVal);
     }
 
@@ -93,6 +78,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_off",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.IsAny<LightTurnOffParameters>()));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.Brightness = 50;
         testLightColortemp.State = "on";
@@ -102,7 +90,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_off", null);
         Assert.False(retVal);
     }
 
@@ -111,6 +98,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x=>x.Brightness == Constants.doubleClick_brightness)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.State = "off";
 
@@ -119,7 +109,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", Constants.doubleClick_brightness);
         Assert.True(retVal);
     }
 
@@ -128,6 +117,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x => x.Brightness == 100 + Constants.doubleClick_increment)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.Brightness = 100;
         testLightColortemp.State = "on";
@@ -137,7 +129,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", 100 + Constants.doubleClick_increment);
         Assert.True(retVal);
     }
 
@@ -146,6 +137,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x => x.Brightness ==  Constants.longPress_brightness)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.State = "off";
 
@@ -154,7 +148,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", Constants.longPress_brightness);
         Assert.True(retVal);
     }
 
@@ -163,6 +156,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x => x.Brightness == 100 - Constants.longPress_decrement)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.Brightness = 100;
         testLightColortemp.State = "on";
@@ -173,7 +169,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", 100 - Constants.longPress_decrement);
         Assert.True(retVal);
     }
 
@@ -182,6 +177,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x => x.Brightness == 100)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         luxBasedBrightnessMock.Setup(x => x.GetBrightness(10, 255)).Returns(100);
         testLightColortemp.State = "off";
@@ -191,7 +189,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", 100);
         Assert.True(retVal);
     }
 
@@ -200,6 +197,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_off",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.IsAny<LightTurnOffParameters>()));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.Brightness = 50;
         testLightColortemp.State = "on";
@@ -209,7 +209,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_off", null);
         Assert.False(retVal);
     }
 
@@ -218,6 +217,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x => x.Brightness == Constants.doubleClick_brightness)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.State = "off";
 
@@ -226,7 +228,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", Constants.doubleClick_brightness);
         Assert.True(retVal);
     }
 
@@ -235,6 +236,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x => x.Brightness == 100 + Constants.doubleClick_increment)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.Brightness = 100;
         testLightColortemp.State = "on";
@@ -244,7 +248,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", 100 + Constants.doubleClick_increment);
         Assert.True(retVal);
     }
 
@@ -253,6 +256,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x => x.Brightness == Constants.longPress_brightness)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.State = "off";
 
@@ -261,7 +267,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", Constants.longPress_brightness);
         Assert.True(retVal);
     }
 
@@ -270,6 +275,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x => x.Brightness == 100 - Constants.longPress_decrement)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.Brightness = 100;
         testLightColortemp.State = "on";
@@ -279,7 +287,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", 100 - Constants.longPress_decrement);
         Assert.True(retVal);
     }
 
@@ -288,6 +295,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x => (long)x.ColorTemp == 5000)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.MaxMireds = 5000;
 
@@ -296,7 +306,7 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", null, 5000);
+        //VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", null, 5000);
     }
 
     [Fact]
@@ -304,6 +314,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x => (long)x.ColorTemp == 5000 && x.Brightness == 50)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.MaxMireds = 5000;
 
@@ -312,7 +325,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", 50, 5000);
     }
 
     [Fact]
@@ -320,6 +332,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_off",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.IsAny<LightTurnOffParameters>()));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.ColorTemp =
         testLightColortemp.MaxMireds = 5000;
@@ -329,7 +344,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_off", null);
     }
 
     [Fact]
@@ -337,6 +351,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x => (long)x.ColorTemp == 5000)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         sut.AddMaxWhiteLight(testLightColortemp);
         testLightColortemp.MinMireds = 0;
@@ -347,7 +364,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", null, 5000);
     }
 
     [Fact]
@@ -355,6 +371,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x => (long)x.ColorTemp == 5000)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         sut.AddMaxWhiteLight(testLightColortemp);
         testLightColortemp.MinMireds = 0;
@@ -365,7 +384,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", 50, 5000);
     }
 
     [Fact]
@@ -373,6 +391,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_off",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.IsAny<LightTurnOffParameters>()));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         sut.AddMaxWhiteLight(testLightColortemp);
         testLightColortemp.MinMireds = 0;
@@ -383,7 +404,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_off", null);
     }
 
     [Fact]
@@ -391,6 +411,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x => (long)x.ColorTemp == 0)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         sut.AddMaxWhiteLight(testLightColortemp);
         testLightColortemp.Brightness = 255;
@@ -403,7 +426,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", 255, 0);
     }
 
     [Fact]
@@ -411,6 +433,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x => (long)x.ColorTemp == 5000)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         sut.AddMaxWhiteLight(testLightColortemp);
         testLightColortemp.Brightness = 255;
@@ -423,14 +448,16 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightColortemp, "turn_on", 255, 5000);
     }
 
     [Fact]
     public void SetLight_OnOffLightCurrentOff_lightTurnOn()
     {
         // Arrange 
-        SetupMocks();
+        SetupMocks(); 
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightOnOff.EntityId),
+            It.IsAny<LightTurnOnParameters>()));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.Brightness = 0;
 
@@ -439,7 +466,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightOnOff, "turn_on", null, null);
     }
 
     [Fact]
@@ -447,15 +473,17 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_off",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightOnOff.EntityId),
+            It.IsAny<LightTurnOffParameters>()));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
-        testLightColortemp.Brightness = 100;
+        testLightOnOff.Brightness = 100;
 
         // Act
         sut.SetLight(testLightOnOff, 0);
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightOnOff, "turn_off", null, null);
     }
 
     [Fact]
@@ -463,15 +491,17 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightBrightness.EntityId),
+            It.IsAny<LightTurnOnParameters>()));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
-        testLightColortemp.Brightness = 0;
+        testLightBrightness.Brightness = 0;
 
         // Act
         sut.SetLight(testLightBrightness);
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightBrightness, "turn_on", null, null);
     }
 
     [Fact]
@@ -479,6 +509,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightBrightness.EntityId),
+            It.Is<LightTurnOnParameters>(x=>x.Brightness == 50)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightColortemp.Brightness = 0;
 
@@ -487,7 +520,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightBrightness, "turn_on", 50, null);
     }
 
     [Fact]
@@ -495,15 +527,17 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_off",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightBrightness.EntityId),
+            It.IsAny<LightTurnOffParameters>()));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
-        testLightColortemp.Brightness = 1;
+        testLightBrightness.Brightness = 1;
 
         // Act
         sut.SetLight(testLightBrightness, 0);
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightBrightness, "turn_off", 0, null);
     }
 
     [Fact]
@@ -511,6 +545,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightHs.EntityId),
+            It.Is<LightTurnOnParameters>(x => (string)x.ColorName == "red")));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightHs.Brightness = 0;
 
@@ -519,7 +556,6 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightHs, "turn_on", null, null, "red");
     }
 
     [Fact]
@@ -527,6 +563,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightHs.EntityId),
+            It.Is<LightTurnOnParameters>(x => x.ColorName == "red"&& x.Brightness == 50)));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightHs.Brightness = 0;
 
@@ -535,7 +574,7 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightHs, "turn_on", 50, null, "red");
+        //VerifyServiceCallOnTestLight(testLightHs, "turn_on", 50, null, "red");
     }
 
     [Fact]
@@ -543,6 +582,9 @@ public class LightControlTest : ServiceProviderTestBase
     {
         // Arrange 
         SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_off",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightHs.EntityId),
+            It.IsAny<LightTurnOffParameters>()));
         var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
         testLightHs.Brightness = 0;
 
@@ -551,6 +593,5 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Assert
         VerifyAllMocks();
-        VerifyServiceCallOnTestLight(testLightHs, "turn_off", null, null);
     }
 }

@@ -42,7 +42,7 @@ public class IdleSettingAppTest : TestBase
             It.Is<MediaPlayerVolumeSetParameters>(x => x.VolumeLevel == 0.7)));
         HaMock.Setup(x => x.CallService("media_player", "volume_set",
             It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.MediaPlayer.Woonkamer.EntityId),
-            It.Is<MediaPlayerVolumeSetParameters>(x => x.VolumeLevel == 0.8)));
+            It.Is<MediaPlayerVolumeSetParameters>(x => x.VolumeLevel == 0.7)));
 
         // Act
         var app = Context.GetApp<IdleSettingApp>();
@@ -97,7 +97,7 @@ public class IdleSettingAppTest : TestBase
         HaMock.TriggerStateChange(Entities.MediaPlayer.Woonkamer, "unknown");
         HaMock.Setup(x => x.CallService("media_player", "volume_set",
             It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.MediaPlayer.Woonkamer.EntityId),
-            It.Is<MediaPlayerVolumeSetParameters>(x => x.VolumeLevel == 0.8)));
+            It.Is<MediaPlayerVolumeSetParameters>(x => x.VolumeLevel == 0.7)));
 
         // Act
         var app = Context.GetApp<IdleSettingApp>();

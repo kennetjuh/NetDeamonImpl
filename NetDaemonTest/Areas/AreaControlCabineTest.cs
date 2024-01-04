@@ -12,7 +12,7 @@ public class AreaControlCabineTest : AreaControlTestBase<AreaControlCabine>
     readonly SwitchEntity CabineSfeer;
     public AreaControlCabineTest()
     {
-        light = entities.Light.LightCabine;
+        light = entities.Light.Cabine;
         CabineSfeer = entities.Switch.SwitchSierCabine;
     }
 
@@ -40,7 +40,7 @@ public class AreaControlCabineTest : AreaControlTestBase<AreaControlCabine>
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId),
                 It.IsAny<double>(),
                 It.IsAny<double>()))
-            .Returns(null);
+            .Returns(false);
         haContextMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == CabineSfeer.EntityId), null));
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);

@@ -24,7 +24,7 @@ public class AreaControlHalTest : AreaControlTestBase<AreaControlHal>
     [MemberData(nameof(DeconzEventIdValues))]
     public void ButtonPressed_VerifyMocks(DeconzEventIdEnum id)
     {
-        light = entities.Light.LightHal;
+        light = entities.Light.Hal;
         // Arrange
         SetupMocks();
         lightControlMock.Setup(x => x.ButtonDefaultLuxBased(
@@ -32,7 +32,7 @@ public class AreaControlHalTest : AreaControlTestBase<AreaControlHal>
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId),
                 It.IsAny<double>(),
                 It.IsAny<double>()))
-            .Returns(null);
+            .Returns(true);
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 

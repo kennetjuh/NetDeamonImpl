@@ -29,24 +29,28 @@ namespace NetDaemonImpl.Modules
 
             LightControl.SetLight(Entities.Light.Kamerlamp, 0);
             LightControl.SetLight(Entities.Light.Bureaulamp, 0);
-            LightControl.SetLight(Entities.Light.BdfM107Screen);
+            Entities.Switch.BdfM107Screen.TurnOn();
             LightControl.SetLight(Entities.Light.WoonkamerKisten);
 
             if (Helper.GetDayNightState(Entities) == DayNightEnum.Day)
             {
-                LightControl.SetLight(Entities.Light.LightWoonWand, Constants.brightnessWandDay);
+                LightControl.SetLight(Entities.Light.Wandlampen, Constants.brightnessWandDay);
                 LightControl.SetLight(Entities.Light.Booglamp, Constants.brightnessBoogDay);
             }
             else
             {
-                LightControl.SetLight(Entities.Light.LightWoonWand, Constants.brightnessWandNight);
+                LightControl.SetLight(Entities.Light.Wandlampen, Constants.brightnessWandNight);
                 LightControl.SetLight(Entities.Light.Booglamp, Constants.brightnessBoogNight);
             }
 
             Twinkle.Start();
+
+            // Kerst
+            //Entities.Switch.Binnen1.TurnOn();
+            //Entities.Switch.Binnen2.TurnOn();
         }
 
-        public void HouseStateAway()
+        public void HouseStateAway(HouseStateEnum state)
         {
             Logger.LogInformation("Away");
 
@@ -55,32 +59,48 @@ namespace NetDaemonImpl.Modules
             // buiten
             LightControl.SetLight(Entities.Light.BuitenachterLamp, 0);
             LightControl.SetLight(Entities.Light.BuitenachterSierverlichting, 0);
+            LightControl.SetLight(Entities.Light.LightHut, 0);
+            LightControl.SetLight(Entities.Light.BuitenzijHutsier, 0);
+            LightControl.SetLight(Entities.Light.BuitenachterHangstoel, 0);
             Entities.Switch.SwitchInfinityMirror.TurnOff();
             Entities.Switch.BuitenachterGrondpomp.TurnOff();
             Entities.Switch.SwitchVliegenlamp.TurnOff();
+            Entities.Switch.SwitchFontein.TurnOff();
 
             // boven
-            LightControl.SetLight(Entities.Light.LightCabine, 0);
+            LightControl.SetLight(Entities.Light.Cabine, 0);
+            LightControl.SetLight(Entities.Light.Halboven, 0);
+            LightControl.SetLight(Entities.Light.Slaapkamer, 0);
+            if (state != HouseStateEnum.Sleeping)
+            {
+                LightControl.SetLight(Entities.Light.SlaapkamerNachtlampen, 0);
+            }
+            LightControl.SetLight(Entities.Light.Slaapkamerkids, 0);
             Entities.Switch.SwitchSierCabine.TurnOff();
+            Entities.Switch.CabineHeater.TurnOff();
 
             // onder
             LightControl.SetLight(Entities.Light.Booglamp, 0);
             LightControl.SetLight(Entities.Light.Kamerlamp, 0);
             LightControl.SetLight(Entities.Light.Bureaulamp, 0);
-            LightControl.SetLight(Entities.Light.BdfM107Screen, 0);
+            Entities.Switch.BdfM107Screen.TurnOff();
             LightControl.SetLight(Entities.Light.WoonkamerKisten, 0);
-            LightControl.SetLight(Entities.Light.LightHal, 0);
+            LightControl.SetLight(Entities.Light.Hal, 0);
             LightControl.SetLight(Entities.Light.KeukenKeukenlamp, 0);
             LightControl.SetLight(Entities.Light.Washal, 0);
             LightControl.SetLight(Entities.Light.WcWclamp, 0);
-            LightControl.SetLight(Entities.Light.LightBadkamer, 0);
+            LightControl.SetLight(Entities.Light.Badkamer, 0);
             LightControl.SetLight(Entities.Light.SpeelkamerLamp, 0);
-            LightControl.SetLight(Entities.Light.LightWoonWand, 0);
+            LightControl.SetLight(Entities.Light.Wandlampen, 0);
+
+            // Kerst
+            //Entities.Switch.Binnen1.TurnOff();
+            //Entities.Switch.Binnen2.TurnOff();
         }
 
         public void HouseStateSleeping()
         {
-            HouseStateAway();
+            HouseStateAway(HouseStateEnum.Sleeping);
             Logger.LogInformation("Sleeping");
 
             Entities.Sensor.Housestate.SetState(Services, HouseStateEnum.Sleeping.ToString());
@@ -98,13 +118,13 @@ namespace NetDaemonImpl.Modules
             }
             if (Entities.DeviceTracker.GsmKen.State == "home")
             {
-                Notify.NotifyGsmKen("Pillen", "Vergeet je avondpillen niet :)", NotifyPriorityEnum.high);
+                //Notify.NotifyGsmKen("Pillen", "Vergeet je avondpillen niet :)", NotifyPriorityEnum.high);
             }
         }
 
         public void HouseStateHoliday()
         {
-            HouseStateAway();
+            HouseStateAway(HouseStateEnum.Away);
             Logger.LogInformation("Holiday");
 
             Entities.Sensor.Housestate.SetState(Services, HouseStateEnum.Holiday.ToString());

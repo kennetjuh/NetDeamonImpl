@@ -45,7 +45,8 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
 
     private void LastDayTrigger()
     {
-        //_entities.Switch.SwitchHalloween.TurnOff();
+        // Halloween
+        //_entities.Switch.Binnen1.TurnOff();
     }
 
     private void SetLastNightTrigger()
@@ -56,7 +57,8 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
 
     private void LastNightTrigger()
     {
-        //_entities.Light.SwitchBuiten.TurnOn();
+        // Halloween
+        //_entities.Switch.Binnen1.TurnOn();
     }
 
     private void CheckDayNight()
@@ -92,9 +94,9 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
         lightControl.SetLight(_entities.Light.SfeerlampBoven, 1);
         lightControl.SetLight(_entities.Light.LightSpeelkamerSfeer, _settingsProvider.BrightnessSfeerlampSpeelkamerNight);
 
-        if (_entities.Light.LightWoonWand.IsOn())
+        if (_entities.Light.Wandlampen.IsOn())
         {
-            lightControl.SetLight(_entities.Light.LightWoonWand, Constants.brightnessWandNight);
+            lightControl.SetLight(_entities.Light.Wandlampen, Constants.brightnessWandNight);
         }
 
         lightControl.SetLight(_entities.Light.LightHut, Constants.brightnessHut);
@@ -116,9 +118,9 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
         lightControl.SetLight(_entities.Light.SfeerlampBoven, 50);
         lightControl.SetLight(_entities.Light.LightSpeelkamerSfeer, _settingsProvider.BrightnessSfeerlampSpeelkamerDay);
 
-        if (_entities.Light.LightWoonWand.IsOn())
+        if (_entities.Light.Wandlampen.IsOn())
         {
-            lightControl.SetLight(_entities.Light.LightWoonWand, Constants.brightnessWandDay);
+            lightControl.SetLight(_entities.Light.Wandlampen, Constants.brightnessWandDay);
         }
 
         lightControl.SetLight(_entities.Light.LightHut, 0);

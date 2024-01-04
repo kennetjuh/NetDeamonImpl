@@ -15,8 +15,8 @@ public class AreaControlSlaapkamer : AreaControl
 
     public AreaControlSlaapkamer(IEntities entities, IDelayProvider delayProvider, ILightControl lightControl) : base(entities, delayProvider, lightControl)
     {
-        lightKamer = entities.Light.LightSlaapkamer;
-        lightKamerSingle = entities.Light.LightSlaapkamer2;
+        lightKamer = entities.Light.Slaapkamer;
+        lightKamerSingle = entities.Light.LightSlaapkamer3;
         lightKen = entities.Light.NachtlampKen;
         lightGreet = entities.Light.NachtlampGreet;
         modeCycler = new ModeCycler(delayProvider.ModeCycleTimeout,

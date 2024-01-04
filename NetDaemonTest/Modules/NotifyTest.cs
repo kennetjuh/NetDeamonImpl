@@ -159,12 +159,6 @@ namespace NetDaemonTest.Modules
         {
             // Arrange 
             SetupMocks();
-            haContextMock.Setup(x => x.CallService("media_player", "volume_set",
-                It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.MediaPlayer.Hal.EntityId),
-                It.Is<MediaPlayerVolumeSetParameters>(y => y.VolumeLevel == 1)));
-            haContextMock.Setup(x => x.CallService("media_player", "volume_set",
-                It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == entities.MediaPlayer.Woonkamer.EntityId),
-                It.Is<MediaPlayerVolumeSetParameters>(y => y.VolumeLevel == 1)));
             haContextMock.Setup(x => x.CallService("tts", "google_translate_say", null,
                 It.Is<TtsGoogleTranslateSayParameters>(y => y.EntityId == entities.MediaPlayer.Hal.EntityId && y.Message == message)));
             haContextMock.Setup(x => x.CallService("tts", "google_translate_say", null,

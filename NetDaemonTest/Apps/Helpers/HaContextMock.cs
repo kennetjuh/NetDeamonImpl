@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Moq;
 using NetDaemon.HassModel.Entities;
 
@@ -27,6 +28,11 @@ public class HaContextMockImpl : IHaContext
 
     public virtual void SendEvent(string eventType, object? data = null)
     { }
+
+    public Task<JsonElement?> CallServiceWithResponseAsync(string domain, string service, ServiceTarget? target = null, object? data = null)
+    {
+        throw new NotImplementedException();
+    }
 
     public IObservable<Event> Events => EventsSubject;
 }

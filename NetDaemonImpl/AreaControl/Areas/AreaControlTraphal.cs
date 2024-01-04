@@ -7,15 +7,15 @@ public class AreaControlTraphal : AreaControl
     private readonly LightEntity LightWand;
     private readonly LightEntity Light;
 
-    private const double minBrightnessWand = 10;
+    private const double minBrightnessWand = 50;
     private const double maxBrightnessWand = 255;
 
     private const double minBrightness = 1;
-    private const double maxBrightness = 50;
+    private const double maxBrightness = 150;
 
     public AreaControlTraphal(IEntities entities, IDelayProvider delayProvider, ILightControl lightControl) : base(entities, delayProvider, lightControl)
     {
-        LightWand = entities.Light.LightTraphal;
+        LightWand = entities.Light.TraphalWand;
         Light = entities.Light.Traphal;
     }
 
@@ -77,11 +77,11 @@ public class AreaControlTraphal : AreaControl
             {
                 StartRunTask((Ct) =>
                 {                   
-                    lightControl.SetLight(entities.Light.LightTraphal3, brightnessWand);
+                    lightControl.SetLight(entities.Light.Traphal3, brightnessWand);
                     DelayRunTaskAndCheckCancellation(delayProvider.MotionOnSequenceDelay, Ct);
-                    lightControl.SetLight(entities.Light.LightTraphal2, brightnessWand);
+                    lightControl.SetLight(entities.Light.Traphal2, brightnessWand);
                     DelayRunTaskAndCheckCancellation(delayProvider.MotionOnSequenceDelay, Ct);
-                    lightControl.SetLight(entities.Light.LightTraphal1, brightnessWand);
+                    lightControl.SetLight(entities.Light.Traphal1, brightnessWand);
                     DelayRunTaskAndCheckCancellation(delayProvider.MotionOnSequenceDelay, Ct);
                     lightControl.SetLight(entities.Light.Traphal, brightness);
                 });
@@ -92,11 +92,11 @@ public class AreaControlTraphal : AreaControl
                 {
                     lightControl.SetLight(entities.Light.Traphal, brightness);
                     DelayRunTaskAndCheckCancellation(delayProvider.MotionOnSequenceDelay, Ct);
-                    lightControl.SetLight(entities.Light.LightTraphal1, brightnessWand);
+                    lightControl.SetLight(entities.Light.Traphal1, brightnessWand);
                     DelayRunTaskAndCheckCancellation(delayProvider.MotionOnSequenceDelay, Ct);
-                    lightControl.SetLight(entities.Light.LightTraphal2, brightnessWand);
+                    lightControl.SetLight(entities.Light.Traphal2, brightnessWand);
                     DelayRunTaskAndCheckCancellation(delayProvider.MotionOnSequenceDelay, Ct);
-                    lightControl.SetLight(entities.Light.LightTraphal3, brightnessWand);
+                    lightControl.SetLight(entities.Light.Traphal3, brightnessWand);
                 });
             }
 

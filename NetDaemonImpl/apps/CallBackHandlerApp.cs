@@ -28,7 +28,7 @@ public class CallBackHandlerApp : MyNetDaemonBaseApp
                 houseState.HouseStateAwake();
                 break;
             case "Away":
-                houseState.HouseStateAway();
+                houseState.HouseStateAway(HouseStateEnum.Away);
                 break;
             case "Sleeping":
                 houseState.HouseStateSleeping();

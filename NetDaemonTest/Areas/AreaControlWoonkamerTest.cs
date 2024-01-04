@@ -43,7 +43,7 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId),
                 It.IsAny<double>(),
                 It.IsAny<double>()))
-            .Returns(null);
+            .Returns(true);
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, houseStateMock.Object);
 
@@ -68,7 +68,7 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
         lightControlMock.Setup(x => x.ButtonDefault(
                 id,
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId)))
-            .Returns(null);
+            .Returns(true);
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, houseStateMock.Object);
 
@@ -93,7 +93,7 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
         lightControlMock.Setup(x => x.ButtonDefault(
                 id,
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId)))
-            .Returns(null);
+            .Returns(true);
 
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, houseStateMock.Object);
 
@@ -120,7 +120,7 @@ public class AreaControlWoonkamerTest : AreaControlTestBase<AreaControlWoonkamer
                 houseStateMock.Setup(x => x.HouseStateAwake());
                 break;
             case DeconzEventIdEnum.Double:
-                houseStateMock.Setup(x => x.HouseStateAway());
+                houseStateMock.Setup(x => x.HouseStateAway(HouseStateEnum.Away));
                 break;
             case DeconzEventIdEnum.LongPress:
                 houseStateMock.Setup(x => x.HouseStateSleeping());

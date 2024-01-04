@@ -16,6 +16,12 @@ public interface ILightControl
     void AddMaxWhiteLight(LightEntity light);
 
     /// <summary>
+    /// Add a light to the list of lights which are allways set to 'cold'
+    /// </summary>
+    /// <param name="light">The light to add</param>
+    void AddAllwaysWhiteLight(LightEntity light);
+
+    /// <summary>
     /// Default button behaviour
     /// Single click
     ///     Turn off light when on, Turn on when off (no brightness supplied so on to last state)
