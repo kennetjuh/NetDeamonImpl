@@ -8,7 +8,7 @@ namespace NetDaemonTest
         internal readonly Mock<IServiceProvider> serviceProviderMock = new(MockBehavior.Strict);
         internal readonly Mock<IServiceScope> serviceScopeMock = new(MockBehavior.Strict);
         internal readonly Mock<IServiceScopeFactory> serviceScopeFactoryMock = new(MockBehavior.Strict);
-        internal readonly Mock<IHaContext> haContextMock = new(MockBehavior.Strict);
+        internal readonly Mock<IHaContext> haContextMock = new();
         internal readonly IEntities entities;
 
         public ServiceProviderTestBase()

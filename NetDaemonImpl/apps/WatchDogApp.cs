@@ -1,4 +1,5 @@
 using NetDaemon.Extensions.Scheduler;
+using NetDaemon.HassModel.Entities;
 using NetDaemonInterface;
 
 namespace NetDaemonImpl.apps;
@@ -18,14 +19,14 @@ public class WatchDogApp : MyNetDaemonBaseApp
     {
         this.lightControl = lightControl;
 
-        _entities.Switch.WatchdogBuiten.StateChanges()
+        _entities.InputBoolean.WatchdogBuiten.StateChanges()
             .Where(x => x.Entity.IsOn())
             .Subscribe(x => StartWatchdogBuiten());
-        _entities.Switch.WatchdogBuiten.StateChanges()
+        _entities.InputBoolean.WatchdogBuiten.StateChanges()
            .Where(x => x.Entity.IsOff())
            .Subscribe(x => watchdogBuitenTask?.Dispose());
 
-        if (_entities.Switch.WatchdogBuiten.IsOn())
+        if (_entities.InputBoolean.WatchdogBuiten.IsOn())
         {
             StartWatchdogBuiten();
         }

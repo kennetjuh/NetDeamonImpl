@@ -26,8 +26,8 @@ public class WatchDogAppTest : TestBase
     {
         // Arrange
         ResetAllMocks();        
-        HaMock.TriggerStateChange(Entities.Switch.WatchdogBuiten, "on");
-        HaMock.TriggerStateChange(Entities.Sensor.Daynight, "Day");
+        HaMock.TriggerStateChange(Entities.InputBoolean.WatchdogBuiten, "on");
+        HaMock.TriggerStateChange(Entities.InputText.Daynight, "Day");
         SetupDayMocks();
 
         // Act
@@ -42,8 +42,8 @@ public class WatchDogAppTest : TestBase
     {
         // Arrange
         ResetAllMocks();
-        HaMock.TriggerStateChange(Entities.Switch.WatchdogBuiten, "on");
-        HaMock.TriggerStateChange(Entities.Sensor.Daynight, "Night");
+        HaMock.TriggerStateChange(Entities.InputBoolean.WatchdogBuiten, "on");
+        HaMock.TriggerStateChange(Entities.InputText.Daynight, "Night");
         SetupNightMocks();
 
         // Act
@@ -58,13 +58,13 @@ public class WatchDogAppTest : TestBase
     {
         // Arrange
         ResetAllMocks();
-        HaMock.TriggerStateChange(Entities.Switch.WatchdogBuiten, "off");
-        HaMock.TriggerStateChange(Entities.Sensor.Daynight, "Day");
+        HaMock.TriggerStateChange(Entities.InputBoolean.WatchdogBuiten, "off");
+        HaMock.TriggerStateChange(Entities.InputText.Daynight, "Day");
         SetupDayMocks();
 
         // Act
         var app = Context.GetApp<WatchDogApp>();
-        HaMock.TriggerStateChange(Entities.Switch.WatchdogBuiten, "on");
+        HaMock.TriggerStateChange(Entities.InputBoolean.WatchdogBuiten, "on");
 
         // Assert
         VerifyAllMocks();
@@ -75,15 +75,15 @@ public class WatchDogAppTest : TestBase
     {
         // Arrange
         ResetAllMocks();
-        HaMock.TriggerStateChange(Entities.Switch.WatchdogBuiten, "off");
-        HaMock.TriggerStateChange(Entities.Sensor.Daynight, "Day");
+        HaMock.TriggerStateChange(Entities.InputBoolean.WatchdogBuiten, "off");
+        HaMock.TriggerStateChange(Entities.InputText.Daynight, "Day");
         SetupDayMocks();
         SetupNightMocks();
 
         // Act
         var app = Context.GetApp<WatchDogApp>();
-        HaMock.TriggerStateChange(Entities.Switch.WatchdogBuiten, "on");
-        HaMock.TriggerStateChange(Entities.Sensor.Daynight, "Night");
+        HaMock.TriggerStateChange(Entities.InputBoolean.WatchdogBuiten, "on");
+        HaMock.TriggerStateChange(Entities.InputText.Daynight, "Night");
         Scheduler.AdvanceBy(TimeSpan.FromMinutes(5).Ticks);
 
         // Assert

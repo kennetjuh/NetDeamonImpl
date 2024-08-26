@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Modules\HouseState.cs~RF3a960.TMP" />
     <None Remove="Resources\arial.ttf" />
     <None Remove="Resources\arialbd.ttf" />
     <None Remove="Resources\arialbi.ttf" />
@@ -60,18 +61,18 @@
     <EmbeddedResource Include="Resources\ariblk.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NetDaemon.AppModel" Version="23.46.1" />
-    <PackageReference Include="NetDaemon.Runtime" Version="23.46.1" />
-    <PackageReference Include="NetDaemon.HassModel" Version="23.46.1" />
-    <PackageReference Include="NetDaemon.Client" Version="23.46.1" />
-    <PackageReference Include="NetDaemon.Extensions.Scheduling" Version="23.46.1" />
-    <PackageReference Include="NetDaemon.Extensions.Logging" Version="23.46.1" />
-    <PackageReference Include="NetDaemon.Extensions.Tts" Version="23.46.1" />
+    <PackageReference Include="NetDaemon.AppModel" Version="24.35.0" />
+    <PackageReference Include="NetDaemon.Runtime" Version="24.35.0" />
+    <PackageReference Include="NetDaemon.HassModel" Version="24.35.0" />
+    <PackageReference Include="NetDaemon.Client" Version="24.35.0" />
+    <PackageReference Include="NetDaemon.Extensions.Scheduling" Version="24.35.0" />
+    <PackageReference Include="NetDaemon.Extensions.Logging" Version="24.35.0" />
+    <PackageReference Include="NetDaemon.Extensions.Tts" Version="24.35.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
-    <PackageReference Include="SkiaSharp" Version="2.88.6" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.6" />
-    <PackageReference Include="System.Reactive" Version="6.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
+    <PackageReference Include="SkiaSharp" Version="2.88.8" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.8" />
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NetDaemonInterface\NetDaemonInterface.csproj" />

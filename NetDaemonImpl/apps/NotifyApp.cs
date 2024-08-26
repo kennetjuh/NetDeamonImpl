@@ -1,8 +1,6 @@
 using NetDaemon.HassModel.Entities;
 using NetDaemonInterface;
 using System.Collections.Generic;
-using NetDaemon.Extensions.Scheduler;
-using System.Globalization;
 
 namespace NetDaemonImpl.apps;
 
@@ -19,7 +17,7 @@ public class NotifyApp : MyNetDaemonBaseApp
     {
         this.notify = notify;
 
-        thermostatActions = new List<NotifyActionEnum> { NotifyActionEnum.Thermostat15, NotifyActionEnum.Thermostat20, NotifyActionEnum.UriThermostat };
+        thermostatActions = new List<NotifyActionEnum> { NotifyActionEnum.Thermostat17, NotifyActionEnum.Thermostat20, NotifyActionEnum.UriThermostat };
 
         houseNotificationImageCreator.AddFormattedText(5, 10, 10, "Ken: {0}", () => _entities.Person.Ken.State?.ToString());
         houseNotificationImageCreator.AddFormattedText(5, 20, 10, "Greet: {0}", () => _entities.Person.Greet.State?.ToString());
@@ -53,13 +51,13 @@ public class NotifyApp : MyNetDaemonBaseApp
             SetBeddenAlarmKidsSchedule(_entities.InputDatetime.Beddenalarmkids.State);
         }
 
-        _entities.Sensor.Housestate.StateChanges()
+        _entities.InputText.Housestate.StateChanges()
             .Subscribe(x =>
             {
                 houseNotificationImageCreator.CreateImage();
                 notify.NotifyHouseStateGsmKen("House State", $"House state: {x.New?.State}", houseNotificationImageCreator.GetImagePath(), NotifyPriorityEnum.low, thermostatActions);
             });
-        _entities.Sensor.Daynight.StateChanges()
+        _entities.InputText.Daynight.StateChanges()
             .Subscribe(x =>
             {
                 houseNotificationImageCreator.CreateImage();
@@ -134,7 +132,10 @@ public class NotifyApp : MyNetDaemonBaseApp
         beddenAlarmKidsSchedule?.Dispose();
         beddenAlarmKidsSchedule = _scheduler.RunDaily(TimeSpan.Parse(time), () =>
         {
-            notify.NotifyHouse("Attentie, Damon en Caitlyn jullie mogen je bed aan zetten.");
+            if (_settingsProvider.BeddenAlarmKids)
+            {
+                notify.NotifyHouse("Attentie, Damon en Caitlyn jullie mogen je bed aan zetten.");
+            }
         });
     }
 
@@ -160,8 +161,8 @@ public class NotifyApp : MyNetDaemonBaseApp
 
         if (x.Old.State == _entities.Zone.WerkKen.Attributes?.FriendlyName && _scheduler.Now.Hour > 13)
         {
-            notify.NotifyGsmGreet("Ken lokatie", "Ken is vertrokken vanuit werk", NotifyPriorityEnum.high);
-            notify.NotifyHouse("Attentie, Ken is vertrokken vanuit werk");
+            //notify.NotifyGsmGreet("Ken lokatie", "Ken is vertrokken vanuit werk", NotifyPriorityEnum.high);
+            //notify.NotifyHouse("Attentie, Ken is vertrokken vanuit werk");
             return;
         }
     }
@@ -171,13 +172,6 @@ public class NotifyApp : MyNetDaemonBaseApp
         if (x.Old == null)
         {
             return;
-        }
-
-        if (x.Old.State == _entities.Zone.IjzerenMan.Attributes?.FriendlyName)
-        {
-            notify.NotifyGsmKen("Greet lokatie", "Greet is vertrokken vanuit de ijzeren man", NotifyPriorityEnum.high);
-            notify.NotifyHouse("Attentie, Great is vertrokken vanuit de ijzeren man");
-            return;
-        }
+        }        
     }
 }

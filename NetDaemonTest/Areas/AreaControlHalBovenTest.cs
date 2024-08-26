@@ -9,7 +9,7 @@ public class AreaControlHalBovenTest : AreaControlTestBase<AreaControlHalBoven>
 {
     public AreaControlHalBovenTest()
     {
-        light = entities.Light.LightHalboven;
+        light = entities.Light.Halboven;
     }
 
     [Fact]

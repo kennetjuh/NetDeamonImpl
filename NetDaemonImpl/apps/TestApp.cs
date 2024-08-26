@@ -1,5 +1,4 @@
 using NetDaemonInterface;
-using System.Collections.Generic;
 
 namespace NetDaemonImpl.apps;
 
@@ -31,7 +30,7 @@ public class TestApp : MyNetDaemonBaseApp
 
         //houseNotificationImageCreator.CreateImage();
         //
-        
+
         //_haContext.Events            
         //    .Subscribe(x =>
         //    {
@@ -40,7 +39,14 @@ public class TestApp : MyNetDaemonBaseApp
         //            Console.WriteLine($"{x.EventType} {x.DataElement}");
         //            Console.WriteLine();
         //        }
-              
+
         //    });
+        //var foo = settingsProvider.JimmieAlarm;
+
+        //_entities.InputDatetime.Daynightlastnighttrigger.SetDatetime(time: DateTime.Now.ToString(Constants.dateTime_TimeFormat));
+        //_entities.InputDatetime.Daynightlastdaytrigger.SetDatetime(time: DateTime.Now.ToString(Constants.dateTime_TimeFormat));
+
     }
 }
+
+

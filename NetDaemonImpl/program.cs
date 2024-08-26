@@ -15,7 +15,7 @@ using System.Reflection;
 
 try
 {
-    Console.WriteLine("Starting v1.24");
+    Console.WriteLine("Starting v1.53");
     await Host.CreateDefaultBuilder(args)
         .UseNetDaemonAppSettings()
         .UseNetDaemonDefaultLogging()

@@ -1,4 +1,3 @@
-using NetDaemon.Extensions.Scheduler;
 using NetDaemonInterface;
 
 namespace NetDaemonImpl.apps;

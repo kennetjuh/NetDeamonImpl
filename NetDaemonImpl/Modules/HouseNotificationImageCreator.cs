@@ -69,7 +69,7 @@ namespace NetDaemonImpl.Modules
     }
 
 
-    internal class HouseNotificationImageCreator : IHouseNotificationImageCreator
+    public class HouseNotificationImageCreator : IHouseNotificationImageCreator
     {
         private readonly string path;
         private readonly List<HouseNotificationTextEntry> textEntries;

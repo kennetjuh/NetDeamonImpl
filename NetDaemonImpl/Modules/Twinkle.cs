@@ -33,9 +33,9 @@ namespace NetDaemonImpl.Modules
                 Entities.Light.KeukenM3,
                 Entities.Light.KeukenM4,
                 Entities.Light.KeukenM5,
-                Entities.Light.KeukenS1,
-                Entities.Light.KeukenS2,
-                Entities.Light.KeukenS3,
+                Entities.Light.KeukenM6,
+                Entities.Light.KeukenL1,
+                Entities.Light.KeukenL2,
             };
             cts = new();
 

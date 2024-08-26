@@ -12,28 +12,28 @@ namespace NetDaemonImpl.Modules
             Entities = new Entities(haContext);
         }
 
-        public int BrightnessSfeerlampSpeelkamerDay => (int?)Entities.InputNumber.Brightnesssfeerlampspeelkamerday.State ?? 50;
+        public int BrightnessSfeerlampSpeelkamerDay => (int?)Entities.InputNumber.Brightnesssfeerlampspeelkamerday.State ?? 40;
 
         public int BrightnessSfeerlampSpeelkamerNight => (int?)Entities.InputNumber.Brightnesssfeerlampspeelkamernight.State ?? 10;
 
-        public int BrightnessSfeerlampHalDay => (int?)Entities.InputNumber.Brightnesssfeerlamphalday.State ?? 50;
+        public int BrightnessSfeerlampHalDay => (int?)Entities.InputNumber.Brightnesssfeerlamphalday.State ?? 40;
 
         public int BrightnessSfeerlampHalNight => (int?)Entities.InputNumber.Brightnesssfeerlamphalnight.State ?? 1;
 
-        public int BrightnessSfeerlampWoonkamer1Day => throw new NotImplementedException();
+        public int BrightnessSfeerlampWoonkamer1Day => (int?)Entities.InputNumber.Brightnesssfeerlampkamer1day.State ?? 40;
 
-        public int BrightnessSfeerlampWoonkamer1Night => throw new NotImplementedException();
+        public int BrightnessSfeerlampWoonkamer1Night => (int?)Entities.InputNumber.Brightnesssfeerlampkamer1night.State ?? 1;
 
-        public int BrightnessSfeerlampWoonkamer2Day => throw new NotImplementedException();
+        public int BrightnessSfeerlampKeukenDay => (int?)Entities.InputNumber.Brightnesssfeerlampkeukenday.State ?? 40;
 
-        public int BrightnessSfeerlampWoonkamer2Night => throw new NotImplementedException();
+        public int BrightnessSfeerlampKeukenNight => (int?)Entities.InputNumber.Brightnesssfeerlampkeukennight.State ?? 1;
 
-        public int BrightnessSfeerlampKeukenDay => throw new NotImplementedException();
+        public int BrightnessSfeerlampBovenDay => (int?)Entities.InputNumber.Brightnesssfeerlampbovenday.State ?? 40;
 
-        public int BrightnessSfeerlampKeukenNight => throw new NotImplementedException();
+        public int BrightnessSfeerlampBovenNight => (int?)Entities.InputNumber.Brightnesssfeerlampbovennight.State ?? 1;
 
-        public int BrightnessSfeerlampBovenDay => throw new NotImplementedException();
+        public bool BeddenAlarmKids => Entities.InputBoolean.Beddenalarmkids.IsOn();
 
-        public int BrightnessSfeerlampBovenNight => throw new NotImplementedException();
+        public bool JimmieAlarm => Entities.InputBoolean.Jimmiealarm.IsOn();
     }
 }

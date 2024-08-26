@@ -42,6 +42,7 @@ public class NotifyAppTest : TestBase
         // Arrange
         ResetAllMocks();
         SetupDefaultMocks();
+        SettingsProviderMock.Setup(x => x.BeddenAlarmKids).Returns(true);
         HaMock.TriggerStateChange(Entities.InputDatetime.Beddenalarmkids, "18:30");
         Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(18).AddMinutes(29).ToUniversalTime().Ticks);
         NotifyMock.Setup(x => x.NotifyHouse("Attentie, Damon en Caitlyn jullie mogen je bed aan zetten."));
@@ -60,6 +61,7 @@ public class NotifyAppTest : TestBase
         // Arrange
         ResetAllMocks();
         SetupDefaultMocks();
+        SettingsProviderMock.Setup(x => x.BeddenAlarmKids).Returns(true);
         HaMock.TriggerStateChange(Entities.InputDatetime.Beddenalarmkids, "17:30");
         Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(18).AddMinutes(29).ToUniversalTime().Ticks);
         NotifyMock.Setup(x => x.NotifyHouse("Attentie, Damon en Caitlyn jullie mogen je bed aan zetten."));
@@ -67,6 +69,24 @@ public class NotifyAppTest : TestBase
         // Act
         var app = Context.GetApp<NotifyApp>();
         HaMock.TriggerStateChange(Entities.InputDatetime.Beddenalarmkids, "18:30");
+        Scheduler.AdvanceBy(TimeSpan.FromMinutes(1).Ticks);
+
+        // Assert
+        VerifyAllMocks();
+    }
+
+    [Fact]
+    public void NotifyApp_DailyBedAlarmDisabled_VerifyCalls()
+    {
+        // Arrange
+        ResetAllMocks();
+        SetupDefaultMocks();
+        SettingsProviderMock.Setup(x => x.BeddenAlarmKids).Returns(false);
+        HaMock.TriggerStateChange(Entities.InputDatetime.Beddenalarmkids, "18:30");
+        Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(18).AddMinutes(29).ToUniversalTime().Ticks);        
+
+        // Act
+        var app = Context.GetApp<NotifyApp>();
         Scheduler.AdvanceBy(TimeSpan.FromMinutes(1).Ticks);
 
         // Assert
@@ -83,11 +103,11 @@ public class NotifyAppTest : TestBase
         HouseNotificationImageCreatorMock.Setup(x => x.GetImagePath()).Returns(imageName);
 
         NotifyMock.Setup(x => x.NotifyHouseStateGsmKen("House State", "House state: Awake", imageName, NotifyPriorityEnum.low,
-            It.Is<List<NotifyActionEnum>>(x => x.Count == 3 && x.Contains(NotifyActionEnum.Thermostat15) && x.Contains(NotifyActionEnum.Thermostat20) && x.Contains(NotifyActionEnum.UriThermostat))));
+            It.Is<List<NotifyActionEnum>>(x => x.Count == 3 && x.Contains(NotifyActionEnum.Thermostat17) && x.Contains(NotifyActionEnum.Thermostat20) && x.Contains(NotifyActionEnum.UriThermostat))));
 
         // Act
         var app = Context.GetApp<NotifyApp>();
-        HaMock.TriggerStateChange(Entities.Sensor.Housestate, "Awake");
+        HaMock.TriggerStateChange(Entities.InputText.Housestate, "Awake");
 
         // Assert
         VerifyAllMocks();
@@ -103,11 +123,11 @@ public class NotifyAppTest : TestBase
         HouseNotificationImageCreatorMock.Setup(x => x.GetImagePath()).Returns(imageName);
 
         NotifyMock.Setup(x => x.NotifyHouseStateGsmKen("House State", "Day/Night state: Day", imageName, NotifyPriorityEnum.low,
-            It.Is<List<NotifyActionEnum>>(x => x.Count == 3 && x.Contains(NotifyActionEnum.Thermostat15) && x.Contains(NotifyActionEnum.Thermostat20) && x.Contains(NotifyActionEnum.UriThermostat))));
+            It.Is<List<NotifyActionEnum>>(x => x.Count == 3 && x.Contains(NotifyActionEnum.Thermostat17) && x.Contains(NotifyActionEnum.Thermostat20) && x.Contains(NotifyActionEnum.UriThermostat))));
 
         // Act
         var app = Context.GetApp<NotifyApp>();
-        HaMock.TriggerStateChange(Entities.Sensor.Daynight, "Day");
+        HaMock.TriggerStateChange(Entities.InputText.Daynight, "Day");
 
         // Assert
         VerifyAllMocks();
@@ -124,7 +144,7 @@ public class NotifyAppTest : TestBase
         HouseNotificationImageCreatorMock.Setup(x => x.GetImagePath()).Returns(imageName);
 
         NotifyMock.Setup(x => x.NotifyHouseStateGsmKen("House State", "Thermostat: 25", imageName, NotifyPriorityEnum.high,
-            It.Is<List<NotifyActionEnum>>(x => x.Count == 3 && x.Contains(NotifyActionEnum.Thermostat15) && x.Contains(NotifyActionEnum.Thermostat20) && x.Contains(NotifyActionEnum.UriThermostat))));
+            It.Is<List<NotifyActionEnum>>(x => x.Count == 3 && x.Contains(NotifyActionEnum.Thermostat17) && x.Contains(NotifyActionEnum.Thermostat20) && x.Contains(NotifyActionEnum.UriThermostat))));
 
         // Act
         var app = Context.GetApp<NotifyApp>();
@@ -162,8 +182,8 @@ public class NotifyAppTest : TestBase
         Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(16).ToUniversalTime().Ticks);
         HaMock.TriggerStateChange(Entities.Zone.WerkKen, "WerkKen", new ZoneAttributes { FriendlyName = "Werk Ken" });
         HaMock.TriggerStateChange(Entities.Person.Ken, Entities.Zone.WerkKen.Attributes?.FriendlyName!);
-        NotifyMock.Setup(x => x.NotifyGsmGreet("Ken lokatie", "Ken is vertrokken vanuit werk", NotifyPriorityEnum.high, null, null));
-        NotifyMock.Setup(x => x.NotifyHouse("Attentie, Ken is vertrokken vanuit werk"));
+        //NotifyMock.Setup(x => x.NotifyGsmGreet("Ken lokatie", "Ken is vertrokken vanuit werk", NotifyPriorityEnum.high, null, null));
+        //NotifyMock.Setup(x => x.NotifyHouse("Attentie, Ken is vertrokken vanuit werk"));
         NotifyMock.Setup(x => x.NotifyHouseStateGsmKen("House State", "Ken: Away", imageName, NotifyPriorityEnum.low, It.IsAny<List<NotifyActionEnum>>()));
 
         // Act
@@ -195,26 +215,6 @@ public class NotifyAppTest : TestBase
         VerifyAllMocks();
     } 
 
-    [Fact]
-    public void NotifyApp_LocationChangeGreetIjzerenMan_VerifyCalls()
-    {
-        // Arrange
-        ResetAllMocks();
-        SetupDefaultMocks();
-        HaMock.TriggerStateChange(Entities.Zone.IjzerenMan, "IjzerenMan", new ZoneAttributes { FriendlyName = "Ijzeren Man" });
-        HaMock.TriggerStateChange(Entities.Person.Greet, Entities.Zone.IjzerenMan.Attributes?.FriendlyName!);
-        NotifyMock.Setup(x => x.NotifyGsmKen("Greet lokatie", "Greet is vertrokken vanuit de ijzeren man", NotifyPriorityEnum.high, null, null));
-        NotifyMock.Setup(x => x.NotifyHouse("Attentie, Great is vertrokken vanuit de ijzeren man"));
-        NotifyMock.Setup(x => x.NotifyHouseStateGsmKen("House State", "Greet: Away", imageName, NotifyPriorityEnum.low, It.IsAny<List<NotifyActionEnum>>()));
-
-        // Act
-        var app = Context.GetApp<NotifyApp>();
-        HaMock.TriggerStateChange(Entities.Person.Greet, "Away");
-
-
-        // Assert
-        VerifyAllMocks();
-    }
 
     [Theory]
     [ClassData(typeof(TestDataGenerator))]

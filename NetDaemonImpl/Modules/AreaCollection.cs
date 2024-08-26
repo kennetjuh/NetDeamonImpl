@@ -8,7 +8,7 @@ public class AreaCollection : IAreaCollection
 {
     private readonly Dictionary<AreaControlEnum, IAreaControl> collection = new();
 
-    public AreaCollection(IServiceProvider serviceProvider, IDelayProvider delayProvider, ILightControl lightControl, IHouseState houseState, ITwinkle twinkle)
+    public AreaCollection(IServiceProvider serviceProvider, IDelayProvider delayProvider, ILightControl lightControl, ILuxBasedBrightness luxBasedBrightness, IHouseState houseState, ITwinkle twinkle)
     {
         var haContext = DiHelper.GetHaContext(serviceProvider);
         var entities = new Entities(haContext);
@@ -21,7 +21,7 @@ public class AreaCollection : IAreaCollection
         collection.Add(AreaControlEnum.Wc, new AreaControlWc(entities, delayProvider, lightControl));
         collection.Add(AreaControlEnum.Voordeur, new AreaControlVoordeur(entities, delayProvider, lightControl));
         collection.Add(AreaControlEnum.SlaapkamerKids, new AreaControlSlaapkamerKids(entities, delayProvider, lightControl));
-        collection.Add(AreaControlEnum.Cabine, new AreaControlCabine(entities, delayProvider, lightControl));
+        collection.Add(AreaControlEnum.Cabine, new AreaControlCabine(entities, delayProvider, lightControl, luxBasedBrightness));
         collection.Add(AreaControlEnum.HalBoven, new AreaControlHalBoven(entities, delayProvider, lightControl));
         collection.Add(AreaControlEnum.Woonkamer, new AreaControlWoonkamer(entities, delayProvider, lightControl, houseState));
         collection.Add(AreaControlEnum.Keuken, new AreaControlKeuken(entities, delayProvider, lightControl, twinkle));

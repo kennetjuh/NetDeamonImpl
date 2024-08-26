@@ -6,5 +6,6 @@
         void HouseStateAway(HouseStateEnum state);
         void HouseStateSleeping();
         void HouseStateHoliday();
+        void TvMode();
     }
 }

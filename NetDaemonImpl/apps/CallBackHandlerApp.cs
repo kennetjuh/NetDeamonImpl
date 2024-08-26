@@ -15,6 +15,7 @@ public class CallBackHandlerApp : MyNetDaemonBaseApp
 
         _haContext.RegisterServiceCallBack<ChangeHouseStateData>("ChangeHouseState", (x) => ChangeHouseState(x));
         _haContext.RegisterServiceCallBack<EmptyStateData>("Twinkle", (x) => twinkle.Start());
+        _haContext.RegisterServiceCallBack<EmptyStateData>("TvMode", (x) => houseState.TvMode());
     }
 
     record ChangeHouseStateData(string state);

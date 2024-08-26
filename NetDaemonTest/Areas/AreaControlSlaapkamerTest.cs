@@ -243,7 +243,7 @@ public class AreaControlSlaapkamerTest : AreaControlTestBase<AreaControlSlaapkam
     }
 
     [Fact]
-    public void ButtonSlaapKamerBed_DoubleClick2TimesWithDelay_VerifyMocks()
+    public async Task ButtonSlaapKamerBed_DoubleClick2TimesWithDelay_VerifyMocksAsync()
     {
         // Arrange 
         SetupMocks();
@@ -256,7 +256,7 @@ public class AreaControlSlaapkamerTest : AreaControlTestBase<AreaControlSlaapkam
 
         // Act
         Sut.ButtonPressed(entities.Sensor.ButtonSlaapkamerbedBattery.EntityId, DeconzEventIdEnum.Double);
-        Task.Delay(TimeSpan.FromMilliseconds(10)).Wait();
+        await Task.Delay(TimeSpan.FromMilliseconds(10));
         Sut.ButtonPressed(entities.Sensor.ButtonSlaapkamerbedBattery.EntityId, DeconzEventIdEnum.Double);
 
         // Assert

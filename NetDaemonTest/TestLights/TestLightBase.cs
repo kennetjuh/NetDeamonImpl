@@ -1,5 +1,4 @@
 ﻿using NetDaemon.HassModel.Entities;
-using System.Collections.Generic;
 
 namespace NetDaemonTest.TestLights;
 

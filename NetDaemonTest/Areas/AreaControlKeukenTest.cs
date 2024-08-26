@@ -31,7 +31,7 @@ public class AreaControlKeukenTest : AreaControlTestBase<AreaControlKeuken>
         // Arrange 
         SetupMocks();
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, twinkleMock.Object);
-        haContextMock.Setup(x => x.GetState(entities.Sensor.Daynight.EntityId)).Returns(new EntityState() { State = "Day" });
+        haContextMock.Setup(x => x.GetState(entities.InputText.Daynight.EntityId)).Returns(new EntityState() { State = "Day" });
         haContextMock.Setup(x => x.GetState(entities.Light.KeukenKeukenlamp.EntityId)).Returns(new EntityState() { State = "off" });
         twinkleMock.Setup(x => x.IsActive()).Returns(false);
         lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.KeukenKeukenlamp.EntityId), 10)).Returns(true);
@@ -49,7 +49,7 @@ public class AreaControlKeukenTest : AreaControlTestBase<AreaControlKeuken>
         // Arrange 
         SetupMocks();
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, twinkleMock.Object);
-        haContextMock.Setup(x => x.GetState(entities.Sensor.Daynight.EntityId)).Returns(new EntityState() { State = "Night" });
+        haContextMock.Setup(x => x.GetState(entities.InputText.Daynight.EntityId)).Returns(new EntityState() { State = "Night" });
         haContextMock.Setup(x => x.GetState(entities.Light.KeukenKeukenlamp.EntityId)).Returns(new EntityState() { State = "off" });
         twinkleMock.Setup(x => x.IsActive()).Returns(false);
         lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.KeukenKeukenlamp.EntityId), 1)).Returns(true);
@@ -101,7 +101,7 @@ public class AreaControlKeukenTest : AreaControlTestBase<AreaControlKeuken>
         // Arrange 
         SetupMocks();
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, twinkleMock.Object);
-        haContextMock.Setup(x => x.GetState(entities.Sensor.Daynight.EntityId)).Returns(new EntityState() { State = "Day" });
+        haContextMock.Setup(x => x.GetState(entities.InputText.Daynight.EntityId)).Returns(new EntityState() { State = "Day" });
         haContextMock.Setup(x => x.GetState(entities.Light.KeukenKeukenlamp.EntityId)).Returns(new EntityState() { State = "on" });
         twinkleMock.Setup(x => x.IsActive()).Returns(true);
         lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.KeukenKeukenlamp.EntityId), 20)).Returns(true);
@@ -119,7 +119,7 @@ public class AreaControlKeukenTest : AreaControlTestBase<AreaControlKeuken>
         // Arrange 
         SetupMocks();
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object, twinkleMock.Object);
-        haContextMock.Setup(x => x.GetState(entities.Sensor.Daynight.EntityId)).Returns(new EntityState() { State = "Night" });
+        haContextMock.Setup(x => x.GetState(entities.InputText.Daynight.EntityId)).Returns(new EntityState() { State = "Night" });
         haContextMock.Setup(x => x.GetState(entities.Light.KeukenKeukenlamp.EntityId)).Returns(new EntityState() { State = "on" });
         twinkleMock.Setup(x => x.IsActive()).Returns(true);
         lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.KeukenKeukenlamp.EntityId), 1)).Returns(true);

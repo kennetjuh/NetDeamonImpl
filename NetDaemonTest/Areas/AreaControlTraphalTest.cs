@@ -2,7 +2,6 @@ using Moq;
 using NetDaemon.HassModel.Entities;
 using NetDaemonImpl.AreaControl.Areas;
 using NetDaemonInterface;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -60,11 +59,11 @@ public class AreaControlTraphalTest : AreaControlTestBase<AreaControlTraphal>
     }
 
     [Fact]
-    public void ButtonPressed_SingleClickLightGoesOff_VerifyMocks()
+    public async Task ButtonPressed_SingleClickLightGoesOff_VerifyMocksAsync()
     {
         // Arrange
         SetupMocks();
-        delayProviderMock.Setup(x => x.ManualOffTimeout).Returns(TimeSpan.FromMilliseconds(100));
+        delayProviderMock.Setup(x => x.ManualOffTimeout).Returns(TimeSpan.FromMilliseconds(10));
         lightControlMock.Setup(x => x.SetLight(light, 0)).Returns(false);
         lightControlMock.Setup(x => x.SetLight(lightWand, 0)).Returns(false);             
                 
@@ -77,7 +76,7 @@ public class AreaControlTraphalTest : AreaControlTestBase<AreaControlTraphal>
         Assert.Equal(AreaModeEnum.Idle, Sut.GetPrivate<AreaModeEnum>("mode"));
         Sut.ButtonPressed("", DeconzEventIdEnum.Single);
         Assert.Equal(AreaModeEnum.Manual, Sut.GetPrivate<AreaModeEnum>("mode"));
-        Thread.Sleep(1000); // Sleep is to make sure all of the Tasks are completed
+        await Task.Delay(TimeSpan.FromMilliseconds(100)); // Sleep is to make sure all of the Tasks are completed
         Assert.Equal(AreaModeEnum.Idle, Sut.GetPrivate<AreaModeEnum>("mode"));
         VerifyAllMocks();
     }
@@ -101,7 +100,7 @@ public class AreaControlTraphalTest : AreaControlTestBase<AreaControlTraphal>
     [Theory]
     [InlineData("binary_sensor.motion_traphal_1")]
     [InlineData("binary_sensor.motion_traphal_2")]
-    public void MotionDetected_ModeIdleSensor1_VerifyMocks(string EntityId)
+    public async Task MotionDetected_ModeIdleSensor1_VerifyMocksAsync(string EntityId)
     {
         // Arrange 
         SetupMocks();
@@ -117,7 +116,7 @@ public class AreaControlTraphalTest : AreaControlTestBase<AreaControlTraphal>
 
         // Act
         Sut.MotionDetected(EntityId);
-        Task.Delay(TimeSpan.FromMilliseconds(100)).Wait();
+        await Task.Delay(TimeSpan.FromMilliseconds(100)); 
 
         // Assert
         VerifyAllMocks();
@@ -141,7 +140,7 @@ public class AreaControlTraphalTest : AreaControlTestBase<AreaControlTraphal>
     }
 
     [Fact]
-    public void MotionCleared_ModeMotion_VerifyMocks()
+    public async Task MotionCleared_ModeMotion_VerifyMocksAsync()
     {
         // Arrange 
         SetupMocks();
@@ -152,7 +151,7 @@ public class AreaControlTraphalTest : AreaControlTestBase<AreaControlTraphal>
 
         // Act
         Sut.MotionCleared("");
-        Task.Delay(TimeSpan.FromMilliseconds(100)).Wait();
+        await Task.Delay(TimeSpan.FromMilliseconds(100));
 
         // Assert
         VerifyAllMocks();

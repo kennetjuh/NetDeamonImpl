@@ -16,6 +16,7 @@ public class TestContext : IServiceProvider
     public TestContext()
     {
         _serviceCollection.AddGeneratedCode();
+        _serviceCollection.AddHomeAssistantGenerated();
         _serviceCollection.AddSingleton(_ => new HaContextMock(MockBehavior.Strict));
         _serviceCollection.AddTransient<IHaContext>(s => s.GetRequiredService<HaContextMock>().Object);
         _serviceCollection.AddSingleton<TestScheduler>();
@@ -36,11 +37,11 @@ public class TestContext : IServiceProvider
         _serviceCollection.AddSingleton(_ => new Mock<ILogger<NotifyApp>>());
         _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ILogger<NotifyApp>>>().Object);
         _serviceCollection.AddSingleton(_ => new Mock<ILogger<NotifyHandlerApp>>());
-        _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ILogger<NotifyHandlerApp>>>().Object);
-        _serviceCollection.AddSingleton(_ => new Mock<ILogger<PersistanceHandlerApp>>());
-        _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ILogger<PersistanceHandlerApp>>>().Object);
+        _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ILogger<NotifyHandlerApp>>>().Object);        
         _serviceCollection.AddSingleton(_ => new Mock<ILogger<WatchDogApp>>());
-        _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ILogger<WatchDogApp>>>().Object);
+        _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ILogger<WatchDogApp>>>().Object);      
+        _serviceCollection.AddSingleton(_ => new Mock<ILogger<TestApp>>());
+        _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ILogger<TestApp>>>().Object);
 
         _serviceCollection.AddSingleton(_ => new Mock<IAreaCollection> (MockBehavior.Strict));
         _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<IAreaCollection>>().Object);
@@ -75,4 +76,7 @@ public class TestContext : IServiceProvider
     public object? GetService(Type serviceType) => _serviceProvider.GetService(serviceType);
 
     public T GetApp<T>() => ActivatorUtilities.GetServiceOrCreateInstance<T>(_serviceProvider);
+
+    public Entities Entities => this.GetRequiredService<Entities>();
+    public HaContextMock HaMock => this.GetRequiredService<HaContextMock>();
 }

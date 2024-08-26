@@ -78,7 +78,7 @@ public class AreaControlVoordeurTest : AreaControlTestBase<AreaControlVoordeur>
     }
 
     [Fact]
-    public void MotionCleared_ModeMotion_VerifyMocks()
+    public async Task MotionCleared_ModeMotion_VerifyMocksAsync()
     {
         // Arrange 
         SetupMocks();
@@ -89,7 +89,7 @@ public class AreaControlVoordeurTest : AreaControlTestBase<AreaControlVoordeur>
 
         // Act
         Sut.MotionCleared("");
-        Task.Delay(TimeSpan.FromMilliseconds(100)).Wait();
+        await Task.Delay(TimeSpan.FromMilliseconds(100));
 
         // Assert
         VerifyAllMocks();

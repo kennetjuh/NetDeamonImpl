@@ -160,7 +160,7 @@ namespace NetDaemonTest.Modules
             // Arrange 
             SetupMocks();
             haContextMock.Setup(x => x.CallService("tts", "google_translate_say", null,
-                It.Is<TtsGoogleTranslateSayParameters>(y => y.EntityId == entities.MediaPlayer.Hal.EntityId && y.Message == message)));
+                It.Is<TtsGoogleTranslateSayParameters>(y => y.EntityId == entities.MediaPlayer.Speelkamer.EntityId && y.Message == message)));
             haContextMock.Setup(x => x.CallService("tts", "google_translate_say", null,
                 It.Is<TtsGoogleTranslateSayParameters>(y => y.EntityId == entities.MediaPlayer.Woonkamer.EntityId && y.Message == message)));
 

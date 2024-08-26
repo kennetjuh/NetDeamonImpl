@@ -18,14 +18,14 @@ public class IdleSettingApp : MyNetDaemonBaseApp
             _entities.Vacuum.DreameP20294b09RobotCleaner.SetFanSpeed("Basic");
         }
 
-        _entities.MediaPlayer.Hal.StateChanges()
+        _entities.MediaPlayer.Speelkamer.StateChanges()
            .Throttle(TimeSpan.FromSeconds(5), scheduler)
            .Where(x => x.New?.State == "off")
-           .Subscribe(x => _entities.MediaPlayer.Hal.VolumeSet(0.7));
+           .Subscribe(x => _entities.MediaPlayer.Speelkamer.VolumeSet(0.7));
 
-        if (_entities.MediaPlayer.Hal.State == "off")
+        if (_entities.MediaPlayer.Speelkamer.State == "off")
         {
-           _entities.MediaPlayer.Hal.VolumeSet(0.7);
+           _entities.MediaPlayer.Speelkamer.VolumeSet(0.7);
         }
 
         _entities.MediaPlayer.Woonkamer.StateChanges()

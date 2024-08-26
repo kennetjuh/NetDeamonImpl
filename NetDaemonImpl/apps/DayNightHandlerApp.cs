@@ -16,6 +16,9 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
     {
         this.lightControl = lightControl;
         this.luxBasedBrightness = luxBasedBrightness;
+                
+        _entities.InputText.Housestate.StateAllChanges()
+            .Subscribe(x => CheckDayNight());
 
         _entities.Sun.Sun.StateAllChanges()
             .Where(x => x.Old?.Attributes?.Elevation != x.New?.Attributes?.Elevation)
@@ -26,7 +29,7 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
 
         CheckDayNight();
 
-        _entities.Sensor.DaynightLastnighttrigger.StateChanges()
+        _entities.InputDatetime.Daynightlastnighttrigger.StateChanges()
             .Subscribe(x =>
             {
                 SetLastNightTrigger();
@@ -40,7 +43,7 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
     private void SetLastDayTrigger()
     {
         lastDayTask?.Dispose();
-        lastDayTask = _scheduler.RunDaily(Helper.StringToDateTime(_entities.Sensor.DaynightLastdaytrigger.State).TimeOfDay.Add(TimeSpan.FromHours(1)), () => LastDayTrigger());
+        lastDayTask = _scheduler.RunDaily(Helper.StringToDateTime(_entities.InputDatetime.Daynightlastdaytrigger.State).TimeOfDay.Add(TimeSpan.FromHours(1)), () => LastDayTrigger());
     }
 
     private void LastDayTrigger()
@@ -52,7 +55,7 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
     private void SetLastNightTrigger()
     {
         lastNightTask?.Dispose();
-        lastNightTask = _scheduler.RunDaily(Helper.StringToDateTime(_entities.Sensor.DaynightLastnighttrigger.State).TimeOfDay.Subtract(TimeSpan.FromHours(1)), () => LastNightTrigger());
+        lastNightTask = _scheduler.RunDaily(Helper.StringToDateTime(_entities.InputDatetime.Daynightlastnighttrigger.State).TimeOfDay.Subtract(TimeSpan.FromHours(1)), () => LastNightTrigger());
     }
 
     private void LastNightTrigger()
@@ -80,50 +83,45 @@ public class DayNightHandlerApp : MyNetDaemonBaseApp
 
     private void Night()
     {
-        _entities.Sensor.DaynightLastnighttrigger.SetState(_services, DateTime.Now.ToString(Constants.dateTime_TimeFormat));
-        _entities.Sensor.Daynight.SetState(_services, DayNightEnum.Night.ToString());
+        _entities.InputDatetime.Daynightlastnighttrigger.SetDatetime(time: DateTime.Now.ToString(Constants.dateTime_TimeFormat));
+        _entities.InputText.Daynight.SetValue(DayNightEnum.Night.ToString());
 
         lightControl.SetLight(_entities.Light.BuitenopritWandlamp, 50);
         lightControl.SetLight(_entities.Light.WandlampBuiten, 50);
         _entities.Switch.BuitenvoorGrondspots.TurnOn();
 
-        lightControl.SetLight(_entities.Light.SfeerlampKamer1, 1);
-        lightControl.SetLight(_entities.Light.SfeerlampKamer2, 1);
-        lightControl.SetLight(_entities.Light.SfeerlampKeuken, 1);
+        lightControl.SetLight(_entities.Light.SfeerlampKamer1, _settingsProvider.BrightnessSfeerlampWoonkamer1Night);        
+        lightControl.SetLight(_entities.Light.SfeerlampKeuken, _settingsProvider.BrightnessSfeerlampKeukenNight);
         lightControl.SetLight(_entities.Light.SfeerlampHal, _settingsProvider.BrightnessSfeerlampHalNight);
-        lightControl.SetLight(_entities.Light.SfeerlampBoven, 1);
+        lightControl.SetLight(_entities.Light.SfeerlampBoven, _settingsProvider.BrightnessSfeerlampBovenNight);
         lightControl.SetLight(_entities.Light.LightSpeelkamerSfeer, _settingsProvider.BrightnessSfeerlampSpeelkamerNight);
 
         if (_entities.Light.Wandlampen.IsOn())
         {
             lightControl.SetLight(_entities.Light.Wandlampen, Constants.brightnessWandNight);
-        }
-
-        lightControl.SetLight(_entities.Light.LightHut, Constants.brightnessHut);
+        }        
     }
 
     private void Day()
     {
-        _entities.Sensor.DaynightLastdaytrigger.SetState(_services, DateTime.Now.ToString(Constants.dateTime_TimeFormat));
-        _entities.Sensor.Daynight.SetState(_services, DayNightEnum.Day.ToString());
+        _entities.InputDatetime.Daynightlastdaytrigger.SetDatetime(time: DateTime.Now.ToString(Constants.dateTime_TimeFormat));
+        _entities.InputText.Daynight.SetValue(DayNightEnum.Day.ToString());
 
         lightControl.SetLight(_entities.Light.BuitenopritWandlamp, 0);
         lightControl.SetLight(_entities.Light.WandlampBuiten, 0);
         _entities.Switch.BuitenvoorGrondspots.TurnOff();
 
-        lightControl.SetLight(_entities.Light.SfeerlampKamer1, 50);
-        lightControl.SetLight(_entities.Light.SfeerlampKamer2, 50);
-        lightControl.SetLight(_entities.Light.SfeerlampKeuken, 50);
+        lightControl.SetLight(_entities.Light.SfeerlampKamer1, _settingsProvider.BrightnessSfeerlampWoonkamer1Day);        
+        lightControl.SetLight(_entities.Light.SfeerlampKeuken, _settingsProvider.BrightnessSfeerlampKeukenDay);
         lightControl.SetLight(_entities.Light.SfeerlampHal, _settingsProvider.BrightnessSfeerlampHalDay);
-        lightControl.SetLight(_entities.Light.SfeerlampBoven, 50);
+        lightControl.SetLight(_entities.Light.SfeerlampBoven, _settingsProvider.BrightnessSfeerlampBovenDay);
         lightControl.SetLight(_entities.Light.LightSpeelkamerSfeer, _settingsProvider.BrightnessSfeerlampSpeelkamerDay);
 
         if (_entities.Light.Wandlampen.IsOn())
         {
             lightControl.SetLight(_entities.Light.Wandlampen, Constants.brightnessWandDay);
         }
-
-        lightControl.SetLight(_entities.Light.LightHut, 0);
+        
         lightControl.SetLight(_entities.Light.BuitenzijHutsier, 0);
     }
 }

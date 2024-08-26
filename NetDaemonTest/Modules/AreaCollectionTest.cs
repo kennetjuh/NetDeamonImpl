@@ -11,6 +11,7 @@ namespace NetDaemonTest.Modules
         private readonly Mock<IHouseState> houseStateMock = new(MockBehavior.Strict);
         private readonly Mock<ILightControl> lightControlMock = new(MockBehavior.Strict);
         private readonly Mock<ITwinkle> twinkleMock = new(MockBehavior.Strict);
+        private readonly Mock<ILuxBasedBrightness> luxBasedBrightnessMock = new(MockBehavior.Strict);
 
         [Fact]
         public void Contructor_NoExceptions()
@@ -25,7 +26,7 @@ namespace NetDaemonTest.Modules
             delayProviderMock.Setup(x => x.ModeCycleTimeout).Returns(TimeSpan.Zero);
 
             // Act
-            _ = new AreaCollection(serviceProviderMock.Object, delayProviderMock.Object, lightControlMock.Object, houseStateMock.Object, twinkleMock.Object);
+            _ = new AreaCollection(serviceProviderMock.Object, delayProviderMock.Object, lightControlMock.Object, luxBasedBrightnessMock.Object, houseStateMock.Object, twinkleMock.Object);
 
             // Assert
             VerifyAllMocks();

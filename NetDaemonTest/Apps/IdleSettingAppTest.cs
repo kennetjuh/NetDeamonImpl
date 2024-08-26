@@ -15,7 +15,7 @@ public class IdleSettingAppTest : TestBase
         // Arrange
         ResetAllMocks();
         HaMock.TriggerStateChange(Entities.Vacuum.DreameP20294b09RobotCleaner, "unknown");
-        HaMock.TriggerStateChange(Entities.MediaPlayer.Hal, "unknown");
+        HaMock.TriggerStateChange(Entities.MediaPlayer.Speelkamer, "unknown");
         HaMock.TriggerStateChange(Entities.MediaPlayer.Woonkamer, "unknown");
 
         // Act
@@ -31,14 +31,14 @@ public class IdleSettingAppTest : TestBase
         // Arrange
         ResetAllMocks();
         HaMock.TriggerStateChange(Entities.Vacuum.DreameP20294b09RobotCleaner, "docked");
-        HaMock.TriggerStateChange(Entities.MediaPlayer.Hal, "off");
+        HaMock.TriggerStateChange(Entities.MediaPlayer.Speelkamer, "off");
         HaMock.TriggerStateChange(Entities.MediaPlayer.Woonkamer, "off");
 
         HaMock.Setup(x => x.CallService("vacuum", "set_fan_speed",
             It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Vacuum.DreameP20294b09RobotCleaner.EntityId),
             It.Is<VacuumSetFanSpeedParameters>(x => x.FanSpeed == "Basic")));
         HaMock.Setup(x => x.CallService("media_player", "volume_set",
-            It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.MediaPlayer.Hal.EntityId),
+            It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.MediaPlayer.Speelkamer.EntityId),
             It.Is<MediaPlayerVolumeSetParameters>(x => x.VolumeLevel == 0.7)));
         HaMock.Setup(x => x.CallService("media_player", "volume_set",
             It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.MediaPlayer.Woonkamer.EntityId),
@@ -75,14 +75,14 @@ public class IdleSettingAppTest : TestBase
     {
         // Arrange
         ResetAllMocks();
-        HaMock.TriggerStateChange(Entities.MediaPlayer.Hal, "unknown");
+        HaMock.TriggerStateChange(Entities.MediaPlayer.Speelkamer, "unknown");
         HaMock.Setup(x => x.CallService("media_player", "volume_set",
-            It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.MediaPlayer.Hal.EntityId),
+            It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.MediaPlayer.Speelkamer.EntityId),
             It.Is<MediaPlayerVolumeSetParameters>(x => x.VolumeLevel == 0.7)));
 
         // Act
         var app = Context.GetApp<IdleSettingApp>();
-        HaMock.TriggerStateChange(Entities.MediaPlayer.Hal, "off");
+        HaMock.TriggerStateChange(Entities.MediaPlayer.Speelkamer, "off");
         Scheduler.AdvanceBy(TimeSpan.FromSeconds(5).Ticks);
 
         // Assert
