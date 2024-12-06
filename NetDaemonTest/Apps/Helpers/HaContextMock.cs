@@ -1,10 +1,10 @@
+using Moq;
+using NetDaemon.HassModel.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Subjects;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Moq;
-using NetDaemon.HassModel.Entities;
 
 namespace NetDaemonTest.Apps.Helpers;
 
@@ -80,7 +80,7 @@ public class HaContextMock : Mock<HaContextMockImpl>
     {
         this.CallBase = true;
     }
-  
+
     public void TriggerStateChange(Entity entity, string newStatevalue, object? attributes = null)
     {
         var newState = new EntityState { State = newStatevalue };

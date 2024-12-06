@@ -2,9 +2,9 @@ using Moq;
 using NetDaemon.HassModel.Entities;
 using NetDaemonImpl.apps;
 using NetDaemonTest.Apps.Helpers;
-using Xunit;
 using System.Linq;
 using System.Text.Json;
+using Xunit;
 
 namespace NetDaemonTest.Apps;
 
@@ -16,7 +16,14 @@ public class TimerAppTest : TestBase
     ""data"": {
         ""entity_id"": ""timer.sleeptimerbedden""      
     } 
-}";    
+}";
+    private const string sleeptimerbeddenkidsFinishedEvent = @"
+{
+    ""event_type"": ""timer.finished"",
+    ""data"": {
+        ""entity_id"": ""timer.sleeptimerbeddenkids""      
+    } 
+}";
     private const string sleeptimerkidsFinishedEvent = @"
 {
     ""event_type"": ""timer.finished"",
@@ -124,7 +131,7 @@ public class TimerAppTest : TestBase
         // Assert
         VerifyAllMocks();
     }
-    
+
     [Fact]
     public void TimerApp_PowerTariffHigh_VerifyCalls()
     {
@@ -161,6 +168,23 @@ public class TimerAppTest : TestBase
     }
 
     [Fact]
+    public void TimerApp_SleeptimerbeddenkidsFinishedEvent_VerifyCalls()
+    {
+        // Arrange
+        ResetAllMocks();
+        var @event = JsonSerializer.Deserialize<Event>(sleeptimerbeddenkidsFinishedEvent)!;
+        HaMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Switch.BedDamon.EntityId), null));
+        HaMock.Setup(x => x.CallService("switch", "turn_off", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Switch.BedCaitlyn.EntityId), null));
+
+        // Act
+        var sut = Context.GetApp<TimerApp>();
+        HaMock.TriggerEvent(@event);
+
+        // Assert
+        VerifyAllMocks();
+    }
+
+    [Fact]
     public void TimerApp_SleeptimerkidsFinishedEvent_VerifyCalls()
     {
         // Arrange
@@ -171,6 +195,36 @@ public class TimerAppTest : TestBase
         // Act
         var sut = Context.GetApp<TimerApp>();
         HaMock.TriggerEvent(@event);
+
+        // Assert
+        VerifyAllMocks();
+    }
+
+    [Fact]
+    public void TimerApp_SleeptimerbeddenkidsChanged0_VerifyCalls()
+    {
+        // Arrange
+        ResetAllMocks();
+        HaMock.Setup(x => x.CallService("timer", "cancel", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Timer.Sleeptimerbeddenkids.EntityId), null));
+
+        // Act
+        var sut = Context.GetApp<TimerApp>();
+        HaMock.TriggerStateChange(Entities.InputNumber.Sleeptimerbeddenminuteskids, "0");
+
+        // Assert
+        VerifyAllMocks();
+    }
+
+    [Fact]
+    public void TimerApp_SleeptimerbeddenkidsChanged10_VerifyCalls()
+    {
+        // Arrange
+        ResetAllMocks();
+        HaMock.Setup(x => x.CallService("timer", "start", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Timer.Sleeptimerbeddenkids.EntityId), It.Is<TimerStartParameters>(x => x.Duration == "600")));
+
+        // Act
+        var sut = Context.GetApp<TimerApp>();
+        HaMock.TriggerStateChange(Entities.InputNumber.Sleeptimerbeddenminuteskids, "10");
 
         // Assert
         VerifyAllMocks();
@@ -196,7 +250,7 @@ public class TimerAppTest : TestBase
     {
         // Arrange
         ResetAllMocks();
-        HaMock.Setup(x => x.CallService("timer", "start", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Timer.Sleeptimerbedden.EntityId), It.Is<TimerStartParameters>(x=>x.Duration == "600")));
+        HaMock.Setup(x => x.CallService("timer", "start", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Timer.Sleeptimerbedden.EntityId), It.Is<TimerStartParameters>(x => x.Duration == "600")));
 
         // Act
         var sut = Context.GetApp<TimerApp>();

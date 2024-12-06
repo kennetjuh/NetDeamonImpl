@@ -5,7 +5,7 @@ using Xunit;
 namespace NetDaemonTest.Modules
 {
     public class SettingsProviderTest : ServiceProviderTestBase
-    { 
+    {
         [Fact]
         public void Contructor_NoExceptions()
         {
@@ -85,6 +85,6 @@ namespace NetDaemonTest.Modules
             // Assert
             Assert.Equal(10, result);
             VerifyAllMocks();
-        }       
+        }
     }
 }

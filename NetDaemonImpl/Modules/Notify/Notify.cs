@@ -90,7 +90,7 @@ public class Notify : INotify
             tag = tag.HasValue ? tag.ToString() : null,
             color = "",
             sticky = "true",
-            channel = priority == NotifyPriorityEnum.high ? "default": "silent",
+            channel = priority == NotifyPriorityEnum.high ? "default" : "silent",
             importance = priority.ToString()
         };
 

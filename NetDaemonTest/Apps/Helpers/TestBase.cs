@@ -21,6 +21,7 @@ public class TestBase
     public Mock<ITwinkle> TwinkleMock => Context.GetRequiredService<Mock<ITwinkle>>();
     public Mock<IHouseNotificationImageCreator> HouseNotificationImageCreatorMock => Context.GetRequiredService<Mock<IHouseNotificationImageCreator>>();
     public Mock<ISettingsProvider> SettingsProviderMock => Context.GetRequiredService<Mock<ISettingsProvider>>();
+    public Mock<IDayNight> DayNightMock => Context.GetRequiredService<Mock<IDayNight>>();
 
     internal virtual void VerifyAllMocks()
     {
@@ -33,6 +34,7 @@ public class TestBase
         NotifyMock.VerifyAll();
         HouseNotificationImageCreatorMock.VerifyAll();
         SettingsProviderMock.VerifyAll();
+        DayNightMock.VerifyAll();
     }
 
     internal virtual void ResetAllMocks()
@@ -46,5 +48,6 @@ public class TestBase
         NotifyMock.Reset();
         HouseNotificationImageCreatorMock.Reset();
         SettingsProviderMock.Reset();
+        DayNightMock.Reset();
     }
 }

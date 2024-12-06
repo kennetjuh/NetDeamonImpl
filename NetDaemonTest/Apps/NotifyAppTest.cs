@@ -83,7 +83,7 @@ public class NotifyAppTest : TestBase
         SetupDefaultMocks();
         SettingsProviderMock.Setup(x => x.BeddenAlarmKids).Returns(false);
         HaMock.TriggerStateChange(Entities.InputDatetime.Beddenalarmkids, "18:30");
-        Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(18).AddMinutes(29).ToUniversalTime().Ticks);        
+        Scheduler.AdvanceTo(DateTime.Now.Date.AddHours(18).AddMinutes(29).ToUniversalTime().Ticks);
 
         // Act
         var app = Context.GetApp<NotifyApp>();
@@ -213,7 +213,37 @@ public class NotifyAppTest : TestBase
 
         // Assert
         VerifyAllMocks();
-    } 
+    }
+
+    [Fact]
+    public void NotifyApp_LocalCalendarOff_VerifyCalls()
+    {
+        // Arrange
+        ResetAllMocks();
+        SetupDefaultMocks();
+        var app = Context.GetApp<NotifyApp>();
+        // Act
+        HaMock.TriggerStateChange(Entities.Calendar.Local, "off");
+
+        // Assert
+        VerifyAllMocks();
+    }
+
+    [Fact]
+    public void NotifyApp_LocalCalendarOn_VerifyCalls()
+    {
+        // Arrange
+        ResetAllMocks();
+        SetupDefaultMocks();
+        var app = Context.GetApp<NotifyApp>();
+        NotifyMock.Setup(x => x.NotifyGsmKen("Calendar notify test", "Test", NotifyPriorityEnum.high, null, null));
+
+        // Act
+        HaMock.TriggerStateChange(Entities.Calendar.Local, "on", new CalendarAttributes() { FriendlyName = "[NotifyHouse] Test" });
+
+        // Assert
+        VerifyAllMocks();
+    }
 
 
     [Theory]
@@ -236,6 +266,7 @@ public class NotifyAppTest : TestBase
         // Assert
         VerifyAllMocks();
     }
+
 
 
     public class TestDataGenerator : IEnumerable<object[]>

@@ -7,7 +7,7 @@ using Xunit;
 namespace NetDaemonTest.Apps;
 
 public class WatchDogAppTest : TestBase
-{  
+{
     [Fact]
     public void WatchDogApp_Constructor_NoEvents()
     {
@@ -22,36 +22,21 @@ public class WatchDogAppTest : TestBase
     }
 
     [Fact]
-    public void WatchDogApp_StartupOnDay_VerifyCalls()
-    {
-        // Arrange
-        ResetAllMocks();        
-        HaMock.TriggerStateChange(Entities.InputBoolean.WatchdogBuiten, "on");
-        HaMock.TriggerStateChange(Entities.InputText.Daynight, "Day");
-        SetupDayMocks();
-
-        // Act
-        var app = Context.GetApp<WatchDogApp>();
-
-        // Assert
-        VerifyAllMocks();
-    }
-
-    [Fact]
-    public void WatchDogApp_StartupOnNight_VerifyCalls()
+    public void WatchDogApp_Startup_VerifyCalls()
     {
         // Arrange
         ResetAllMocks();
         HaMock.TriggerStateChange(Entities.InputBoolean.WatchdogBuiten, "on");
-        HaMock.TriggerStateChange(Entities.InputText.Daynight, "Night");
-        SetupNightMocks();
+        HaMock.TriggerStateChange(Entities.InputText.Daynight, "Day");
+        DayNightMock.Setup(x => x.WatchdogBuiten());
 
         // Act
         var app = Context.GetApp<WatchDogApp>();
 
         // Assert
         VerifyAllMocks();
-    }
+        DayNightMock.Verify(x => x.WatchdogBuiten(), Times.Exactly(1));
+    }    
 
     [Fact]
     public void WatchDogApp_TurnOn_VerifyCalls()
@@ -60,7 +45,7 @@ public class WatchDogAppTest : TestBase
         ResetAllMocks();
         HaMock.TriggerStateChange(Entities.InputBoolean.WatchdogBuiten, "off");
         HaMock.TriggerStateChange(Entities.InputText.Daynight, "Day");
-        SetupDayMocks();
+        DayNightMock.Setup(x => x.WatchdogBuiten());
 
         // Act
         var app = Context.GetApp<WatchDogApp>();
@@ -68,6 +53,7 @@ public class WatchDogAppTest : TestBase
 
         // Assert
         VerifyAllMocks();
+        DayNightMock.Verify(x => x.WatchdogBuiten(), Times.Exactly(1));
     }
 
     [Fact]
@@ -77,8 +63,7 @@ public class WatchDogAppTest : TestBase
         ResetAllMocks();
         HaMock.TriggerStateChange(Entities.InputBoolean.WatchdogBuiten, "off");
         HaMock.TriggerStateChange(Entities.InputText.Daynight, "Day");
-        SetupDayMocks();
-        SetupNightMocks();
+        DayNightMock.Setup(x => x.WatchdogBuiten());
 
         // Act
         var app = Context.GetApp<WatchDogApp>();
@@ -88,19 +73,6 @@ public class WatchDogAppTest : TestBase
 
         // Assert
         VerifyAllMocks();
-    }
-
-    private void SetupDayMocks()
-    {
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.GrondlampZij.EntityId), 0)).Returns(false);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.BuitenachterFonteinlamp.EntityId), 0)).Returns(false);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.WandlampHut.EntityId), 0)).Returns(false);
-    }
-
-    private void SetupNightMocks()
-    {
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.GrondlampZij.EntityId), Constants.brightnessBuitenZij)).Returns(true);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.BuitenachterFonteinlamp.EntityId), Constants.brightnessFontein)).Returns(true);
-        LightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == Entities.Light.WandlampHut.EntityId), Constants.brightnessHutWand)).Returns(true);
+        DayNightMock.Verify(x => x.WatchdogBuiten(), Times.Exactly(6));
     }
 }

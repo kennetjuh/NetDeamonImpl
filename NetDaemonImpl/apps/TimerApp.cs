@@ -19,10 +19,15 @@ public class TimerApp : MyNetDaemonBaseApp
                 if (x.DataElement.HasValue)
                 {
                     var data = System.Text.Json.JsonSerializer.Deserialize<TimerFinishedDataElement>(x.DataElement.Value);
-                    if(data?.entity_id == _entities.Timer.Sleeptimerbedden.EntityId)
+                    if (data?.entity_id == _entities.Timer.Sleeptimerbedden.EntityId)
                     {
                         _entities.Switch.BedGreet.TurnOff();
                         _entities.Switch.BedKen.TurnOff();
+                    }
+                    if (data?.entity_id == _entities.Timer.Sleeptimerbeddenkids.EntityId)
+                    {
+                        _entities.Switch.BedCaitlyn.TurnOff();
+                        _entities.Switch.BedDamon.TurnOff();
                     }
                     if (data?.entity_id == _entities.Timer.Sleeptimerkids.EntityId)
                     {
@@ -36,7 +41,7 @@ public class TimerApp : MyNetDaemonBaseApp
             {
                 var newState = x.New!.State!;
                 if (newState == 0)
-                {                    
+                {
                     _entities.Timer.Sleeptimerbedden.Cancel();
                 }
                 else
@@ -44,6 +49,20 @@ public class TimerApp : MyNetDaemonBaseApp
                     _entities.Timer.Sleeptimerbedden.Start((x.New!.State! * 60).ToString());
                 }
             });
+
+        _entities.InputNumber.Sleeptimerbeddenminuteskids.StateChanges()
+           .Subscribe(x =>
+           {
+               var newState = x.New!.State!;
+               if (newState == 0)
+               {
+                   _entities.Timer.Sleeptimerbeddenkids.Cancel();
+               }
+               else
+               {
+                   _entities.Timer.Sleeptimerbeddenkids.Start((x.New!.State! * 60).ToString());
+               }
+           });
 
         _entities.InputNumber.Sleeptimerkids.StateChanges()
             .Subscribe(x =>

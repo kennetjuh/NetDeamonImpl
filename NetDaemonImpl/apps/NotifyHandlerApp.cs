@@ -6,7 +6,7 @@ namespace NetDaemonImpl.apps;
 [NetDaemonApp]
 public class NotifyHandlerApp : MyNetDaemonBaseApp
 {
-    private INotify notify;
+    private readonly INotify notify;
 
     private record notificationEventDataElement
     {
@@ -22,7 +22,7 @@ public class NotifyHandlerApp : MyNetDaemonBaseApp
         [JsonPropertyName("device_id")]
         public string? DeviceId { get; init; }
     }
-    
+
     public NotifyHandlerApp(IHaContext haContext, IScheduler scheduler, ILogger<NotifyHandlerApp> logger, INotify notify, ISettingsProvider settingsProvider)
         : base(haContext, scheduler, logger, settingsProvider)
     {
@@ -32,7 +32,7 @@ public class NotifyHandlerApp : MyNetDaemonBaseApp
         {
             HandleNotificationEvent(x);
         });
-    }    
+    }
 
     private void HandleNotificationEvent(Event x)
     {
@@ -60,7 +60,7 @@ public class NotifyHandlerApp : MyNetDaemonBaseApp
 
             _logger.LogInformation($"{notificationEventDataElement.Action}");
 
-            if(Enum.TryParse<NotifyActionEnum>(notificationEventDataElement.Action, out var result))
+            if (Enum.TryParse<NotifyActionEnum>(notificationEventDataElement.Action, out var result))
             {
                 notify.HandleNotificationEvent(result);
             }

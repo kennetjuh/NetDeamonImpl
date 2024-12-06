@@ -24,7 +24,7 @@ public class CallServiceEventHandlerAppTest : TestBase
         ""parent_id"": null,
         ""user_id"": null
     }
-}";   
+}";
 
 
     [Fact]

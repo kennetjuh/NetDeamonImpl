@@ -64,7 +64,7 @@ public class AreaControlCabineTest : AreaControlTestBase<AreaControlCabine>
                 It.IsAny<double>(),
                 It.IsAny<double>()))
             .Returns(true);
-        luxBasedBrightnessMock.Setup(x=>x.GetBrightness(It.IsAny<double>(), It.IsAny<double>())).Returns(50);
+        luxBasedBrightnessMock.Setup(x => x.GetBrightness(It.IsAny<double>(), It.IsAny<double>())).Returns(50);
         lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Cabineplafond.EntityId), 50)).Returns(true);
         haContextMock.Setup(x => x.CallService("switch", "turn_on", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == CabineSfeer.EntityId), null));
 

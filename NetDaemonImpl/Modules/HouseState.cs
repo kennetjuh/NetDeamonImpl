@@ -6,19 +6,21 @@ namespace NetDaemonImpl.Modules
     {
         private readonly ILogger<HouseState> Logger;
         private readonly ISettingsProvider settingsProvider;
+        private readonly IDayNight dayNight;
         private readonly Entities Entities;
         private readonly Services Services;
         private readonly ILightControl LightControl;
         private readonly ITwinkle Twinkle;
         private readonly INotify Notify;
 
-        public HouseState(IServiceProvider provider, ILightControl lightControl, ITwinkle twinkle, INotify notify, ILogger<HouseState> logger, ISettingsProvider settingsProvider)
+        public HouseState(IServiceProvider provider, ILightControl lightControl, ITwinkle twinkle, INotify notify, ILogger<HouseState> logger, ISettingsProvider settingsProvider, IDayNight dayNight)
         {
             LightControl = lightControl;
             Twinkle = twinkle;
             Notify = notify;
             Logger = logger;
             this.settingsProvider = settingsProvider;
+            this.dayNight = dayNight;
             var haContext = DiHelper.GetHaContext(provider);
             Entities = new Entities(haContext);
             Services = new Services(haContext);
@@ -29,23 +31,13 @@ namespace NetDaemonImpl.Modules
             Logger.LogInformation("Awake");
             Entities.InputText.Housestate.SetValue(HouseStateEnum.Awake.ToString());
 
+            dayNight.ForceDayNight();
             Entities.InputBoolean.WatchdogBuiten.TurnOn();
 
             LightControl.SetLight(Entities.Light.Kamerlamp, 0);
             LightControl.SetLight(Entities.Light.Bureaulamp, 0);
-            Entities.Switch.BdfM107Screen.TurnOn();
-            LightControl.SetLight(Entities.Light.WoonkamerKisten);
-
-            if (Helper.GetDayNightState(Entities) == DayNightEnum.Day)
-            {
-                LightControl.SetLight(Entities.Light.Wandlampen, Constants.brightnessWandDay);
-                LightControl.SetLight(Entities.Light.Booglamp, Constants.brightnessBoogDay);
-            }
-            else
-            {
-                LightControl.SetLight(Entities.Light.Wandlampen, Constants.brightnessWandNight);
-                LightControl.SetLight(Entities.Light.Booglamp, Constants.brightnessBoogNight);
-            }
+            LightControl.SetLight(Entities.Light.Booglamp, Helper.GetDayNightState(Entities) == DayNightEnum.Day?Constants.brightnessBoogDay: Constants.brightnessBoogNight);
+            
 
             Twinkle.Start();
 
@@ -58,17 +50,16 @@ namespace NetDaemonImpl.Modules
         {
             Logger.LogInformation("Away");
 
-            Entities.InputText.Housestate.SetValue(HouseStateEnum.Away.ToString());
+            Entities.InputText.Housestate.SetValue(state.ToString());
+            
+            Entities.InputBoolean.WatchdogBuiten.TurnOn();
 
             // buiten
             LightControl.SetLight(Entities.Light.BuitenachterLamp, 0);
-            LightControl.SetLight(Entities.Light.BuitenachterSierverlichting, 0);
             LightControl.SetLight(Entities.Light.LightHut, 0);
             LightControl.SetLight(Entities.Light.BuitenzijHutsier, 0);
             LightControl.SetLight(Entities.Light.BuitenachterHangstoel, 0);
-            Entities.Switch.SwitchInfinityMirror.TurnOff();
             Entities.Switch.BuitenachterGrondpomp.TurnOff();
-            Entities.Switch.SwitchVliegenlamp.TurnOff();
             Entities.Switch.SwitchFontein.TurnOff();
             Entities.InputBoolean.WatchdogBuiten.TurnOn();
 
@@ -90,8 +81,6 @@ namespace NetDaemonImpl.Modules
             LightControl.SetLight(Entities.Light.Booglamp, 0);
             LightControl.SetLight(Entities.Light.Kamerlamp, 0);
             LightControl.SetLight(Entities.Light.Bureaulamp, 0);
-            Entities.Switch.BdfM107Screen.TurnOff();
-            LightControl.SetLight(Entities.Light.WoonkamerKisten, 0);
             LightControl.SetLight(Entities.Light.Hal, 0);
             LightControl.SetLight(Entities.Light.KeukenKeukenlamp, 0);
             LightControl.SetLight(Entities.Light.Washal, 0);
@@ -99,6 +88,10 @@ namespace NetDaemonImpl.Modules
             LightControl.SetLight(Entities.Light.Badkamer, 0);
             LightControl.SetLight(Entities.Light.SpeelkamerLamp, 0);
             LightControl.SetLight(Entities.Light.Wandlampen, 0);
+
+            LightControl.SetLight(Entities.Light.LightHalSfeer, 0);
+            LightControl.SetLight(Entities.Light.SfeerlampKeuken, 0);
+            LightControl.SetLight(Entities.Light.SfeerlampSpeelkamer, 0);
 
             // Kerst
             //Entities.Switch.Binnen1.TurnOff();
@@ -115,6 +108,8 @@ namespace NetDaemonImpl.Modules
                     Notify.NotifyGsmKen("Jimmie", "Zit ie in de bench?", NotifyPriorityEnum.high);
                 }
             }
+
+            dayNight.CheckDayNight();
         }
 
         public void HouseStateSleeping()
@@ -124,13 +119,12 @@ namespace NetDaemonImpl.Modules
 
             Entities.InputText.Housestate.SetValue(HouseStateEnum.Sleeping.ToString());
 
-            Entities.Climate.Keuken.SetTemperature(17);
-            LightControl.SetLight(Entities.Light.NachtlampGreet, 1);
-            LightControl.SetLight(Entities.Light.NachtlampKen, 1);
+            Entities.Climate.Keuken.SetTemperature(19);
+            //LightControl.SetLight(Entities.Light.NachtlampGreet, 1);
+            //LightControl.SetLight(Entities.Light.NachtlampKen, 1);
 
             Entities.Vacuum.DreameP20294b09RobotCleaner.SetFanSpeed("Strong");
-            Entities.Vacuum.DreameP20294b09RobotCleaner.Start();    
-            
+            Entities.Vacuum.DreameP20294b09RobotCleaner.Start();
         }
 
         public void HouseStateHoliday()
@@ -143,24 +137,21 @@ namespace NetDaemonImpl.Modules
 
         public void TvMode()
         {
+            Entities.InputText.Housestate.SetValue(HouseStateEnum.Tv.ToString());
+
             // buiten
-            Entities.InputBoolean.WatchdogBuiten.TurnOff();                     
+            Entities.InputBoolean.WatchdogBuiten.TurnOff();
             LightControl.SetLight(Entities.Light.BuitenachterLamp, 0);
-            LightControl.SetLight(Entities.Light.BuitenachterSierverlichting, 0);            
             LightControl.SetLight(Entities.Light.BuitenachterHangstoel, 0);
             LightControl.SetLight(Entities.Light.BuitenachterFonteinlamp, 0);
-            Entities.Switch.SwitchInfinityMirror.TurnOff();                        
             Entities.Switch.SwitchFontein.TurnOff();
 
             // onder
             LightControl.SetLight(Entities.Light.Booglamp, 0);
             LightControl.SetLight(Entities.Light.Kamerlamp, 0);
             LightControl.SetLight(Entities.Light.Bureaulamp, 0);
-            Entities.Switch.BdfM107Screen.TurnOff();
-            LightControl.SetLight(Entities.Light.WoonkamerKisten, 0);            
-            LightControl.SetLight(Entities.Light.KeukenKeukenlamp, 0);            
+            LightControl.SetLight(Entities.Light.KeukenKeukenlamp, 0);
             LightControl.SetLight(Entities.Light.Wandlampen, 0);
-            LightControl.SetLight(Entities.Light.SfeerlampKamer1, 0);
             LightControl.SetLight(Entities.Light.SfeerlampKeuken, 0);
         }
     }

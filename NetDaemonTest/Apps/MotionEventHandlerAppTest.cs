@@ -10,7 +10,7 @@ namespace NetDaemonTest.Apps;
 
 public class MotionEventHandlerAppTest : TestBase
 {
-    private Mock<IAreaControl> areaMock = new Mock<IAreaControl>(MockBehavior.Strict);
+    private readonly Mock<IAreaControl> areaMock = new Mock<IAreaControl>(MockBehavior.Strict);
     internal override void ResetAllMocks()
     {
         base.ResetAllMocks();

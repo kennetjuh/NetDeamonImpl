@@ -5,7 +5,7 @@ using Xunit;
 namespace NetDaemonTest.Apps;
 
 public class TestAppTest : TestBase
-{  
+{
     [Fact]
     public void TestAppTest_Constructor_NoEvents()
     {
@@ -17,5 +17,5 @@ public class TestAppTest : TestBase
 
         // Assert
         VerifyAllMocks();
-    }   
+    }
 }

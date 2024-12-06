@@ -19,6 +19,8 @@ public class LightControlTest : ServiceProviderTestBase
     private readonly TestLightOnOff testLightOnOff;
     private readonly TestLightHs testLightHs;
     private readonly TestLightBrightness testLightBrightness;
+    private readonly TestLightUnsupported testLightUnsupported;
+    private readonly TestLightNull testLightNull;
 
     internal override void VerifyAllMocks()
     {
@@ -38,6 +40,8 @@ public class LightControlTest : ServiceProviderTestBase
         testLightOnOff = new TestLightOnOff(haContextMock.Object, "Light.testLightOnOff");
         testLightHs = new TestLightHs(haContextMock.Object, "Light.testLightHs");
         testLightBrightness = new TestLightBrightness(haContextMock.Object, "Light.testLightBrightness");
+        testLightUnsupported = new TestLightUnsupported(haContextMock.Object, "Light.testLightUnsupported");
+        testLightNull = new TestLightNull(haContextMock.Object, "Light.testLightNull");
     }
 
 
@@ -288,6 +292,26 @@ public class LightControlTest : ServiceProviderTestBase
         // Assert
         VerifyAllMocks();
         Assert.True(retVal);
+    }
+
+    [Fact]
+    public void SetLight_AllwaysWhite_VerifyColorTempInServiceCall()
+    {
+        // Arrange 
+        SetupMocks();
+        haContextMock.Setup(x => x.CallService("Light", "turn_on",
+            It.Is<ServiceTarget>(x => x.EntityIds!.Single() == testLightColortemp.EntityId),
+            It.Is<LightTurnOnParameters>(x => x.ColorTemp != null && (long)x.ColorTemp == 0)));
+        var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
+        sut.AddAllwaysWhiteLight(testLightColortemp);
+        testLightColortemp.MinMireds = 0;
+        testLightColortemp.MaxMireds = 5000;
+
+        // Act
+        sut.SetLight(testLightColortemp, null);
+
+        // Assert
+        VerifyAllMocks();
     }
 
     [Fact]
@@ -590,6 +614,62 @@ public class LightControlTest : ServiceProviderTestBase
 
         // Act
         sut.SetLight(testLightHs, 0, "red");
+
+        // Assert
+        VerifyAllMocks();
+    }
+
+    [Fact]
+    public void SetLightColor_UnsupportedLight_VerifyCalls()
+    {
+        // Arrange 
+        SetupMocks();
+        var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
+
+        // Act
+        sut.SetLight(testLightUnsupported, null, "red");
+
+        // Assert
+        VerifyAllMocks();
+    }
+
+    [Fact]
+    public void SetLight_UnsupportedLight_VerifyCalls()
+    {
+        // Arrange 
+        SetupMocks();
+        var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
+
+        // Act
+        sut.SetLight(testLightUnsupported, null);
+
+        // Assert
+        VerifyAllMocks();
+    }
+
+    [Fact]
+    public void SetLight_NullLight_VerifyCalls()
+    {
+        // Arrange 
+        SetupMocks();
+        var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
+
+        // Act
+        sut.SetLight(testLightNull, null);
+
+        // Assert
+        VerifyAllMocks();
+    }
+
+    [Fact]
+    public void SetLightColor_NullLight_VerifyCalls()
+    {
+        // Arrange 
+        SetupMocks();
+        var sut = new LightControl(serviceProviderMock.Object, luxBasedBrightnessMock.Object, loggerMock.Object);
+
+        // Act
+        sut.SetLight(testLightNull, null, "red");
 
         // Assert
         VerifyAllMocks();

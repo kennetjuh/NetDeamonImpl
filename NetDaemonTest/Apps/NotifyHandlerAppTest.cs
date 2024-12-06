@@ -36,8 +36,8 @@ public class NotifyHandlerAppTest : TestBase
 
         // Assert
         VerifyAllMocks();
-    }    
-    
+    }
+
     [Fact]
     public void NotifyHandlerApp_HandleEvent_VerifyCalls()
     {

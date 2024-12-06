@@ -1,10 +1,10 @@
-using System.Reactive.Concurrency;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Reactive.Testing;
 using Moq;
 using NetDaemonImpl.apps;
 using NetDaemonInterface;
+using System.Reactive.Concurrency;
 
 namespace NetDaemonTest.Apps.Helpers;
 
@@ -37,13 +37,13 @@ public class TestContext : IServiceProvider
         _serviceCollection.AddSingleton(_ => new Mock<ILogger<NotifyApp>>());
         _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ILogger<NotifyApp>>>().Object);
         _serviceCollection.AddSingleton(_ => new Mock<ILogger<NotifyHandlerApp>>());
-        _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ILogger<NotifyHandlerApp>>>().Object);        
+        _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ILogger<NotifyHandlerApp>>>().Object);
         _serviceCollection.AddSingleton(_ => new Mock<ILogger<WatchDogApp>>());
-        _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ILogger<WatchDogApp>>>().Object);      
+        _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ILogger<WatchDogApp>>>().Object);
         _serviceCollection.AddSingleton(_ => new Mock<ILogger<TestApp>>());
         _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ILogger<TestApp>>>().Object);
 
-        _serviceCollection.AddSingleton(_ => new Mock<IAreaCollection> (MockBehavior.Strict));
+        _serviceCollection.AddSingleton(_ => new Mock<IAreaCollection>(MockBehavior.Strict));
         _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<IAreaCollection>>().Object);
 
         _serviceCollection.AddSingleton(_ => new Mock<IDelayProvider>(MockBehavior.Strict));
@@ -69,6 +69,9 @@ public class TestContext : IServiceProvider
 
         _serviceCollection.AddSingleton(_ => new Mock<ISettingsProvider>(MockBehavior.Strict));
         _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<ISettingsProvider>>().Object);
+
+        _serviceCollection.AddSingleton(_ => new Mock<IDayNight>(MockBehavior.Strict));
+        _serviceCollection.AddTransient(s => s.GetRequiredService<Mock<IDayNight>>().Object);
 
         _serviceProvider = _serviceCollection.BuildServiceProvider();
     }

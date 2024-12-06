@@ -5,7 +5,7 @@ using Xunit;
 namespace NetDaemonTest
 {
     public class HouseNotificationImageCreatorTest
-    {       
+    {
         [Fact]
         public void Contructor_NoExceptions()
         {
@@ -15,7 +15,7 @@ namespace NetDaemonTest
             _ = new HouseNotificationImageCreator();
 
             // Assert
-        }        
+        }
 
         [Fact]
         public void GetImagePath()
@@ -78,7 +78,7 @@ namespace NetDaemonTest
             // Arrange
             var sut = new HouseNotificationImageCreator();
             sut.SetPrivate("path", "HouseImage.png");
-            sut.AddConditionalImage(150, 50, 50, 50, File.ReadAllBytes(@"../../../../NetDaemonImpl/Resources/Home.png"), ()=>false);
+            sut.AddConditionalImage(150, 50, 50, 50, File.ReadAllBytes(@"../../../../NetDaemonImpl/Resources/Home.png"), () => false);
 
             // Act
             sut.CreateImage();

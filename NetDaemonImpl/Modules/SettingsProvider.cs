@@ -3,14 +3,18 @@
 namespace NetDaemonImpl.Modules
 {
     public class SettingsProvider : ISettingsProvider
-    {        
+    {
         private readonly Entities Entities;
 
         public SettingsProvider(IServiceProvider provider)
-        {       
+        {
             var haContext = DiHelper.GetHaContext(provider);
             Entities = new Entities(haContext);
         }
+
+        public int BrightnessSfeerlampWoonkamerDay => (int?)Entities.InputNumber.Brightnesssfeerlampwoonkamerday.State ?? 40;
+
+        public int BrightnessSfeerlampWoonkamerNight => (int?)Entities.InputNumber.Brightnesssfeerlampwoonkamernight.State ?? 10;
 
         public int BrightnessSfeerlampSpeelkamerDay => (int?)Entities.InputNumber.Brightnesssfeerlampspeelkamerday.State ?? 40;
 
@@ -19,10 +23,6 @@ namespace NetDaemonImpl.Modules
         public int BrightnessSfeerlampHalDay => (int?)Entities.InputNumber.Brightnesssfeerlamphalday.State ?? 40;
 
         public int BrightnessSfeerlampHalNight => (int?)Entities.InputNumber.Brightnesssfeerlamphalnight.State ?? 1;
-
-        public int BrightnessSfeerlampWoonkamer1Day => (int?)Entities.InputNumber.Brightnesssfeerlampkamer1day.State ?? 40;
-
-        public int BrightnessSfeerlampWoonkamer1Night => (int?)Entities.InputNumber.Brightnesssfeerlampkamer1night.State ?? 1;
 
         public int BrightnessSfeerlampKeukenDay => (int?)Entities.InputNumber.Brightnesssfeerlampkeukenday.State ?? 40;
 

@@ -89,7 +89,7 @@ public class AreaControlVoordeurTest : AreaControlTestBase<AreaControlVoordeur>
 
         // Act
         Sut.MotionCleared("");
-        await Task.Delay(TimeSpan.FromMilliseconds(100));
+        await Task.Delay(TimeSpan.FromMilliseconds(200));
 
         // Assert
         VerifyAllMocks();

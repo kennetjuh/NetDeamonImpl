@@ -1,11 +1,11 @@
 using Moq;
 using NetDaemon.HassModel.Entities;
 using NetDaemonImpl.apps;
-using NetDaemonTest.Apps.Helpers;
-using Xunit;
-using System.Linq;
 using NetDaemonInterface;
+using NetDaemonTest.Apps.Helpers;
 using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
 namespace NetDaemonTest.Apps;
 
@@ -32,7 +32,7 @@ public class CabineAppTest : TestBase
         HaMock.TriggerStateChange(Entities.InputNumber.Cabinetemptarget.EntityId, new EntityState() { State = "20" });
         HaMock.TriggerStateChange(Entities.Sensor.MultiCabineTemp.EntityId, new EntityState() { State = "15" });
         HaMock.TriggerStateChange(Entities.InputBoolean.Cabinethermostat.EntityId, new EntityState() { State = "on" });
-        NotifyMock.Setup(x => x.NotifyGsmKen("CabineThermostat", "Actual or Target is NULL",NotifyPriorityEnum.high,null, It.IsAny<List<NotifyActionEnum>>()));
+        NotifyMock.Setup(x => x.NotifyGsmKen("CabineThermostat", "Actual or Target is NULL", NotifyPriorityEnum.high, null, It.IsAny<List<NotifyActionEnum>>()));
 
         // Act
         var app = Context.GetApp<CabineApp>();
@@ -95,7 +95,7 @@ public class CabineAppTest : TestBase
         // Assert
         VerifyAllMocks();
     }
-    
+
     [Fact]
     public void CabineApp_ThermostatChangeTarget_VerifyCalls()
     {
@@ -112,7 +112,7 @@ public class CabineAppTest : TestBase
 
         // Assert
         VerifyAllMocks();
-    }    
+    }
 
     [Fact]
     public void CabineApp_ThermostatOff_VerifyCalls()

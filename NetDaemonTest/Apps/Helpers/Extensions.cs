@@ -7,6 +7,6 @@ namespace NetDaemonTest.Apps.Helpers
         public static IServiceCollection AddGeneratedCode(this IServiceCollection serviceCollection)
             => serviceCollection
                 .AddTransient<Entities>()
-                .AddTransient<Services>();    
+                .AddTransient<Services>();
     }
 }

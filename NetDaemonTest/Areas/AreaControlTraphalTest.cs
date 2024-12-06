@@ -65,8 +65,8 @@ public class AreaControlTraphalTest : AreaControlTestBase<AreaControlTraphal>
         SetupMocks();
         delayProviderMock.Setup(x => x.ManualOffTimeout).Returns(TimeSpan.FromMilliseconds(10));
         lightControlMock.Setup(x => x.SetLight(light, 0)).Returns(false);
-        lightControlMock.Setup(x => x.SetLight(lightWand, 0)).Returns(false);             
-                
+        lightControlMock.Setup(x => x.SetLight(lightWand, 0)).Returns(false);
+
         haContextMock.Setup(x => x.GetState(lightWand.EntityId)).Returns(new EntityState() { State = "on" });
 
 
@@ -76,7 +76,7 @@ public class AreaControlTraphalTest : AreaControlTestBase<AreaControlTraphal>
         Assert.Equal(AreaModeEnum.Idle, Sut.GetPrivate<AreaModeEnum>("mode"));
         Sut.ButtonPressed("", DeconzEventIdEnum.Single);
         Assert.Equal(AreaModeEnum.Manual, Sut.GetPrivate<AreaModeEnum>("mode"));
-        await Task.Delay(TimeSpan.FromMilliseconds(100)); // Sleep is to make sure all of the Tasks are completed
+        await Task.Delay(TimeSpan.FromMilliseconds(300)); // Sleep is to make sure all of the Tasks are completed
         Assert.Equal(AreaModeEnum.Idle, Sut.GetPrivate<AreaModeEnum>("mode"));
         VerifyAllMocks();
     }
@@ -116,7 +116,7 @@ public class AreaControlTraphalTest : AreaControlTestBase<AreaControlTraphal>
 
         // Act
         Sut.MotionDetected(EntityId);
-        await Task.Delay(TimeSpan.FromMilliseconds(100)); 
+        await Task.Delay(TimeSpan.FromMilliseconds(100));
 
         // Assert
         VerifyAllMocks();
@@ -151,7 +151,7 @@ public class AreaControlTraphalTest : AreaControlTestBase<AreaControlTraphal>
 
         // Act
         Sut.MotionCleared("");
-        await Task.Delay(TimeSpan.FromMilliseconds(100));
+        await Task.Delay(TimeSpan.FromMilliseconds(200));
 
         // Assert
         VerifyAllMocks();

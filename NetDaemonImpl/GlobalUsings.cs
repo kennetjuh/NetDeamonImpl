@@ -6,6 +6,6 @@ global using NetDaemon.HassModel;
 global using NetDaemon.HassModel.Integration;
 global using NetDaemonImpl.Extensions;
 global using System;
-global using System.Reactive.Linq;
 global using System.Reactive.Concurrency;
+global using System.Reactive.Linq;
 

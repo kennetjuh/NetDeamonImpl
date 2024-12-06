@@ -23,7 +23,6 @@ public class DeconzButtonMapping
             new("button_halboven_1", AreaControlEnum.HalBoven, _entities.Sensor.ButtonHalboven1Battery.EntityId),
             new("button_halboven_2", AreaControlEnum.HalBoven, _entities.Sensor.ButtonHalboven2Battery.EntityId),
             new("button_cabine", AreaControlEnum.Cabine, _entities.Sensor.ButtonCabineBattery.EntityId),
-            new("button_cabine_1", AreaControlEnum.Cabine, _entities.Sensor.ButtonCabine1Battery.EntityId),
             new("button_hal", AreaControlEnum.Hal, _entities.Sensor.ButtonHalBattery.EntityId),
             new("button_kamerlamp", AreaControlEnum.Woonkamer, _entities.Sensor.ButtonKamerlampBattery.EntityId),
             new("button_bureaulamp", AreaControlEnum.Woonkamer, _entities.Sensor.ButtonBureaulampBattery.EntityId),

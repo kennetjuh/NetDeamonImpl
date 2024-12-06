@@ -30,7 +30,7 @@ public class AreaControlWashalTest : AreaControlTestBase<AreaControlWashal>
     public void ButtonPressed_SingleClickLightGoesOn_VerifyMocks()
     {
         // Arrange
-        SetupMocks();        
+        SetupMocks();
         lightControlMock.Setup(x => x.ButtonDefaultLuxBased(
                 DeconzEventIdEnum.Single,
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId),

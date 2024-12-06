@@ -93,7 +93,7 @@ public class LightControl : ILightControl
     public bool SetLight(LightEntity light, double? brightness = null)
     {
         var supportedModes = light.Attributes?.SupportedColorModes;
-        var colorTemp = lightEntitiesAllwaysWhite.Any(x => x.EntityId == light.EntityId)? light.Attributes?.MinMireds : light.Attributes?.MaxMireds;
+        var colorTemp = lightEntitiesAllwaysWhite.Any(x => x.EntityId == light.EntityId) ? light.Attributes?.MinMireds : light.Attributes?.MaxMireds;
         var currentBrightness = light.Attributes?.Brightness;
         var currentColorTemp = light.Attributes?.ColorTemp;
 
@@ -203,5 +203,5 @@ public class LightControl : ILightControl
                 return false;
             }
         }
-    }   
+    }
 }

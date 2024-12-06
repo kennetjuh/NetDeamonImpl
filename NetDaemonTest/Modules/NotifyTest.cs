@@ -197,16 +197,16 @@ namespace NetDaemonTest.Modules
         public void Notify_NotifyWithTags_VerifyMocks(NotifyTagEnum tag)
         {
             // Arrange 
-            NotifyMobileAppA53Parameters parameters= new NotifyMobileAppA53Parameters();
+            NotifyMobileAppA53Parameters parameters = new NotifyMobileAppA53Parameters();
             SetupMocks();
             haContextMock.Setup(x => x.CallService("notify", "mobile_app_a53", null,
                 It.IsAny<NotifyMobileAppA53Parameters>()))
-                .Callback<string,string,ServiceTarget,object>((a, b, c, d) => parameters = (NotifyMobileAppA53Parameters)d);
+                .Callback<string, string, ServiceTarget, object>((a, b, c, d) => parameters = (NotifyMobileAppA53Parameters)d);
 
             var sut = new Notify(serviceProviderMock.Object);
 
             // Act
-            sut.NotifyGsmKen("","",NotifyPriorityEnum.high, tag, null);
+            sut.NotifyGsmKen("", "", NotifyPriorityEnum.high, tag, null);
 
             // Assert
             AssertRecordNotifyData(parameters.Data as RecordNotifyData, "default", null, NotifyPriorityEnum.high, tag, null);
@@ -229,7 +229,7 @@ namespace NetDaemonTest.Modules
             sut.NotifyHouseStateGsmKen("", "", "image", NotifyPriorityEnum.high, null);
 
             // Assert
-            AssertRecordNotifyData(parameters.Data as RecordNotifyData, "default", "image", NotifyPriorityEnum.high,NotifyTagEnum.HouseStateChanged, null);
+            AssertRecordNotifyData(parameters.Data as RecordNotifyData, "default", "image", NotifyPriorityEnum.high, NotifyTagEnum.HouseStateChanged, null);
             VerifyAllMocks();
         }
 
@@ -247,7 +247,7 @@ namespace NetDaemonTest.Modules
             var sut = new Notify(serviceProviderMock.Object);
 
             // Act
-            sut.NotifyGsmKen("", "",NotifyPriorityEnum.high, null, new() { action });
+            sut.NotifyGsmKen("", "", NotifyPriorityEnum.high, null, new() { action });
 
             // Assert
             AssertRecordNotifyData(parameters.Data as RecordNotifyData, "default", null, NotifyPriorityEnum.high, null, action);
@@ -260,8 +260,8 @@ namespace NetDaemonTest.Modules
         {
             // Arrange 
             NotifyMobileAppA53Parameters parameters = new NotifyMobileAppA53Parameters();
-            SetupMocks();    
-            if(!action.ToString().StartsWith("Uri"))
+            SetupMocks();
+            if (!action.ToString().StartsWith("Uri"))
             {
                 //just a general setup, each action except Uri's will call a service
                 haContextMock.Setup(x => x.CallService(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ServiceTarget>(), It.IsAny<object?>()));

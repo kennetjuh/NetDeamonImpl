@@ -25,7 +25,7 @@ public class IdleSettingApp : MyNetDaemonBaseApp
 
         if (_entities.MediaPlayer.Speelkamer.State == "off")
         {
-           _entities.MediaPlayer.Speelkamer.VolumeSet(0.7);
+            _entities.MediaPlayer.Speelkamer.VolumeSet(0.7);
         }
 
         _entities.MediaPlayer.Woonkamer.StateChanges()

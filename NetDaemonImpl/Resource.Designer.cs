@@ -249,5 +249,15 @@ namespace NetDaemonImpl {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Tv {
+            get {
+                object obj = ResourceManager.GetObject("Tv", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

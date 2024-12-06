@@ -49,7 +49,7 @@ public class IdleSettingAppTest : TestBase
 
         // Assert
         VerifyAllMocks();
-    } 
+    }
 
     [Fact]
     public void IdleSettingsApp_IdleDetectionVacuum_VerifyMocks()

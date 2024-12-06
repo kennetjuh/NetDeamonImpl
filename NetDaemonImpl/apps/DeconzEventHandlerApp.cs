@@ -10,7 +10,7 @@ namespace NetDaemonImpl.apps;
 [NetDaemonApp]
 public class DeconzEventHandlerApp : MyNetDaemonBaseApp
 {
-    private DeconzButtonMapping mapping;
+    private readonly DeconzButtonMapping mapping;
 
     private IAreaCollection AreaCollection { get; }
 
@@ -72,7 +72,7 @@ public class DeconzEventHandlerApp : MyNetDaemonBaseApp
 
             var map = mapping.mapping.SingleOrDefault(x => x.Item1 == deconzEventDataElement.Id);
 
-            if (map!=null)
+            if (map != null)
             {
                 AreaCollection.GetArea(map.Item2).ButtonPressed(map.Item3, deconzEvent);
             }

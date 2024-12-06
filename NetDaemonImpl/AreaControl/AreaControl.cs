@@ -99,17 +99,11 @@ public abstract class AreaControl : IAreaControl
     }
 
     /// <inheritdoc/>
-    public virtual void ButtonPressed(string ButtonSensor, DeconzEventIdEnum eventId)
-    {
-    }
+    public virtual void ButtonPressed(string ButtonSensor, DeconzEventIdEnum eventId) { }
 
     /// <inheritdoc/>
-    public virtual void MotionCleared(string MotionSensor)
-    {
-    }
+    public virtual void MotionCleared(string MotionSensor) { }
 
     /// <inheritdoc/>
-    public virtual void MotionDetected(string MotionSensor)
-    {
-    }
+    public virtual void MotionDetected(string MotionSensor) { }
 }

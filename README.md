@@ -1,7 +1,4 @@
-# NetDeamonImpl
-My NetDeamon Implementation for HomeAssistant
+# NetDeamon
+My NetDeamon implementation for  HomeAssistant
 
-## Discuss the NetDaemon
-
-Please [join the Discord server](https://discord.gg/K3xwfcX) to get support or if you want to contribute and help
-others.
+[![codecov](https://codecov.io/gh/kennetjuh/NetDeamon/branch/main/graph/badge.svg?token=5JHYO0XXEP)](https://codecov.io/gh/kennetjuh/NetDeamon)

@@ -26,8 +26,9 @@ public class CallBackHandlerAppTest : TestBase
     }
 }";
 
-    private string GetCallChangeHouseStateEvent(string state) {
- return @"
+    private string GetCallChangeHouseStateEvent(string state)
+    {
+        return @"
 {
     ""event_type"": ""call_service"",
     ""data"": {
@@ -42,7 +43,8 @@ public class CallBackHandlerAppTest : TestBase
         ""parent_id"": null,
         ""user_id"": null
     }
-}".Replace("<state>", state);}
+}".Replace("<state>", state);
+    }
 
 
     [Fact]
@@ -74,8 +76,8 @@ public class CallBackHandlerAppTest : TestBase
 
         // Assert
         VerifyAllMocks();
-    }    
-    
+    }
+
     [Fact]
     public void CallBackHandlerApp_ChangeHouseStateAwake_VerifyCalls()
     {

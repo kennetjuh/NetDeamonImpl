@@ -26,7 +26,7 @@ public class AreaControlTraphal : AreaControl
         StopRunTask();
         mode = AreaModeEnum.Manual;
 
-        if (LightWand.IsOn() && eventId==DeconzEventIdEnum.Single)
+        if (LightWand.IsOn() && eventId == DeconzEventIdEnum.Single)
         {
             lightControl.SetLight(Light, 0);
             lightControl.SetLight(LightWand, 0);
@@ -40,7 +40,7 @@ public class AreaControlTraphal : AreaControl
         {
             lightControl.ButtonDefaultLuxBased(eventId, LightWand, minBrightnessWand, maxBrightnessWand);
             lightControl.ButtonDefaultLuxBased(eventId, Light, minBrightness, maxBrightness);
-        }        
+        }
     }
 
     public override void MotionCleared(string entityId)
@@ -76,7 +76,7 @@ public class AreaControlTraphal : AreaControl
             if (entityId == entities.BinarySensor.MotionTraphal1.EntityId)
             {
                 StartRunTask((Ct) =>
-                {                   
+                {
                     lightControl.SetLight(entities.Light.Traphal3, brightnessWand);
                     DelayRunTaskAndCheckCancellation(delayProvider.MotionOnSequenceDelay, Ct);
                     lightControl.SetLight(entities.Light.Traphal2, brightnessWand);

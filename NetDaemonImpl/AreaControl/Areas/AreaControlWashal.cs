@@ -20,7 +20,7 @@ public class AreaControlWashal : AreaControl
         mode = AreaModeEnum.Manual;
 
         if (!lightControl.ButtonDefaultLuxBased(eventId, light, minBrightness, maxBrightness))
-        {    
+        {
             StartAfterTask(delayProvider.ManualOffTimeout, () =>
             {
                 mode = AreaModeEnum.Idle;

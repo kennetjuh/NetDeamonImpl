@@ -11,11 +11,13 @@ using System.Reflection;
 
 /*
  * TODO: Add tests for imagecreator
- */ 
+ * 
+ * dotnet tool update -g NetDaemon.HassModel.CodeGen
+ */
 
 try
 {
-    Console.WriteLine("Starting v1.53");
+    Console.WriteLine("Starting v1.71");
     await Host.CreateDefaultBuilder(args)
         .UseNetDaemonAppSettings()
         .UseNetDaemonDefaultLogging()
@@ -36,6 +38,7 @@ try
             services.AddSingleton<ITwinkle, Twinkle>();
             services.AddSingleton<IHouseNotificationImageCreator, HouseNotificationImageCreator>();
             services.AddSingleton<ISettingsProvider, SettingsProvider>();
+            services.AddSingleton<IDayNight, DayNight>();
         })
         .Build()
         .RunAsync()
