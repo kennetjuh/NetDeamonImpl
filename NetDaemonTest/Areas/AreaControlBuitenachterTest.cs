@@ -19,7 +19,6 @@ public class AreaControlBuitenachterTest : AreaControlTestBase<AreaControlBuiten
     {
         // Arrange 
         SetupMocks();
-        lightControlMock.Setup(x => x.AddAllwaysWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.BuitenachterHangstoel.EntityId)));
 
         // Act
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
@@ -40,10 +39,9 @@ public class AreaControlBuitenachterTest : AreaControlTestBase<AreaControlBuiten
     private void buttonCheck(DeconzEventIdEnum id, string button)
     {
         // Arrange
-        light = entities.Light.BuitenachterHangstoel;
+        light = entities.Light.BuitenachterLamp;
 
         SetupMocks();
-        lightControlMock.Setup(x => x.AddAllwaysWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.BuitenachterHangstoel.EntityId)));
         lightControlMock.Setup(x => x.ButtonDefaultLuxBased(
                 id,
                 It.Is<LightEntity>(x => x.EntityId == light.EntityId),
@@ -54,35 +52,9 @@ public class AreaControlBuitenachterTest : AreaControlTestBase<AreaControlBuiten
         Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
 
         // Act
-        Sut.ButtonPressed(entities.Sensor.Buttonhangstoel.EntityId, id);
+        Sut.ButtonPressed(button, id);
 
         // Assert
         VerifyAllMocks();
-    }
-
-
-    [Theory]
-    [MemberData(nameof(DeconzEventIdValues))]
-    public void HangStoelButtonPressed_VerifyMocks(DeconzEventIdEnum id)
-    {
-        // Arrange
-        light = entities.Light.BuitenachterHangstoel;
-
-        SetupMocks();
-        lightControlMock.Setup(x => x.AddAllwaysWhiteLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.BuitenachterHangstoel.EntityId)));
-        lightControlMock.Setup(x => x.ButtonDefaultLuxBased(
-                id,
-                It.Is<LightEntity>(x => x.EntityId == light.EntityId),
-                It.IsAny<double>(),
-                It.IsAny<double>()))
-            .Returns(true);
-
-        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
-
-        // Act
-        Sut.ButtonPressed(entities.Sensor.Buttonhangstoel.EntityId, id);
-
-        // Assert
-        VerifyAllMocks();
-    }
+    }    
 }

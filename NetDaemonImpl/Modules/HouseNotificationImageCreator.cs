@@ -1,4 +1,5 @@
-﻿using NetDaemonInterface;
+﻿using Microsoft.AspNetCore.Identity;
+using NetDaemonInterface;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.IO;
@@ -22,9 +23,9 @@ namespace NetDaemonImpl.Modules
             this.variables = variables;
         }
 
-        public void Draw(SKCanvas canvas, SKPaint paint)
+        public void Draw(SKCanvas canvas, SKFont font, SKPaint paint)
         {
-            paint.TextSize = size;
+            font.Size = size;
             var text = label;
             for (var i = 0; i < variables.Count; i++)
             {
@@ -32,7 +33,7 @@ namespace NetDaemonImpl.Modules
                 text = text.Replace($"{{{i}}}", variable ?? "NULL");
             }
 
-            canvas.DrawText(text, new SKPoint(x, y), paint);
+            canvas.DrawText(text, new SKPoint(x, y), font, paint);
         }
     }
 
@@ -63,7 +64,7 @@ namespace NetDaemonImpl.Modules
             }
 
             var image = SKBitmap.Decode(this.image);
-            image = image.Resize(new SKSizeI(width, heigth), SKFilterQuality.High);
+            image = image.Resize(new SKSizeI(width, heigth), SKSamplingOptions.Default);
             canvas.DrawBitmap(image, new SKPoint(x, y));
         }
     }
@@ -108,13 +109,15 @@ namespace NetDaemonImpl.Modules
             using var surface = SKSurface.Create(imageInfo);
             SKCanvas canvas = surface.Canvas;
             canvas.Clear(SKColors.Black);
-            using var paint = new SKPaint(new SKFont(SKTypeface.FromStream(fontStream), 10));
+            using var paint = new SKPaint();
             paint.IsAntialias = true;
             paint.Color = SKColors.White;
 
+            using var skfont = new SKFont(SKTypeface.FromStream(fontStream), 10);
+
             foreach (var textEntry in textEntries)
             {
-                textEntry.Draw(canvas, paint);
+                textEntry.Draw(canvas, skfont, paint);
             }
 
             foreach (var imageEntry in imageEntries)

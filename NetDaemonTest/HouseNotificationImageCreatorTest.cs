@@ -69,7 +69,7 @@ namespace NetDaemonTest
             sut.CreateImage();
 
             // Assert
-            Assert.Equal(1407, new FileInfo(sut.GetPrivate<string>("path")).Length);
+            Assert.Equal(1067, new FileInfo(sut.GetPrivate<string>("path")).Length);
         }
 
         [Fact]

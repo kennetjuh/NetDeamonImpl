@@ -32,7 +32,6 @@ public class DeconzButtonMapping
             new("button_buitenachterlamp", AreaControlEnum.BuitenAchter, _entities.Sensor.ButtonBuitenachterlampBattery.EntityId),
             new("button_buitenachterzithoek", AreaControlEnum.BuitenAchter, _entities.Sensor.ButtonBuitenachterzithoekBattery.EntityId),
             new("button_traphal", AreaControlEnum.Traphal, _entities.Sensor.ButtonTraphalBattery.EntityId),
-            new("button_hut", AreaControlEnum.Hut, _entities.Sensor.ButtonHutBattery.EntityId),
             new("button_hangstoel", AreaControlEnum.BuitenAchter, _entities.Sensor.Buttonhangstoel.EntityId),
         };
     }

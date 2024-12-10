@@ -57,7 +57,6 @@ namespace NetDaemonImpl.Modules
             // buiten
             LightControl.SetLight(Entities.Light.BuitenachterLamp, 0);
             LightControl.SetLight(Entities.Light.LightHut, 0);
-            LightControl.SetLight(Entities.Light.BuitenzijHutsier, 0);
             LightControl.SetLight(Entities.Light.BuitenachterHangstoel, 0);
             Entities.Switch.BuitenachterGrondpomp.TurnOff();
             Entities.Switch.SwitchFontein.TurnOff();

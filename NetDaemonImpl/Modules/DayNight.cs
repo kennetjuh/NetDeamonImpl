@@ -87,7 +87,6 @@ namespace NetDaemonImpl.Modules
             LightControl.SetLight(Entities.Light.WandlampBuiten, 0);
             Entities.Switch.BuitenvoorGrondspots.TurnOff();
             LightControl.SetLight(Entities.Light.SfeerlampHalboven, settingsProvider.BrightnessSfeerlampBovenDay);
-            LightControl.SetLight(Entities.Light.BuitenzijHutsier, 0);
 
             if (Entities.Light.Wandlampen.IsOn() || force)
             {

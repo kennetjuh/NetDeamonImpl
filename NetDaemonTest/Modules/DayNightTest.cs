@@ -185,7 +185,6 @@ namespace NetDaemonTest.Modules
 
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.BuitenopritWandlamp.EntityId), 0)).Returns(false);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.WandlampBuiten.EntityId), 0)).Returns(false);
-            lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.BuitenzijHutsier.EntityId), 0)).Returns(false);
             lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(y => y.EntityId == entities.Light.SfeerlampHalboven.EntityId), 55)).Returns(true);
             settingsProvidermock.Setup(x => x.BrightnessSfeerlampBovenDay).Returns(55);
 
