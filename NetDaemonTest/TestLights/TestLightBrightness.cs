@@ -15,9 +15,9 @@ public record TestLightBrightness : TestLightBase
             var attributes = new LightAttributes()
             {
                 Brightness = Brightness,
-                ColorTemp = ColorTemp,
-                MaxMireds = MaxMireds,
-                MinMireds = MinMireds,
+                ColorTempKelvin = ColorTemp,
+                MaxColorTempKelvin = MaxColorTempKelvin,
+                MinColorTempKelvin = MinColorTempKelvin,
                 SupportedColorModes = new List<string> { "brightness" }
             };
             return attributes;

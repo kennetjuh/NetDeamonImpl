@@ -4,7 +4,7 @@ namespace NetDaemonImpl.Modules
 {
     public class DelayProvider : IDelayProvider
     {
-        public TimeSpan MotionClear => TimeSpan.FromMinutes(1);
+        public TimeSpan MotionClear => TimeSpan.FromMinutes(5);
 
         public TimeSpan MotionClearManual => TimeSpan.FromMinutes(10);
 
@@ -13,7 +13,5 @@ namespace NetDaemonImpl.Modules
         public TimeSpan MotionOnSequenceDelay => TimeSpan.FromSeconds(1);
 
         public TimeSpan ModeCycleTimeout => TimeSpan.FromSeconds(5);
-
-        public TimeSpan TwinkleDelay => TimeSpan.FromSeconds(120);
     }
 }

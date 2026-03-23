@@ -2,18 +2,18 @@
 
 public enum AreaControlEnum
 {
+    HouseState,
     Badkamer,
-    BuitenAchter,
-    Cabine,
-    Hal,
     HalBoven,
     Keuken,
-    Slaapkamer,
-    SlaapkamerKids,
-    Speelkamer,
-    Traphal,
-    Voordeur,
+    Inkom,
+    SlaapkamerKen,
+    SlaapkamerDamon,
+    SlaapkamerCaitlyn,
+    Rommelkamer,
     Washal,
-    Wc,
     Woonkamer,
+    Eetkamer,
+    Kelder,
+    Garage,
 }

@@ -17,22 +17,18 @@ public class NotifyApp : MyNetDaemonBaseApp
     {
         this.notify = notify;
 
-        thermostatActions = new List<NotifyActionEnum> { NotifyActionEnum.Thermostat17, NotifyActionEnum.Thermostat20, NotifyActionEnum.UriThermostat };
+        thermostatActions = [NotifyActionEnum.Thermostat17, NotifyActionEnum.Thermostat20, NotifyActionEnum.UriThermostat];
 
         houseNotificationImageCreator.AddFormattedText(5, 10, 10, "Ken: {0}", () => _entities.Person.Ken.State?.ToString());
-        houseNotificationImageCreator.AddFormattedText(5, 20, 10, "Greet: {0}", () => _entities.Person.Greet.State?.ToString());
         houseNotificationImageCreator.AddConditionalImage(150, 50, 50, 50, Resource.Home, null);
-        houseNotificationImageCreator.AddConditionalImage(125, 30, 20, 20, Resource.EnergyLow, () => _entities.Sensor.PowerTariff.State?.ToString() == "low");
-        houseNotificationImageCreator.AddConditionalImage(125, 30, 20, 20, Resource.EnergyHigh, () => _entities.Sensor.PowerTariff.State?.ToString() == "normal");
         houseNotificationImageCreator.AddConditionalImage(150, 30, 20, 20, Resource.Moon, () => Helper.GetDayNightState(_entities) == DayNightEnum.Night);
         houseNotificationImageCreator.AddConditionalImage(150, 30, 20, 20, Resource.Sun, () => Helper.GetDayNightState(_entities) == DayNightEnum.Day);
         houseNotificationImageCreator.AddConditionalImage(175, 30, 20, 20, Resource.Holiday, () => Helper.GetHouseState(_entities) == HouseStateEnum.Holiday);
         houseNotificationImageCreator.AddConditionalImage(175, 30, 20, 20, Resource.Awake, () => Helper.GetHouseState(_entities) == HouseStateEnum.Awake);
         houseNotificationImageCreator.AddConditionalImage(175, 30, 20, 20, Resource.Away, () => Helper.GetHouseState(_entities) == HouseStateEnum.Away);
-        houseNotificationImageCreator.AddConditionalImage(175, 30, 20, 20, Resource.Sleep, () => Helper.GetHouseState(_entities) == HouseStateEnum.Sleeping);
-        houseNotificationImageCreator.AddConditionalImage(175, 30, 20, 20, Resource.Tv, () => Helper.GetHouseState(_entities) == HouseStateEnum.Tv);
+        houseNotificationImageCreator.AddConditionalImage(175, 30, 20, 20, Resource.Sleep, () => Helper.GetHouseState(_entities) == HouseStateEnum.Sleeping);        
 
-        houseNotificationImageCreator.AddFormattedText(110, 90, 15, "{0}", () => _entities.Sensor.TempKeukenSetpoint.State?.ToString());
+        //houseNotificationImageCreator.AddFormattedText(110, 90, 15, "{0}", () => _entities.Sensor.TempKeukenSetpoint.State?.ToString());
         houseNotificationImageCreator.AddConditionalImage(125, 70, 25, 25, Resource.Thermostat, null);
 
         houseNotificationImageCreator.CreateImage();
@@ -65,43 +61,19 @@ public class NotifyApp : MyNetDaemonBaseApp
                 notify.NotifyHouseStateGsmKen("House State", $"Day/Night state: {x.New?.State}", houseNotificationImageCreator.GetImagePath(), NotifyPriorityEnum.low, thermostatActions);
             });
 
-        _entities.Sensor.PowerTariff.StateChanges()
-            .Subscribe(x =>
-            {
-                houseNotificationImageCreator.CreateImage();
-                notify.NotifyHouseStateGsmKen("House State", $"Energy tarif: {x.New?.State}", houseNotificationImageCreator.GetImagePath(), NotifyPriorityEnum.low, thermostatActions);
-            });
-
-        _entities.Person.Greet.StateChanges()
-            .Subscribe(x =>
-            {
-                houseNotificationImageCreator.CreateImage();
-                notify.NotifyHouseStateGsmKen("House State", $"Greet: {x.New?.State}", houseNotificationImageCreator.GetImagePath(), NotifyPriorityEnum.low, thermostatActions);
-                LocationChangedGreet(x);
-            });
-
         _entities.Person.Ken.StateChanges()
             .Subscribe(x =>
             {
                 houseNotificationImageCreator.CreateImage();
                 notify.NotifyHouseStateGsmKen("House State", $"Ken: {x.New?.State}", houseNotificationImageCreator.GetImagePath(), NotifyPriorityEnum.low, thermostatActions);
                 LocationChangedKen(x);
-            });
+            });        
 
-        _entities.Sensor.TempKeukenSetpoint.StateChanges().Subscribe(x =>
-        {
-            if (x.New != null && x.New.State != null)
-            {
-                houseNotificationImageCreator.CreateImage();
-                notify.NotifyHouseStateGsmKen("House State", $"Thermostat: {x.New.State}", houseNotificationImageCreator.GetImagePath(), NotifyPriorityEnum.high, thermostatActions);
-            }
-        });
-
-        CreateNotificationForOpenClose(_entities.BinarySensor.OpencloseVoordeur, scheduler, TimeSpan.FromMinutes(1), NotifyTagEnum.OpenCloseVoordeur, new() { NotifyActionEnum.OpenCloseVoordeurOmroepen });
-        CreateNotificationForOpenClose(_entities.BinarySensor.OpencloseGarage, scheduler, TimeSpan.FromMinutes(1), NotifyTagEnum.OpenCloseGarage, new() { NotifyActionEnum.OpenCloseGarageOmroepen });
-        CreateNotificationForOpenClose(_entities.BinarySensor.OpencloseAchterdeur, scheduler, TimeSpan.FromMinutes(1), NotifyTagEnum.OpenCloseAchterdeur, new() { NotifyActionEnum.OpenCloseAchterdeurOmroepen });
-        CreateNotificationForOpenClose(_entities.BinarySensor.OpencloseTuindeur, scheduler, TimeSpan.FromMinutes(1), NotifyTagEnum.OpenCloseTuindeur, new() { NotifyActionEnum.OpenCloseTuindeurOmroepen });
-        CreateNotificationForOpenClose(_entities.BinarySensor.OpencloseAchterdeurgarage, scheduler, TimeSpan.FromMinutes(1), NotifyTagEnum.OpenCloseAchterdeurgarage, new() { NotifyActionEnum.OpenCloseAchterdeurgarageOmroepen });
+        //CreateNotificationForOpenClose(_entities.BinarySensor.OpencloseVoordeur, scheduler, TimeSpan.FromMinutes(1), NotifyTagEnum.OpenCloseVoordeur, new() { NotifyActionEnum.OpenCloseVoordeurOmroepen });
+        //CreateNotificationForOpenClose(_entities.BinarySensor.OpencloseGarage, scheduler, TimeSpan.FromMinutes(1), NotifyTagEnum.OpenCloseGarage, new() { NotifyActionEnum.OpenCloseGarageOmroepen });
+        //CreateNotificationForOpenClose(_entities.BinarySensor.OpencloseAchterdeur, scheduler, TimeSpan.FromMinutes(1), NotifyTagEnum.OpenCloseAchterdeur, new() { NotifyActionEnum.OpenCloseAchterdeurOmroepen });
+        //CreateNotificationForOpenClose(_entities.BinarySensor.OpencloseTuindeur, scheduler, TimeSpan.FromMinutes(1), NotifyTagEnum.OpenCloseTuindeur, new() { NotifyActionEnum.OpenCloseTuindeurOmroepen });
+        //CreateNotificationForOpenClose(_entities.BinarySensor.OpencloseAchterdeurgarage, scheduler, TimeSpan.FromMinutes(1), NotifyTagEnum.OpenCloseAchterdeurgarage, new() { NotifyActionEnum.OpenCloseAchterdeurgarageOmroepen });
 
         const string notifyHousePrefix = "[NotifyHouse]";
 
@@ -164,14 +136,6 @@ public class NotifyApp : MyNetDaemonBaseApp
         {
             //notify.NotifyGsmGreet("Ken lokatie", "Ken is vertrokken vanuit werk", NotifyPriorityEnum.high);
             //notify.NotifyHouse("Attentie, Ken is vertrokken vanuit werk");
-            return;
-        }
-    }
-
-    private void LocationChangedGreet(StateChange<PersonEntity, EntityState<PersonAttributes>> x)
-    {
-        if (x.Old == null)
-        {
             return;
         }
     }

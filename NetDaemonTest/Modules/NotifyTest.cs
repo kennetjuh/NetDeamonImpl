@@ -44,27 +44,6 @@ namespace NetDaemonTest.Modules
         }
 
         [Theory]
-        [InlineData("title", "message")]
-        public void NotifyGsmGreet_Notify_VerifyMocks(string title, string message)
-        {
-            // Arrange 
-            SetupMocks();
-            haContextMock.Setup(x => x.CallService("notify", "mobile_app_gsm_greet", null,
-                It.Is<NotifyMobileAppGsmGreetParameters>(y =>
-                    y.Title == title &&
-                    y.Message == message)));
-
-            var sut = new Notify(serviceProviderMock.Object);
-
-            // Act
-            sut.NotifyGsmGreet(title, message, NotifyPriorityEnum.high);
-
-            // Assert
-            VerifyAllMocks();
-        }
-
-
-        [Theory]
         [InlineData("message")]
         public void NotifyGsmKenTTS_Notify_VerifyMocks(string message)
         {
@@ -84,74 +63,6 @@ namespace NetDaemonTest.Modules
             VerifyAllMocks();
         }
 
-        [Theory]
-        [InlineData("message")]
-        public void NotifyGsmGreetTTS_Notify_VerifyMocks(string message)
-        {
-            // Arrange 
-            SetupMocks();
-            haContextMock.Setup(x => x.CallService("notify", "mobile_app_gsm_greet", null,
-                It.Is<NotifyMobileAppGsmGreetParameters>(y =>
-                    y.Title == message &&
-                    y.Message == "TTS")));
-
-            var sut = new Notify(serviceProviderMock.Object);
-
-            // Act
-            sut.NotifyGsmGreetTTS(message);
-
-            // Assert
-            VerifyAllMocks();
-        }
-
-        [Theory]
-        [InlineData("title", "message")]
-        public void NotifyGsm_Notify_VerifyMocks(string title, string message)
-        {
-            // Arrange 
-            SetupMocks();
-            haContextMock.Setup(x => x.CallService("notify", "mobile_app_gsm_greet", null,
-                It.Is<NotifyMobileAppGsmGreetParameters>(y =>
-                    y.Title == title &&
-                    y.Message == message)));
-            haContextMock.Setup(x => x.CallService("notify", "mobile_app_a53", null,
-                It.Is<NotifyMobileAppA53Parameters>(y =>
-                    y.Title == title &&
-                    y.Message == message)));
-
-            var sut = new Notify(serviceProviderMock.Object);
-
-            // Act
-            sut.NotifyGsm(title, message, NotifyPriorityEnum.high);
-
-            // Assert
-            VerifyAllMocks();
-        }
-
-        [Fact]
-        public void NotifyGsmAlarm_Notify_VerifyMocks()
-        {
-            // Arrange 
-            SetupMocks();
-            haContextMock.Setup(x => x.CallService("notify", "mobile_app_gsm_greet", null,
-                It.Is<NotifyMobileAppGsmGreetParameters>(y =>
-                    y.Title != null &&
-                    y.Title.Contains("alarm") &&
-                    y.Message == "TTS")));
-            haContextMock.Setup(x => x.CallService("notify", "mobile_app_a53", null,
-                It.Is<NotifyMobileAppA53Parameters>(y =>
-                    y.Title != null &&
-                    y.Title.Contains("alarm") &&
-                    y.Message == "TTS")));
-
-            var sut = new Notify(serviceProviderMock.Object);
-
-            // Act
-            sut.NotifyGsmAlarm();
-
-            // Assert
-            VerifyAllMocks();
-        }
 
         [Theory]
         [InlineData("message")]
@@ -160,7 +71,7 @@ namespace NetDaemonTest.Modules
             // Arrange 
             SetupMocks();
             haContextMock.Setup(x => x.CallService("tts", "google_translate_say", null,
-                It.Is<TtsGoogleTranslateSayParameters>(y => y.EntityId == entities.MediaPlayer.Speelkamer.EntityId && y.Message == message)));
+                It.Is<TtsGoogleTranslateSayParameters>(y => y.EntityId == entities.MediaPlayer.Keuken.EntityId && y.Message == message)));
             haContextMock.Setup(x => x.CallService("tts", "google_translate_say", null,
                 It.Is<TtsGoogleTranslateSayParameters>(y => y.EntityId == entities.MediaPlayer.Woonkamer.EntityId && y.Message == message)));
 

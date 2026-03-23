@@ -11,5 +11,5 @@ public interface ISettingsProvider
     public int BrightnessSfeerlampBovenDay { get; }
     public int BrightnessSfeerlampBovenNight { get; }
     bool BeddenAlarmKids { get; }
-    bool JimmieAlarm { get; }
+    //bool JimmieAlarm { get; }
 }

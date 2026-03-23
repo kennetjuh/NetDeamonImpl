@@ -5,6 +5,5 @@ public enum HouseStateEnum
     Sleeping,
     Awake,
     Away,
-    Holiday,
-    Tv,
+    Holiday    
 }

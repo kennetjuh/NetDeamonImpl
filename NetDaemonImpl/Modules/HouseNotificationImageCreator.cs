@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using NetDaemonInterface;
+﻿using NetDaemonInterface;
 using SkiaSharp;
 using System.Collections.Generic;
 using System.IO;

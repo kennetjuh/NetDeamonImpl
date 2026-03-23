@@ -39,5 +39,14 @@ namespace NetDaemonImpl
             }
             return HouseStateEnum.Awake;
         }
+
+        public static AlarmEnum GetAlarmState(IEntities entities)
+        {
+            if (entities.InputBoolean.Alarm.IsOn())
+            {
+                return AlarmEnum.Armed;
+            }
+            return AlarmEnum.Disarmed;
+        }
     }
 }

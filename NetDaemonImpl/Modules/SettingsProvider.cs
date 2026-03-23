@@ -30,6 +30,6 @@ namespace NetDaemonImpl.Modules
 
         public bool BeddenAlarmKids => Entities.InputBoolean.Beddenalarmkids.IsOn();
 
-        public bool JimmieAlarm => Entities.InputBoolean.Jimmiealarm.IsOn();
+        //public bool JimmieAlarm => Entities.InputBoolean.Jimmiealarm.IsOn();
     }
 }

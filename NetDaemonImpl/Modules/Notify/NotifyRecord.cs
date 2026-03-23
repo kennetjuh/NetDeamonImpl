@@ -33,6 +33,7 @@ namespace NetDaemonImpl.Modules.Notify
         public string? color { get; set; }
         public string? sticky { get; set; }
         public string? image { get; set; }
+        public string? tts_text { get; set; }
         public List<RecordNotifyAction>? actions { get; set; }
     }
 }

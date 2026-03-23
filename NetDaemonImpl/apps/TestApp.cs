@@ -1,4 +1,6 @@
+using NetDaemon.Client;
 using NetDaemonInterface;
+using NetDaemonInterface.Observable;
 
 namespace NetDaemonImpl.apps;
 
@@ -6,11 +8,19 @@ namespace NetDaemonImpl.apps;
 //[Focus]
 public class TestApp : MyNetDaemonBaseApp
 {
-    public TestApp(IHaContext haContext, IScheduler scheduler, ILogger<TestApp> logger,
-        IAreaCollection areaCollection, IDelayProvider delayProvider, IHouseState houseState, ILightControl lightControl,
-        ILuxBasedBrightness luxBasedBrightness, INotify notify, ITwinkle twinkle, ISettingsProvider settingsProvider, IHouseNotificationImageCreator houseNotificationImageCreator)
+    public TestApp(IHomeAssistantRunner runner, ITriggerManager triggerManager, IHaContext haContext, IScheduler scheduler, ILogger<TestApp> logger, IDelayProvider delayProvider, ILightControl lightControl,
+        ILuxBasedBrightness luxBasedBrightness, INotify notify, ISettingsProvider settingsProvider, IHouseNotificationImageCreator houseNotificationImageCreator, IButtonEvents deconzButtonEvents)
         : base(haContext, scheduler, logger, settingsProvider)
     {
+        //var haMessages = (IHomeAssistantHassMessages)runner.CurrentConnection!;
+
+        //haMessages.OnHassMessage.Subscribe(m => logger.LogInformation("{Message}", m));
+
+        //notify.NotifyHouse("Dit is een test");
+
+        //find al frigate cameras and look for the recording toggle entity        
+
+        //notify.NotifyGsmAlarm();
         //houseNotificationImageCreator.AddFormattedText(5, 10, 10, "Ken: {0}", () => _entities.Person.Ken.State?.ToString());
         //houseNotificationImageCreator.AddFormattedText(5, 20, 10, "Greet: {0}", () => _entities.Person.Greet.State?.ToString());
 
@@ -45,8 +55,5 @@ public class TestApp : MyNetDaemonBaseApp
 
         //_entities.InputDatetime.Daynightlastnighttrigger.SetDatetime(time: DateTime.Now.ToString(Constants.dateTime_TimeFormat));
         //_entities.InputDatetime.Daynightlastdaytrigger.SetDatetime(time: DateTime.Now.ToString(Constants.dateTime_TimeFormat));
-
     }
 }
-
-

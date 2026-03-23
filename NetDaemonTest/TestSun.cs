@@ -1,6 +1,6 @@
 ﻿using NetDaemon.HassModel.Entities;
 
-namespace NetDaemonTest.TestLights;
+namespace NetDaemonTest;
 
 public record TestSun : SunEntity
 {

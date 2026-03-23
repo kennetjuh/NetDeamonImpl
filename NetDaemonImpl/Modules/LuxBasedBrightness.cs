@@ -12,18 +12,18 @@ namespace NetDaemonImpl.Modules
         {
             var haContext = DiHelper.GetHaContext(provider);
             Entities = new Entities(haContext);
-            luxSensor = Entities.Sensor.LightSensor;
+            luxSensor = Entities.Sensor.SensorLuxBuiten;
         }
 
-        private readonly List<Tuple<double, double>> luxRanges = new()
-        {
+        private readonly List<Tuple<double, double>> luxRanges =
+        [
             new(0, 20),
             new(20, 50),
             new(50, 100),
             new(100, 200),
             new(200, 500),
             new(500, 1000)
-        };
+        ];
 
         public double GetBrightness(double minBrightness, double maxBrightness)
         {

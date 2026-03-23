@@ -1,4 +1,6 @@
 ﻿using HomeAssistantGenerated;
+using NetDaemonInterface.Enums;
+using System.Collections.Generic;
 
 namespace NetDaemonInterface;
 
@@ -14,6 +16,8 @@ public interface ILightControl
     /// </summary>
     /// <param name="light">The light to add</param>
     void AddMaxWhiteLight(LightEntity light);
+
+    void AddMaxCustomColorLight(LightEntity light, List<int> rgb);
 
     /// <summary>
     /// Add a light to the list of lights which are allways set to 'cold'
@@ -33,7 +37,7 @@ public interface ILightControl
     /// <param name="deconzEventId">The event id from the deconz event (single,double,etc)</param>
     /// <param name="light">The light to control</param>
     /// <returns>true if the light is on, false otherwise</returns>
-    bool ButtonDefault(DeconzEventIdEnum deconzEventId, LightEntity light);
+    bool ButtonDefault(ButtonEventType deconzEventId, LightEntity light);
 
     /// <summary>
     /// Default button behaviour but single click turn on uses the lux based brightness
@@ -49,7 +53,7 @@ public interface ILightControl
     /// <param name="minBrightness">The minimum brightness</param>
     /// <param name="maxBrightness">The maximum brightness</param>
     /// <returns>true if the light is on, false otherwise</returns>
-    bool ButtonDefaultLuxBased(DeconzEventIdEnum deconzEventId, LightEntity light, double minBrightness, double maxBrightness);
+    bool ButtonDefaultLuxBased(ButtonEventType deconzEventId, LightEntity light, double minBrightness, double maxBrightness);
 
     /// <summary>
     /// A routine used to turn lights on, off set the brightness and colortemp
@@ -67,5 +71,11 @@ public interface ILightControl
     /// <returns>true if the light is on, false otherwise</returns>
     public bool SetLight(LightEntity light, double? brightness = null);
 
-    public bool SetLight(LightEntity light, double? brightness, string colorName);
+    public bool SetLightColorName(LightEntity light, double brightness, string colorName);
+    
+    public bool SetLightRgb(LightEntity light, double brightness, List<int> rgb);
+
+    public bool SetLightKelvin(LightEntity light, double brightness, int colorTemp);
+
+    public bool SetLightXY(LightEntity light, double brightness, List<double> xyColor);
 }

@@ -21,7 +21,7 @@ namespace NetDaemonTest.Modules
         public void GetLux_StateNull_VerifyReturn()
         {
             // Arrange 
-            haContextMock.Setup(x => x.GetState(entities.Sensor.LightSensor.EntityId)).Returns(new EntityState() { State = null });
+            haContextMock.Setup(x => x.GetState(entities.Sensor.SensorLuxBuiten.EntityId)).Returns(new EntityState() { State = null });
 
             // Act
             var sut = new LuxBasedBrightness(serviceProviderMock.Object);
@@ -35,7 +35,7 @@ namespace NetDaemonTest.Modules
         public void GetLux_StateOk_VerifyReturn()
         {
             // Arrange 
-            haContextMock.Setup(x => x.GetState(entities.Sensor.LightSensor.EntityId)).Returns(new EntityState() { State = "10" });
+            haContextMock.Setup(x => x.GetState(entities.Sensor.SensorLuxBuiten.EntityId)).Returns(new EntityState() { State = "10" });
 
             // Act
             var sut = new LuxBasedBrightness(serviceProviderMock.Object);
@@ -56,7 +56,7 @@ namespace NetDaemonTest.Modules
         public void GetBrightness_VariableLuxAndMinAndMax_VerifyResult(int min, int max, int lux, double expected)
         {
             // Arrange 
-            haContextMock.Setup(x => x.GetState(entities.Sensor.LightSensor.EntityId)).Returns(new EntityState() { State = lux.ToString() });
+            haContextMock.Setup(x => x.GetState(entities.Sensor.SensorLuxBuiten.EntityId)).Returns(new EntityState() { State = lux.ToString() });
 
             // Act
             var sut = new LuxBasedBrightness(serviceProviderMock.Object);
@@ -70,7 +70,7 @@ namespace NetDaemonTest.Modules
         public void GetBrightness_LuxNull_VerifyResult()
         {
             // Arrange 
-            haContextMock.Setup(x => x.GetState(entities.Sensor.LightSensor.EntityId)).Returns(new EntityState() { State = null });
+            haContextMock.Setup(x => x.GetState(entities.Sensor.SensorLuxBuiten.EntityId)).Returns(new EntityState() { State = null });
 
             // Act
             var sut = new LuxBasedBrightness(serviceProviderMock.Object);

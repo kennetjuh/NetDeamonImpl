@@ -7,8 +7,8 @@ public record TestLightBase : LightEntity
     public new string? State;
     public double? Brightness;
     public double? ColorTemp;
-    public double? MaxMireds;
-    public double? MinMireds;
+    public double? MaxColorTempKelvin;
+    public double? MinColorTempKelvin;
 
     public TestLightBase(IHaContext haContext, string entityId) : base(haContext, entityId)
     {

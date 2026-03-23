@@ -6,6 +6,6 @@ public record TestEntityStateLightAttributes : EntityState
 {
     public double? Brightness;
     public double? ColorTemp;
-    public double? MaxMireds;
-    public double? MinMireds;
+    public double? MaxColorTempKelvin;
+    public double? MinColorTempKelvin;
 }

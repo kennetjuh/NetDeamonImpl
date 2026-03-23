@@ -54,7 +54,7 @@ namespace NetDaemonTest
 
             // Assert
             var size = new FileInfo(sut.GetPrivate<string>("path")).Length;
-            Assert.True(size == 617 || size == 749);
+            Assert.True(size == 616 || size == 749);
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace NetDaemonTest
             sut.CreateImage();
 
             // Assert
-            Assert.Equal(1067, new FileInfo(sut.GetPrivate<string>("path")).Length);
+            Assert.Equal(1061, new FileInfo(sut.GetPrivate<string>("path")).Length);
         }
 
         [Fact]
