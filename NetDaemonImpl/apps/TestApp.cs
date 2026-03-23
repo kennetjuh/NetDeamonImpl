@@ -1,6 +1,14 @@
+using Microsoft.Extensions.Options;
 using NetDaemon.Client;
 using NetDaemonInterface;
+using NetDaemonInterface.Models;
 using NetDaemonInterface.Observable;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace NetDaemonImpl.apps;
 
@@ -9,9 +17,12 @@ namespace NetDaemonImpl.apps;
 public class TestApp : MyNetDaemonBaseApp
 {
     public TestApp(IHomeAssistantRunner runner, ITriggerManager triggerManager, IHaContext haContext, IScheduler scheduler, ILogger<TestApp> logger, IDelayProvider delayProvider, ILightControl lightControl,
-        ILuxBasedBrightness luxBasedBrightness, INotify notify, ISettingsProvider settingsProvider, IHouseNotificationImageCreator houseNotificationImageCreator, IButtonEvents deconzButtonEvents)
+        ILuxBasedBrightness luxBasedBrightness, INotify notify, ISettingsProvider settingsProvider, IHouseNotificationImageCreator houseNotificationImageCreator, IButtonEvents deconzButtonEvents, IThinginoClient thinginoClient)
         : base(haContext, scheduler, logger, settingsProvider)
-    {
+    {        
+        thinginoClient.SetPrivacyModeAsync("http://192.168.1.50", true).Wait();
+        thinginoClient.SetPrivacyModeAsync("http://192.168.1.50", false).Wait();
+
         //var haMessages = (IHomeAssistantHassMessages)runner.CurrentConnection!;
 
         //haMessages.OnHassMessage.Subscribe(m => logger.LogInformation("{Message}", m));

@@ -60,17 +60,17 @@
 		<EmbeddedResource Include="Resources\ariblk.ttf" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="NetDaemon.AppModel" Version="26.3.0" />
-		<PackageReference Include="NetDaemon.Runtime" Version="26.3.0" />
-		<PackageReference Include="NetDaemon.HassModel" Version="26.3.0" />
-		<PackageReference Include="NetDaemon.Client" Version="26.3.0" />
-		<PackageReference Include="NetDaemon.Extensions.Scheduling" Version="26.3.0" />
-		<PackageReference Include="NetDaemon.Extensions.Logging" Version="26.3.0" />
-		<PackageReference Include="NetDaemon.Extensions.Tts" Version="26.3.0" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
+		<PackageReference Include="NetDaemon.AppModel" Version="26.11.0" />
+		<PackageReference Include="NetDaemon.Runtime" Version="26.11.0" />
+		<PackageReference Include="NetDaemon.HassModel" Version="26.11.0" />
+		<PackageReference Include="NetDaemon.Client" Version="26.11.0" />
+		<PackageReference Include="NetDaemon.Extensions.Scheduling" Version="26.11.0" />
+		<PackageReference Include="NetDaemon.Extensions.Logging" Version="26.11.0" />
+		<PackageReference Include="NetDaemon.Extensions.Tts" Version="26.11.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
 		<PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
-		<PackageReference Include="SkiaSharp" Version="3.119.1" />
-		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.1" />
+		<PackageReference Include="SkiaSharp" Version="3.119.2" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.2" />
 		<PackageReference Include="System.Reactive" Version="6.1.0" />
 	</ItemGroup>
 	<ItemGroup>

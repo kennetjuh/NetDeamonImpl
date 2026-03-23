@@ -8,6 +8,7 @@ using NetDaemonImpl.IObservable;
 using NetDaemonImpl.Modules;
 using NetDaemonImpl.Modules.Notify;
 using NetDaemonInterface;
+using NetDaemonInterface.Models;
 using NetDaemonInterface.Observable;
 using System.Reflection;
 
@@ -17,7 +18,7 @@ using System.Reflection;
 
 try
 {
-    Console.WriteLine("Starting v4.41");
+    Console.WriteLine("Starting v4.43");
     await Host.CreateDefaultBuilder(args)
         .UseNetDaemonAppSettings()
         .UseNetDaemonDefaultLogging()
@@ -30,7 +31,8 @@ try
                 .AddNetDaemonStateManager()
                 .AddNetDaemonScheduler();
             // Bind Frigate settings from configuration
-            services.Configure<NetDaemonInterface.Models.FrigateSettings>(hostContext.Configuration.GetSection("Frigate"));
+            services.Configure<FrigateSettings>(hostContext.Configuration.GetSection("Frigate"));
+            services.Configure<ThinginoSettings>(hostContext.Configuration.GetSection("Thingino"));
             services.AddSingleton<IDelayProvider, DelayProvider>();
             services.AddSingleton<ILightControl, LightControl>();
             services.AddSingleton<ILuxBasedBrightness, LuxBasedBrightness>();
@@ -40,6 +42,8 @@ try
             services.AddSingleton<IButtonEvents, ButtonEvents>();
             services.AddSingleton<IHouseStateEvents, HouseStateEvents>();
             services.AddSingleton<IDayNightEvents, DayNightEvents>();
+            services.AddSingleton<IFrigateClient, FrigateClient>();
+            services.AddSingleton<IThinginoClient, ThinginoClient>();
         })
         .Build()
         .RunAsync()

@@ -57,14 +57,14 @@ namespace NetDaemonImpl.apps
         private static readonly HttpClient _httpClient = new();
         private readonly ITriggerManager triggerManager;
         private readonly IEnumerable<SwitchEntity> cameraAlertSwitches;
-        private readonly IEnumerable<SwitchEntity> cameraDetectSwitches;
-        private readonly FrigateSettings _frigateSettings;
+        private readonly IEnumerable<SwitchEntity> cameraDetectSwitches;        
 
         public Camera(ITriggerManager triggerManager, IHaContext haContext, IScheduler scheduler, ILogger<Camera> logger,
-        ISettingsProvider settingsProvider, IButtonEvents deconzButtonEvents, IDelayProvider delayProvider, ILightControl lightControl, IDayNightEvents dayNightEvents, IHouseStateEvents houseStateEvents, IOptions<FrigateSettings> frigateOptions)
+        ISettingsProvider settingsProvider, IButtonEvents deconzButtonEvents, IDelayProvider delayProvider, ILightControl lightControl, IDayNightEvents dayNightEvents, IHouseStateEvents houseStateEvents,
+        IFrigateClient frigateClient, IThinginoClient thinginoClient)
             : base(haContext, scheduler, logger, settingsProvider)
-        {
-            _frigateSettings = frigateOptions?.Value ?? new FrigateSettings();
+        {            
+
             this.triggerManager = triggerManager;
             //cameraAlertSwitches = _haContext.GetAllEntities().Where(e => e.EntityId.EndsWith("_review_alerts") && e.Registration?.Platform == "frigate").Select(x => new SwitchEntity(x));
             //cameraDetectSwitches = _haContext.GetAllEntities().Where(e => e.EntityId.EndsWith("_review_detections") && e.Registration?.Platform == "frigate").Select(x => new SwitchEntity(x));
@@ -79,20 +79,18 @@ namespace NetDaemonImpl.apps
                 });
 
 
-            frigate.Subscribe(async m =>
+            frigate.Subscribe(async x =>
             {
                 try
                 {
+                    var id = x?.PayloadJson?.After?.Id;
+                    await frigateClient.MarkReviewedAsync(id);
+                    await frigateClient.MarkReviewedWithLoginAsync(id);
 
-                    var id = m?.PayloadJson?.After?.Id;
-                    await MarkFrigateReviewedAsync(id, _frigateSettings.Local);
-                    // use configured credentials for local Frigate
-                    await MarkFrigateReviewedWithLocalLoginAsync(id, _frigateSettings.LocalLogin);
-
-                    foreach (var detection in m?.PayloadJson?.After?.Data?.Detections ?? Enumerable.Empty<string>())
+                    foreach (var detection in x?.PayloadJson?.After?.Data?.Detections ?? Enumerable.Empty<string>())
                     {
-                        await MarkFrigateReviewedAsync(detection, _frigateSettings.Local);
-                        await MarkFrigateReviewedWithLocalLoginAsync(detection, _frigateSettings.LocalLogin);
+                        await frigateClient.MarkReviewedAsync(detection);
+                        await frigateClient.MarkReviewedWithLoginAsync(detection);
                     }
                 }
                 catch (Exception ex)
@@ -100,114 +98,6 @@ namespace NetDaemonImpl.apps
                     logger.LogError(ex, "Error processing frigate review message");
                 }
             });
-
         }
-        public async Task MarkFrigateReviewedAsync(string? id, FrigateLocal frigateLocal)
-        {
-            if (string.IsNullOrWhiteSpace(id)) return;
-            if (Helper.GetHouseState(_entities) != HouseStateEnum.Awake) return; // Only mark as reviewed if we're not awake, otherwise we might miss important notifications
-
-            try
-            {                
-                var url = $"{frigateLocal.BaseUrl}/api/reviews/viewed";
-                var body = new { ids = new[] { id } };
-                var json = JsonSerializer.Serialize(body);
-                using var content = new StringContent(json, Encoding.UTF8, "application/json");
-                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-                var resp = await _httpClient.PostAsync(url, content);
-                var respBody = await resp.Content.ReadAsStringAsync();
-     
-                if (!resp.IsSuccessStatusCode)
-                {
-                    _logger?.LogWarning("Frigate 5000 mark-reviewed failed for {Id}, status {Status}", id, resp.StatusCode);
-                }
-                else
-                {
-                    //_logger?.LogInformation("Frigate 5000 marked reviewed: {Id}", id);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, "Error marking frigate 5000 review as reviewed");
-            }
-        }
-
-        public async Task MarkFrigateReviewedWithLocalLoginAsync(string? id, FrigateLocalLogin frigateLocalLogin)
-        {
-            if (string.IsNullOrWhiteSpace(id)) return;
-            if (string.IsNullOrWhiteSpace(frigateLocalLogin.Username) || string.IsNullOrWhiteSpace(frigateLocalLogin.Password))
-            {
-                _logger?.LogWarning("Local login credentials missing");
-                return;
-            }
-            if (Helper.GetHouseState(_entities) != HouseStateEnum.Awake) return;
-
-            try
-            {
-                var loginUrl = frigateLocalLogin.BaseUrl + "/api/login";
-
-                // Frigate login expects 'user' per some endpoints/examples
-                var loginBody = new { user = frigateLocalLogin.Username, password = frigateLocalLogin.Password };
-                var loginJson = JsonSerializer.Serialize(loginBody);
-                using var loginContent = new StringContent(loginJson, Encoding.UTF8, "application/json");
-
-                using var loginReq = new HttpRequestMessage(HttpMethod.Post, loginUrl) { Content = loginContent };
-                loginReq.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-
-                // Use an HttpClient that ignores invalid SSL certs for the local Frigate instance
-                using var insecureHandler = new HttpClientHandler
-                {
-                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                };
-                using var insecureClient = new HttpClient(insecureHandler);
-
-                var loginResp = await insecureClient.SendAsync(loginReq).ConfigureAwait(false);
-                var loginRespContentDbg = await loginResp.Content.ReadAsStringAsync().ConfigureAwait(false);
-                if (!loginResp.IsSuccessStatusCode)
-                {
-                    _logger?.LogWarning("Frigate 8971 login failed, status {Status} body: {Body}", loginResp.StatusCode, loginRespContentDbg);
-                    return;
-                }
-
-                string? cookieHeader = null;
-
-                var loginRespContent = await loginResp.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-                if (loginResp.Headers.TryGetValues("Set-Cookie", out var cookies))
-                {
-                    cookieHeader = string.Join("; ", cookies.Select(c => c.Split(';', 2)[0]));
-                }
-
-                var reviewUrl = frigateLocalLogin.BaseUrl + "/api/reviews/viewed";
-                var reviewBody = new { ids = new[] { id } };
-                var reviewJson = JsonSerializer.Serialize(reviewBody);
-                
-                using var reviewContent = new StringContent(reviewJson, Encoding.UTF8, "application/json");
-                using var reviewReq = new HttpRequestMessage(HttpMethod.Post, reviewUrl) { Content = reviewContent };
-                reviewReq.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-
-                if (!string.IsNullOrWhiteSpace(cookieHeader))
-                {
-                    reviewReq.Headers.TryAddWithoutValidation("Cookie", cookieHeader);
-                }
-
-                var reviewResp = await insecureClient.SendAsync(reviewReq).ConfigureAwait(false);
-                var reviewRespBody = await reviewResp.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-                if (!reviewResp.IsSuccessStatusCode)
-                {
-                    _logger?.LogWarning("Frigate 8971 mark-reviewed failed for {Id}, status {Status}", id, reviewResp.StatusCode);
-                }
-                else
-                {
-                    //_logger?.LogInformation("Frigate 8971 marked reviewed: {Id}", id);
-                }
-            }
-            catch (System.Exception ex)
-            {
-                _logger?.LogError(ex, "Error marking frigate 8971 review as reviewed");
-            }
-        }
-
     }
 }
