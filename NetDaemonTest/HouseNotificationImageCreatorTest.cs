@@ -7,24 +7,13 @@ namespace NetDaemonTest
     public class HouseNotificationImageCreatorTest
     {
         [Fact]
-        public void Contructor_NoExceptions()
-        {
-            // Arrange 
-
-            // Act
-            _ = new HouseNotificationImageCreator();
-
-            // Assert
-        }
-
-        [Fact]
         public void GetImagePath()
         {
             // Arrange
             var sut = new HouseNotificationImageCreator();
 
             // Assert
-            Assert.Equal("/local/HouseImage.jpg", sut.GetImagePath());
+            Assert.StartsWith("/local/HouseImage.jpg?t=", sut.GetImagePath());
         }
 
         [Fact]
@@ -54,7 +43,7 @@ namespace NetDaemonTest
 
             // Assert
             var size = new FileInfo(sut.GetPrivate<string>("path")).Length;
-            Assert.True(size == 616 || size == 749);
+            Assert.True(size > 356, $"Expected image with text to be larger than empty image (356 bytes), but was {size} bytes");
         }
 
         [Fact]

@@ -1,14 +1,9 @@
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Hosting;
 using NetDaemon.Client;
 using NetDaemonInterface;
-using NetDaemonInterface.Models;
 using NetDaemonInterface.Observable;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
+using YamlDotNet.Serialization;
 
 namespace NetDaemonImpl.apps;
 
@@ -17,11 +12,29 @@ namespace NetDaemonImpl.apps;
 public class TestApp : MyNetDaemonBaseApp
 {
     public TestApp(IHomeAssistantRunner runner, ITriggerManager triggerManager, IHaContext haContext, IScheduler scheduler, ILogger<TestApp> logger, IDelayProvider delayProvider, ILightControl lightControl,
-        ILuxBasedBrightness luxBasedBrightness, INotify notify, ISettingsProvider settingsProvider, IHouseNotificationImageCreator houseNotificationImageCreator, IButtonEvents deconzButtonEvents, IThinginoClient thinginoClient)
+        ILuxBasedBrightness luxBasedBrightness, INotify notify, ISettingsProvider settingsProvider, IHouseNotificationImageCreator houseNotificationImageCreator, IButtonEvents deconzButtonEvents, IThinginoClient thinginoClient, IFrigateClient frigateClient)
         : base(haContext, scheduler, logger, settingsProvider)
-    {        
-        thinginoClient.SetPrivacyModeAsync("http://192.168.1.50", true).Wait();
-        thinginoClient.SetPrivacyModeAsync("http://192.168.1.50", false).Wait();
+    {
+        //thinginoClient.Connect("192.168.1.50");
+        //thinginoClient.Deurbel("192.168.1.50");
+        //Task.Run(async () =>
+        //{
+            
+        //            await Task.Delay(5000);
+        //    thinginoClient.StopDeurbel("192.168.1.50");
+
+
+        //});
+        //thinginoClient.StopDeurbel("192.168.1.50");
+
+        //var test = _entities.Climate.TadoSmartThermostatRu3248113920.EntityState;
+        //logger.LogInformation(_entities.Climate.TadoSmartThermostatRu3248113920.EntityState?.Attributes?.Temperature?.ToString("F1"));
+
+
+        //thinginoClient.SetLight(ipCamera, false);
+
+        //thinginoClient.SetPrivacyMode("192.168.1.50", true);
+        //thinginoClient.SetPrivacyMode("192.168.1.50", false);
 
         //var haMessages = (IHomeAssistantHassMessages)runner.CurrentConnection!;
 
@@ -67,4 +80,5 @@ public class TestApp : MyNetDaemonBaseApp
         //_entities.InputDatetime.Daynightlastnighttrigger.SetDatetime(time: DateTime.Now.ToString(Constants.dateTime_TimeFormat));
         //_entities.InputDatetime.Daynightlastdaytrigger.SetDatetime(time: DateTime.Now.ToString(Constants.dateTime_TimeFormat));
     }
+
 }

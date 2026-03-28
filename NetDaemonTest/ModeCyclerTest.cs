@@ -8,18 +8,6 @@ namespace NetDaemonTest
 {
     public class ModeCyclerTest
     {
-
-        [Fact]
-        public void Contructor_NoExceptions()
-        {
-            // Arrange 
-
-            // Act
-            _ = new ModeCycler(TimeSpan.Zero);
-
-            // Assert
-        }
-
         [Fact]
         public void ModeCycler_2ActionsCycle2Times_BothActionsExecuted()
         {

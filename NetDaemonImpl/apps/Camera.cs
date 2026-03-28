@@ -1,14 +1,13 @@
-﻿using NetDaemonInterface;
+﻿using Microsoft.Extensions.Options;
+using NetDaemonInterface;
+using NetDaemonInterface.Models;
 using NetDaemonInterface.Observable;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Options;
-using NetDaemonInterface.Models;
-using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+using System.Threading;
+using YamlDotNet.Serialization;
 
 namespace NetDaemonImpl.apps
 {
@@ -54,22 +53,35 @@ namespace NetDaemonImpl.apps
     [NetDaemonApp]
     public class Camera : MyNetDaemonBaseApp
     {
-        private static readonly HttpClient _httpClient = new();
-        private readonly ITriggerManager triggerManager;
-        private readonly IEnumerable<SwitchEntity> cameraAlertSwitches;
-        private readonly IEnumerable<SwitchEntity> cameraDetectSwitches;        
+        private DateTime lastNotification;
 
         public Camera(ITriggerManager triggerManager, IHaContext haContext, IScheduler scheduler, ILogger<Camera> logger,
         ISettingsProvider settingsProvider, IButtonEvents deconzButtonEvents, IDelayProvider delayProvider, ILightControl lightControl, IDayNightEvents dayNightEvents, IHouseStateEvents houseStateEvents,
-        IFrigateClient frigateClient, IThinginoClient thinginoClient)
+        IFrigateClient frigateClient, IThinginoClient thinginoClient, INotify notify, IOptions<ThinginoSettings> options)
             : base(haContext, scheduler, logger, settingsProvider)
-        {            
+        {
+            lastNotification = DateTime.MinValue;
+            var deurbel = _entities.Light.Deurbel;
+            var settings = options?.Value ?? new ThinginoSettings();
 
-            this.triggerManager = triggerManager;
-            //cameraAlertSwitches = _haContext.GetAllEntities().Where(e => e.EntityId.EndsWith("_review_alerts") && e.Registration?.Platform == "frigate").Select(x => new SwitchEntity(x));
-            //cameraDetectSwitches = _haContext.GetAllEntities().Where(e => e.EntityId.EndsWith("_review_detections") && e.Registration?.Platform == "frigate").Select(x => new SwitchEntity(x));
-            //houseStateEvents.Event.Subscribe(HandleHouseState);
-            //HandleHouseState(new HouseStateEvent(Helper.GetHouseState(_entities), new(Button.HouseVoordeur, ButtonEventType.Single, DateTime.MinValue)));
+            deurbel.StateChanges()
+                .Where(e => e.New?.State?.ToString() == "on")
+                .Subscribe(e =>
+                {
+                    Thread.Sleep(500);
+                    deurbel.TurnOff();
+
+                    var now = DateTime.Now;
+                    if (now - lastNotification < TimeSpan.FromSeconds(1))
+                    {
+                        return;
+                    }
+                    lastNotification = now;
+
+                    thinginoClient.Deurbel(settings?.Voordeur!);
+                    frigateClient.SaveLatestImageAsync("deurbel.png");
+                    notify.NotifyGsmKenDeurbel("/local/deurbel.png");
+                });
 
             var frigate = triggerManager.RegisterTrigger<FrigateTriggerMessage>(
                 new
@@ -81,6 +93,11 @@ namespace NetDaemonImpl.apps
 
             frigate.Subscribe(async x =>
             {
+                // only mark as reviewed when house is awake.
+                if (Helper.GetHouseState(_entities) != HouseStateEnum.Awake)
+                {
+                    return;
+                }
                 try
                 {
                     var id = x?.PayloadJson?.After?.Id;
@@ -98,6 +115,8 @@ namespace NetDaemonImpl.apps
                     logger.LogError(ex, "Error processing frigate review message");
                 }
             });
+            thinginoClient.Connect(settings.Voordeur!);
+            thinginoClient.StopDeurbel(settings.Voordeur!);
         }
     }
 }

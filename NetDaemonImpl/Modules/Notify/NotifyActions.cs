@@ -1,4 +1,6 @@
-﻿using NetDaemonInterface;
+﻿using Microsoft.Extensions.Options;
+using NetDaemonInterface;
+using NetDaemonInterface.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,21 +12,19 @@ namespace NetDaemonImpl.Modules.Notify
         private readonly Services Services;
         public Dictionary<NotifyActionEnum, NotifyAction> Actions { get; set; }
 
-        public NotifyActions(IHaContext haContext, INotify notify)
+        public NotifyActions(IHaContext haContext, INotify notify, IThinginoClient thinginoClient, IOptions<ThinginoSettings> options)
         {
             Entities = new Entities(haContext);
             Services = new Services(haContext);
+            var settings = options?.Value ?? new ThinginoSettings();
 
             var actions = new List<NotifyAction>()
             {
-                new NotifyAction(NotifyActionEnum.Thermostat17, "Set to 17", ()=>Entities.Climate.TadoSmartThermostatRu3248113920.SetTemperature(17)),
-                new NotifyAction(NotifyActionEnum.Thermostat20, "Set to 20", ()=>Entities.Climate.TadoSmartThermostatRu3248113920.SetTemperature(20)),
+                new NotifyAction(NotifyActionEnum.Thermostat15, "Set to 15", ()=>Entities.Climate.TadoSmartThermostatRu3248113920.SetTemperature(15)),
+                new NotifyAction(NotifyActionEnum.Thermostat19, "Set to 19", ()=>Entities.Climate.TadoSmartThermostatRu3248113920.SetTemperature(19)),
                 new NotifyAction(NotifyActionEnum.UriThermostat, "More", $"entityId:{Entities.Climate.TadoSmartThermostatRu3248113920.EntityId}"),
-                new NotifyAction(NotifyActionEnum.OpenCloseVoordeurOmroepen, "Omroepen", ()=>notify.NotifyHouse("De voordeur staat al lange tijd open")),
-                new NotifyAction(NotifyActionEnum.OpenCloseAchterdeurgarageOmroepen, "Omroepen", ()=>notify.NotifyHouse("De achterdeur in de garage staat al lange tijd open")),
-                new NotifyAction(NotifyActionEnum.OpenCloseGarageOmroepen, "Omroepen", ()=>notify.NotifyHouse("De garage staat al lange tijd open")),
-                new NotifyAction(NotifyActionEnum.OpenCloseTuindeurOmroepen, "Omroepen", ()=>notify.NotifyHouse("De tuindeur staat al lange tijd open")),
-                new NotifyAction(NotifyActionEnum.OpenCloseAchterdeurOmroepen, "Omroepen", ()=>notify.NotifyHouse("De achterdeur staat al lange tijd open")),
+                new NotifyAction(NotifyActionEnum.StopRinger, "Stop Ringer", ()=>thinginoClient.StopDeurbel(settings?.Voordeur!)),
+                new NotifyAction(NotifyActionEnum.UriDeurbel, "Open Camera", $"https://frigate.kennetjuh.duckdns.org/#voordeur"),
             };
             Actions = actions.ToDictionary(x => x.Id, x => x);
         }

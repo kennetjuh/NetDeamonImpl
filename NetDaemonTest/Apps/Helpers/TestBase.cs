@@ -21,6 +21,9 @@ public class TestBase
     public Mock<IDayNightEvents> DayNightEventsMock => Context.GetRequiredService<Mock<IDayNightEvents>>();
     public Mock<IButtonEvents> DeconzButtonEventsMock => Context.GetRequiredService<Mock<IButtonEvents>>();
     public Mock<IHouseStateEvents> HouseStateEventsMock => Context.GetRequiredService<Mock<IHouseStateEvents>>();
+    public Mock<ITriggerManager> TriggerManagerMock => Context.GetRequiredService<Mock<ITriggerManager>>();
+    public Mock<IFrigateClient> FrigateClientMock => Context.GetRequiredService<Mock<IFrigateClient>>();
+    public Mock<IThinginoClient> ThinginoClientMock => Context.GetRequiredService<Mock<IThinginoClient>>();
 
     internal virtual void VerifyAllMocks()
     {
@@ -34,6 +37,8 @@ public class TestBase
         DayNightEventsMock.VerifyAll();
         DeconzButtonEventsMock.VerifyAll();
         HouseStateEventsMock.VerifyAll();
+        FrigateClientMock.VerifyAll();
+        ThinginoClientMock.VerifyAll();
     }
 
     internal virtual void ResetAllMocks()
@@ -48,5 +53,7 @@ public class TestBase
         DayNightEventsMock.Reset();
         DeconzButtonEventsMock.Reset();
         HouseStateEventsMock.Reset();
+        FrigateClientMock.Reset();
+        ThinginoClientMock.Reset();
     }
 }

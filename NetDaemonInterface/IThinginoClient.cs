@@ -1,10 +1,14 @@
-using System.Threading.Tasks;
+using System;
 
 namespace NetDaemonInterface
 {
-    public interface IThinginoClient
+    public interface IThinginoClient : IDisposable
     {
-        Task<string?> LoginAsync(string baseUrl);
-        Task SetPrivacyModeAsync(string baseUrl, bool enabled);
+        void Connect(string host);
+        void SetPrivacyMode(string host, bool enabled);
+        void SetLight(string host, bool enabled);
+        void Tell(string host, string message);        
+        void Deurbel(string host);
+        void StopDeurbel(string host);
     }
 }

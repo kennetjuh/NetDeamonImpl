@@ -143,7 +143,7 @@ namespace NetDaemonImpl.IObservable
 
                     if (buttonEvent == ButtonEventType.Unknown)
                     {
-                        logger.LogWarning($"Unknown Zha button event: {ZhaEventDataElement.Command}");
+                        logger.LogWarning("Unknown Zha button event: {Command} from device: {DeviceId}, full data: {Data}", ZhaEventDataElement.Command, ZhaEventDataElement.DeviceId, x.DataElement.Value);
                         return;
                     }
 

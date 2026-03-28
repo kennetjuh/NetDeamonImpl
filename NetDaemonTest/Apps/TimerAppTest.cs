@@ -132,7 +132,7 @@ public class TimerAppTest : TestBase
     {
         // Arrange
         ResetAllMocks();
-        HaMock.Setup(x => x.CallService("timer", "start", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Timer.Sleeptimerbeddenkids.EntityId), It.Is<TimerStartParameters>(x => x.Duration == "600")));
+        HaMock.Setup(x => x.CallService("timer", "start", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Timer.Sleeptimerbeddenkids.EntityId), It.Is<TimerStartParameters>(x => "600".Equals(x.Duration))));
 
         // Act
         var sut = Context.GetApp<TimerApp>();
@@ -162,7 +162,7 @@ public class TimerAppTest : TestBase
     {
         // Arrange
         ResetAllMocks();
-        HaMock.Setup(x => x.CallService("timer", "start", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Timer.Sleeptimerbedden.EntityId), It.Is<TimerStartParameters>(x => x.Duration == "600")));
+        HaMock.Setup(x => x.CallService("timer", "start", It.Is<ServiceTarget>(x => x.EntityIds!.SingleOrDefault()! == Entities.Timer.Sleeptimerbedden.EntityId), It.Is<TimerStartParameters>(x => "600".Equals(x.Duration))));
 
         // Act
         var sut = Context.GetApp<TimerApp>();

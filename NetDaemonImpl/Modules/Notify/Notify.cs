@@ -1,4 +1,6 @@
-﻿using NetDaemonInterface;
+﻿using Microsoft.Extensions.Options;
+using NetDaemonInterface;
+using NetDaemonInterface.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,12 +14,12 @@ public class Notify : INotify
 
     private readonly NotifyActions notifyActions;
 
-    public Notify(IServiceProvider provider)
+    public Notify(IServiceProvider provider, IThinginoClient thinginoClient, IOptions<ThinginoSettings> options)
     {
         HaContext = DiHelper.GetHaContext(provider);
         Entities = new Entities(HaContext);
         Services = new Services(HaContext);
-        notifyActions = new NotifyActions(HaContext, this);        
+        notifyActions = new NotifyActions(HaContext, this, thinginoClient, options);        
     }
 
     public void NotifyHouse(string message)
@@ -35,7 +37,7 @@ public class Notify : INotify
 
     public void NotifyGsmKen(string title, string message, NotifyPriorityEnum prority, NotifyTagEnum? tag = null, List<NotifyActionEnum>? actions = null)
     {
-        var data = ConstructData(null, false, null, prority, tag, actions);
+        var data = ConstructData(null, false, null, prority, null, tag, actions);
         Services.Notify.MobileAppA53(new() { Title = title, Message = message, Data = data });
     }
 
@@ -49,7 +51,7 @@ public class Notify : INotify
 
     public void NotifyHouseStateGsmKen(string title, string message, string image, NotifyPriorityEnum priority, List<NotifyActionEnum>? actions = null)
     {
-        var data = ConstructData(image, false, null, priority, NotifyTagEnum.HouseStateChanged, actions);
+        var data = ConstructData(image, false, null, priority,null, NotifyTagEnum.HouseStateChanged, actions);
         Services.Notify.MobileAppA53(new() { Title = title, Message = message, Data = data });
     }
 
@@ -63,9 +65,9 @@ public class Notify : INotify
     public void HandleNotificationEvent(NotifyActionEnum action)
     {
         notifyActions.Actions[action]?.Action?.Invoke();
-    }
+    }   
 
-    private RecordNotifyData ConstructData(string? image = null, bool tts = false, string? ttsText = null, NotifyPriorityEnum priority = NotifyPriorityEnum.high, NotifyTagEnum? tag = null, List<NotifyActionEnum>? actions = null)
+    private RecordNotifyData ConstructData(string? image = null, bool tts = false, string? ttsText = null, NotifyPriorityEnum priority = NotifyPriorityEnum.high, string? channel = null, NotifyTagEnum? tag = null, List<NotifyActionEnum>? actions = null)
     {
         //construct the data here
 
@@ -76,7 +78,7 @@ public class Notify : INotify
             tag = tag.HasValue ? tag.ToString() : null,
             color = "",
             sticky = "true",
-            channel = priority == NotifyPriorityEnum.high ? "default" : "silent",
+            channel = channel ?? (priority == NotifyPriorityEnum.high ? "default" : "silent"),
             importance = priority.ToString()
         };
 
@@ -101,7 +103,14 @@ public class Notify : INotify
 
     public void Clear(NotifyTagEnum tag)
     {
-        var data = ConstructData(null, false, null, NotifyPriorityEnum.high, tag, null);
+        var data = ConstructData(null, false, null, NotifyPriorityEnum.high, null, tag, null);
         Services.Notify.MobileAppA53(new() { Title = "", Message = "clear_notification", Data = data });
     }
+
+    public void NotifyGsmKenDeurbel(string imagename)
+    {
+        var title = "De deurbel gaat!";        
+        var data = ConstructData(imagename, false, null, NotifyPriorityEnum.high, "Deurbel", NotifyTagEnum.Doorbell, [NotifyActionEnum.StopRinger, NotifyActionEnum.UriDeurbel]);
+        Services.Notify.MobileAppA53(new() { Title = title, Message="", Data = data });
+    }    
 }

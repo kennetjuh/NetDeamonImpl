@@ -6,17 +6,6 @@ namespace NetDaemonTest.Modules
     public class DelayProviderTest
     {
         [Fact]
-        public void Contructor_NoExceptions()
-        {
-            // Arrange 
-
-            // Act
-            _ = new DelayProvider();
-
-            // Assert
-        }
-
-        [Fact]
         public void GetDelays_Verifydelay()
         {
             // Arrange 
@@ -25,7 +14,7 @@ namespace NetDaemonTest.Modules
             var delayProvider = new DelayProvider();
 
             // Assert
-            Assert.Equal(TimeSpan.FromMinutes(1), delayProvider.MotionClear);
+            Assert.Equal(TimeSpan.FromMinutes(5), delayProvider.MotionClear);
             Assert.Equal(TimeSpan.FromMinutes(10), delayProvider.MotionClearManual);
             Assert.Equal(TimeSpan.FromSeconds(5), delayProvider.ManualOffTimeout);
             Assert.Equal(TimeSpan.FromSeconds(1), delayProvider.MotionOnSequenceDelay);

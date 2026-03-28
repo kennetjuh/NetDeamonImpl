@@ -6,5 +6,6 @@ namespace NetDaemonInterface
     {
         Task MarkReviewedAsync(string? id);
         Task MarkReviewedWithLoginAsync(string? id);
+        Task SaveLatestImageAsync(string fileName);
     }
 }

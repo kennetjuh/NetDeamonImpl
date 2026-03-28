@@ -101,7 +101,7 @@ public class NotifyAppTest : TestBase
         HouseNotificationImageCreatorMock.Setup(x => x.GetImagePath()).Returns(imageName);
 
         NotifyMock.Setup(x => x.NotifyHouseStateGsmKen("House State", "House state: Awake", imageName, NotifyPriorityEnum.low,
-            It.Is<List<NotifyActionEnum>>(x => x.Count == 3 && x.Contains(NotifyActionEnum.Thermostat17) && x.Contains(NotifyActionEnum.Thermostat20) && x.Contains(NotifyActionEnum.UriThermostat))));
+            It.Is<List<NotifyActionEnum>>(x => x.Count == 3 && x.Contains(NotifyActionEnum.Thermostat15) && x.Contains(NotifyActionEnum.Thermostat19) && x.Contains(NotifyActionEnum.UriThermostat))));
 
         // Act
         var app = Context.GetApp<NotifyApp>();
@@ -121,7 +121,7 @@ public class NotifyAppTest : TestBase
         HouseNotificationImageCreatorMock.Setup(x => x.GetImagePath()).Returns(imageName);
 
         NotifyMock.Setup(x => x.NotifyHouseStateGsmKen("House State", "Day/Night state: Day", imageName, NotifyPriorityEnum.low,
-            It.Is<List<NotifyActionEnum>>(x => x.Count == 3 && x.Contains(NotifyActionEnum.Thermostat17) && x.Contains(NotifyActionEnum.Thermostat20) && x.Contains(NotifyActionEnum.UriThermostat))));
+            It.Is<List<NotifyActionEnum>>(x => x.Count == 3 && x.Contains(NotifyActionEnum.Thermostat15) && x.Contains(NotifyActionEnum.Thermostat19) && x.Contains(NotifyActionEnum.UriThermostat))));
 
         // Act
         var app = Context.GetApp<NotifyApp>();

@@ -8,4 +8,5 @@ public enum NotifyTagEnum
     OpenCloseTuindeur,
     OpenCloseAchterdeurgarage,
     HouseStateChanged,
+    Doorbell,
 }

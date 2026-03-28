@@ -7,17 +7,6 @@ namespace NetDaemonTest.Modules
     public class LuxBasesBrightnessTest : ServiceProviderTestBase
     {
         [Fact]
-        public void Contructor_NoExceptions()
-        {
-            // Arrange 
-
-            // Act
-            _ = new LuxBasedBrightness(serviceProviderMock.Object);
-
-            // Assert
-        }
-
-        [Fact]
         public void GetLux_StateNull_VerifyReturn()
         {
             // Arrange 

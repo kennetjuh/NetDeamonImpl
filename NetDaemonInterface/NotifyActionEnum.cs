@@ -2,12 +2,9 @@
 
 public enum NotifyActionEnum
 {
-    Thermostat17,
-    Thermostat20,
+    Thermostat15,
+    Thermostat19,
     UriThermostat,
-    OpenCloseVoordeurOmroepen,
-    OpenCloseAchterdeurgarageOmroepen,
-    OpenCloseAchterdeurOmroepen,
-    OpenCloseTuindeurOmroepen,
-    OpenCloseGarageOmroepen,
+    UriDeurbel,
+    StopRinger,
 }

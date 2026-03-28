@@ -1,7 +1,9 @@
-﻿using Moq;
+using Microsoft.Extensions.Options;
+using Moq;
 using NetDaemon.HassModel.Entities;
 using NetDaemonImpl.Modules.Notify;
 using NetDaemonInterface;
+using NetDaemonInterface.Models;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -10,18 +12,7 @@ namespace NetDaemonTest.Modules
 {
     public class NotifyTest : ServiceProviderTestBase
     {
-        [Fact]
-        public void Contructor_NoExceptions()
-        {
-            // Arrange 
-            SetupMocks();
-
-            // Act
-            _ = new Notify(serviceProviderMock.Object);
-
-            // Assert
-            VerifyAllMocks();
-        }
+        private readonly Mock<IThinginoClient> thinginoClientMock = new();
 
         [Theory]
         [InlineData("title", "message")]
@@ -34,7 +25,9 @@ namespace NetDaemonTest.Modules
                     y.Title == title &&
                     y.Message == message)));
 
-            var sut = new Notify(serviceProviderMock.Object);
+            var optionsMock = new Mock<IOptions<ThinginoSettings>>();
+            optionsMock.Setup(o => o.Value).Returns(new ThinginoSettings());
+            var sut = new Notify(serviceProviderMock.Object, thinginoClientMock.Object, optionsMock.Object);
 
             // Act
             sut.NotifyGsmKen(title, message, NotifyPriorityEnum.high);
@@ -54,7 +47,9 @@ namespace NetDaemonTest.Modules
                     y.Title == message &&
                     y.Message == "TTS")));
 
-            var sut = new Notify(serviceProviderMock.Object);
+            var optionsMock = new Mock<IOptions<ThinginoSettings>>();
+            optionsMock.Setup(o => o.Value).Returns(new ThinginoSettings());
+            var sut = new Notify(serviceProviderMock.Object, thinginoClientMock.Object, optionsMock.Object);
 
             // Act
             sut.NotifyGsmKenTTS(message);
@@ -75,7 +70,9 @@ namespace NetDaemonTest.Modules
             haContextMock.Setup(x => x.CallService("tts", "google_translate_say", null,
                 It.Is<TtsGoogleTranslateSayParameters>(y => y.EntityId == entities.MediaPlayer.Woonkamer.EntityId && y.Message == message)));
 
-            var sut = new Notify(serviceProviderMock.Object);
+            var optionsMock = new Mock<IOptions<ThinginoSettings>>();
+            optionsMock.Setup(o => o.Value).Returns(new ThinginoSettings());
+            var sut = new Notify(serviceProviderMock.Object, thinginoClientMock.Object, optionsMock.Object);
 
             // Act
             sut.NotifyHouse(message);
@@ -94,7 +91,9 @@ namespace NetDaemonTest.Modules
                     y.Title == "" &&
                     y.Message == "clear_notification")));
 
-            var sut = new Notify(serviceProviderMock.Object);
+            var optionsMock = new Mock<IOptions<ThinginoSettings>>();
+            optionsMock.Setup(o => o.Value).Returns(new ThinginoSettings());
+            var sut = new Notify(serviceProviderMock.Object, thinginoClientMock.Object, optionsMock.Object);
 
             // Act
             sut.Clear(NotifyTagEnum.OpenCloseTuindeur);
@@ -114,7 +113,9 @@ namespace NetDaemonTest.Modules
                 It.IsAny<NotifyMobileAppA53Parameters>()))
                 .Callback<string, string, ServiceTarget, object>((a, b, c, d) => parameters = (NotifyMobileAppA53Parameters)d);
 
-            var sut = new Notify(serviceProviderMock.Object);
+            var optionsMock = new Mock<IOptions<ThinginoSettings>>();
+            optionsMock.Setup(o => o.Value).Returns(new ThinginoSettings());
+            var sut = new Notify(serviceProviderMock.Object, thinginoClientMock.Object, optionsMock.Object);
 
             // Act
             sut.NotifyGsmKen("", "", NotifyPriorityEnum.high, tag, null);
@@ -134,7 +135,9 @@ namespace NetDaemonTest.Modules
                 It.IsAny<NotifyMobileAppA53Parameters>()))
                 .Callback<string, string, ServiceTarget, object>((a, b, c, d) => parameters = (NotifyMobileAppA53Parameters)d);
 
-            var sut = new Notify(serviceProviderMock.Object);
+            var optionsMock = new Mock<IOptions<ThinginoSettings>>();
+            optionsMock.Setup(o => o.Value).Returns(new ThinginoSettings());
+            var sut = new Notify(serviceProviderMock.Object, thinginoClientMock.Object, optionsMock.Object);
 
             // Act
             sut.NotifyHouseStateGsmKen("", "", "image", NotifyPriorityEnum.high, null);
@@ -155,7 +158,9 @@ namespace NetDaemonTest.Modules
                 It.IsAny<NotifyMobileAppA53Parameters>()))
                 .Callback<string, string, ServiceTarget, object>((a, b, c, d) => parameters = (NotifyMobileAppA53Parameters)d);
 
-            var sut = new Notify(serviceProviderMock.Object);
+            var optionsMock = new Mock<IOptions<ThinginoSettings>>();
+            optionsMock.Setup(o => o.Value).Returns(new ThinginoSettings());
+            var sut = new Notify(serviceProviderMock.Object, thinginoClientMock.Object, optionsMock.Object);
 
             // Act
             sut.NotifyGsmKen("", "", NotifyPriorityEnum.high, null, new() { action });
@@ -172,13 +177,15 @@ namespace NetDaemonTest.Modules
             // Arrange 
             NotifyMobileAppA53Parameters parameters = new NotifyMobileAppA53Parameters();
             SetupMocks();
-            if (!action.ToString().StartsWith("Uri"))
+            if (!action.ToString().StartsWith("Uri") && action != NotifyActionEnum.StopRinger)
             {
-                //just a general setup, each action except Uri's will call a service
+                //just a general setup, each action except Uri's and StopRinger will call a service
                 haContextMock.Setup(x => x.CallService(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<ServiceTarget>(), It.IsAny<object?>()));
             }
 
-            var sut = new Notify(serviceProviderMock.Object);
+            var optionsMock = new Mock<IOptions<ThinginoSettings>>();
+            optionsMock.Setup(o => o.Value).Returns(new ThinginoSettings());
+            var sut = new Notify(serviceProviderMock.Object, thinginoClientMock.Object, optionsMock.Object);    
 
             // Act
             sut.HandleNotificationEvent(action);

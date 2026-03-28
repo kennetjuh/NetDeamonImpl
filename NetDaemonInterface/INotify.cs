@@ -12,4 +12,5 @@ public interface INotify
     void NotifyGsmKenTTS(string message);
     void NotifyHouse(string message);
     void HandleNotificationEvent(NotifyActionEnum action);
+    void NotifyGsmKenDeurbel(string imagename);
 }

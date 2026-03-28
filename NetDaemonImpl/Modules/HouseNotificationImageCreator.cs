@@ -91,7 +91,7 @@ namespace NetDaemonImpl.Modules
 
         public string GetImagePath()
         {
-            return $"/local/{imageName}";
+            return $"/local/{imageName}?t={DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
         }
 
         public void CreateImage()

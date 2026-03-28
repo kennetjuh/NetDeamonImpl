@@ -7,19 +7,6 @@ namespace NetDaemonTest.Modules
     public class SettingsProviderTest : ServiceProviderTestBase
     {
         [Fact]
-        public void Contructor_NoExceptions()
-        {
-            // Arrange 
-            SetupMocks();
-
-            // Act
-            _ = new SettingsProvider(serviceProviderMock.Object);
-
-            // Assert
-            VerifyAllMocks();
-        }
-
-        [Fact]
         public void SettingsProvider_BrightnessSfeerlampHalDay_VerifyMocks()
         {
             // Arrange 

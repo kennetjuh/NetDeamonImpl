@@ -1,5 +1,4 @@
-﻿using NetDaemonInterface.Enums;
-using System;
+﻿using System;
 
 namespace NetDaemonInterface.Observable
 {

@@ -1,11 +1,12 @@
+using Microsoft.Extensions.Options;
 using NetDaemonInterface;
 using NetDaemonInterface.Models;
-using System.Net.Http;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
 
 namespace NetDaemonImpl.Modules
 {
@@ -18,6 +19,17 @@ namespace NetDaemonImpl.Modules
             _settings = options?.Value ?? new FrigateSettings();
         }
 
+        private string GetRootPath()
+        {
+            var destfolder = Path.GetFullPath("../www");
+            if (!Directory.Exists(destfolder))
+            {
+                destfolder = Path.GetFullPath(@".\");
+            }
+            return destfolder;
+        }
+
+
         public async Task MarkReviewedAsync(string? id)
         {
             if (string.IsNullOrWhiteSpace(id)) return;
@@ -29,6 +41,20 @@ namespace NetDaemonImpl.Modules
             using var content = new StringContent(json, Encoding.UTF8, "application/json");
             using var httpClient = new HttpClient();
             await httpClient.PostAsync(full, content);
+        }
+
+        public async Task SaveLatestImageAsync(string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName)) return;
+            var loginBase = _settings.Local?.BaseUrl?.TrimEnd('/');
+            if (string.IsNullOrWhiteSpace(loginBase)) return;
+
+            var url = loginBase + "/api/voordeur/latest.png";
+
+            using var httpClient = new HttpClient();
+            var imageBytes = await httpClient.GetByteArrayAsync(url).ConfigureAwait(false);
+            var destPath = Path.Combine(GetRootPath(), fileName);
+            await File.WriteAllBytesAsync(destPath, imageBytes).ConfigureAwait(false);
         }
 
         public async Task MarkReviewedWithLoginAsync(string? id)

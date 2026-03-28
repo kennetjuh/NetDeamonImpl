@@ -1,144 +1,84 @@
-//using Moq;
-//using NetDaemonImpl.apps.Areas;
-//using NetDaemonInterface;
-//using System.Threading.Tasks;
-//using Xunit;
+using Moq;
+using NetDaemonImpl.apps.Areas;
+using NetDaemonInterface.Enums;
+using NetDaemonInterface.Observable;
+using NetDaemonTest.Apps.Helpers;
+using System.Reactive.Subjects;
+using Xunit;
 
-//namespace NetDaemonTest.Areas;
+namespace NetDaemonTest.Areas;
 
-//public class KippenHokTest : AreaControlTestBase<KippenHok>
-//{
-//    public KippenHokTest()
-//    {
-//        light = entities.Light.Washal;
-//    }
+public class KippenHokTest : TestBase
+{
+    private readonly Subject<ButtonEvent> buttonSubject = new();
 
-//    [Fact]
-//    public void Contructor_NoExceptions()
-//    {
-//        // Arrange 
-//        SetupMocks();
+    private void SetupMocks()
+    {
+        DeconzButtonEventsMock.Setup(x => x.Event).Returns(buttonSubject);
+    }
 
-//        // Act
-//        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
+    [Fact]
+    public void KippenHok_Constructor_VerifyCalls()
+    {
+        // Arrange
+        ResetAllMocks();
+        SetupMocks();
 
-//        // Assert
-//        VerifyAllMocks();
-//    }
+        // Act
+        var app = Context.GetApp<KippenHok>();
 
-//    [Fact]
-//    public void ButtonPressed_SingleClickLightGoesOn_VerifyMocks()
-//    {
-//        // Arrange
-//        SetupMocks();
-//        lightControlMock.Setup(x => x.ButtonDefaultLuxBased(
-//                DeconzEventIdEnum.Single,
-//                It.Is<LightEntity>(x => x.EntityId == light.EntityId),
-//                It.IsAny<double>(),
-//                It.IsAny<double>()))
-//            .Returns(true);
+        // Assert
+        VerifyAllMocks();
+    }
 
-//        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
+    [Fact]
+    public void KippenHok_SingleClick_VerifyCalls()
+    {
+        // Arrange
+        ResetAllMocks();
+        SetupMocks();
+        LightControlMock.Setup(x => x.ButtonDefaultLuxBased(ButtonEventType.Single, It.Is<LightEntity>(l => l.EntityId == Entities.Light.LightKip.EntityId), 20, 255)).Returns(true);
 
-//        // Act
-//        Sut.ButtonPressed("", DeconzEventIdEnum.Single);
+        var app = Context.GetApp<KippenHok>();
 
-//        // Assert
-//        Assert.Equal(AreaModeEnum.Manual, Sut.GetPrivate<AreaModeEnum>("mode"));
-//        VerifyAllMocks();
-//    }
+        // Act
+        buttonSubject.OnNext(new ButtonEvent(Button.Kip, ButtonEventType.Single, DateTime.MinValue));
 
-//    [Fact]
-//    public async Task ButtonPressed_SingleClickLightGoesOff_VerifyMocks()
-//    {
-//        // Arrange
-//        SetupMocks();
-//        delayProviderMock.Setup(x => x.ManualOffTimeout).Returns(TimeSpan.FromMilliseconds(50));
-//        lightControlMock.Setup(x => x.ButtonDefaultLuxBased(
-//                DeconzEventIdEnum.Single,
-//                It.Is<LightEntity>(x => x.EntityId == light.EntityId),
-//                It.IsAny<double>(),
-//                It.IsAny<double>()))
-//            .Returns(false);
+        // Assert
+        VerifyAllMocks();
+    }
 
-//        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
+    [Fact]
+    public void KippenHok_DoubleClick_VerifyCalls()
+    {
+        // Arrange
+        ResetAllMocks();
+        SetupMocks();
+        LightControlMock.Setup(x => x.ButtonDefaultLuxBased(ButtonEventType.Double, It.Is<LightEntity>(l => l.EntityId == Entities.Light.LightKip.EntityId), 20, 255)).Returns(true);
 
-//        // Act
-//        Sut.ButtonPressed("", DeconzEventIdEnum.Single);
+        var app = Context.GetApp<KippenHok>();
 
-//        // Assert
-//        Assert.Equal(AreaModeEnum.Manual, Sut.GetPrivate<AreaModeEnum>("mode"));
-//        await Task.Delay(TimeSpan.FromMilliseconds(100));
-//        Assert.Equal(AreaModeEnum.Idle, Sut.GetPrivate<AreaModeEnum>("mode"));
-//        VerifyAllMocks();
-//    }
+        // Act
+        buttonSubject.OnNext(new ButtonEvent(Button.Kip, ButtonEventType.Double, DateTime.MinValue));
 
-//    [Fact]
-//    public void MotionDetected_ModeManual_VerifyMocks()
-//    {
-//        // Arrange 
-//        SetupMocks();
-//        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
-//        Sut.SetPrivate("mode", AreaModeEnum.Manual);
+        // Assert
+        VerifyAllMocks();
+    }
 
-//        // Act
-//        Sut.MotionDetected("");
+    [Fact]
+    public void KippenHok_LongPress_VerifyCalls()
+    {
+        // Arrange
+        ResetAllMocks();
+        SetupMocks();
+        LightControlMock.Setup(x => x.ButtonDefaultLuxBased(ButtonEventType.LongPress, It.Is<LightEntity>(l => l.EntityId == Entities.Light.LightKip.EntityId), 20, 255)).Returns(true);
 
-//        // Assert
-//        VerifyAllMocks();
-//        Assert.Equal(AreaModeEnum.Manual, Sut.GetPrivate<AreaModeEnum>("mode"));
-//    }
+        var app = Context.GetApp<KippenHok>();
 
-//    [Fact]
-//    public void MotionDetected_ModeIdle_VerifyMocks()
-//    {
-//        // Arrange 
-//        SetupMocks();
-//        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
-//        lightControlMock.Setup(x => x.LuxBasedBrightness).Returns(luxBasedBrightnessMock.Object);
-//        luxBasedBrightnessMock.Setup(x => x.GetBrightness(10, 255)).Returns(100);
-//        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Washal.EntityId), 100)).Returns(true);
+        // Act
+        buttonSubject.OnNext(new ButtonEvent(Button.Kip, ButtonEventType.LongPress, DateTime.MinValue));
 
-//        // Act
-//        Sut.MotionDetected("");
-
-//        // Assert
-//        VerifyAllMocks();
-//        Assert.Equal(AreaModeEnum.Motion, Sut.GetPrivate<AreaModeEnum>("mode"));
-//    }
-
-//    [Fact]
-//    public void MotionCleared_ModeIdle_VerifyMocks()
-//    {
-//        // Arrange 
-//        SetupMocks();
-//        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
-//        Sut.SetPrivate("mode", AreaModeEnum.Idle);
-
-//        // Act
-//        Sut.MotionCleared("");
-
-//        // Assert
-//        VerifyAllMocks();
-//        Assert.Equal(AreaModeEnum.Idle, Sut.GetPrivate<AreaModeEnum>("mode"));
-//    }
-
-//    [Fact]
-//    public async Task MotionCleared_ModeMotion_VerifyMocksAsync()
-//    {
-//        // Arrange 
-//        SetupMocks();
-//        Sut = new(entities, delayProviderMock.Object, lightControlMock.Object);
-//        Sut.SetPrivate("mode", AreaModeEnum.Motion);
-//        delayProviderMock.Setup(x => x.MotionClear).Returns(TimeSpan.FromMilliseconds(1));
-//        lightControlMock.Setup(x => x.SetLight(It.Is<LightEntity>(x => x.EntityId == entities.Light.Washal.EntityId), 0)).Returns(true);
-
-//        // Act
-//        Sut.MotionCleared("");
-//        await Task.Delay(TimeSpan.FromMilliseconds(100));
-
-//        // Assert
-//        VerifyAllMocks();
-//        Assert.Equal(AreaModeEnum.Idle, Sut.GetPrivate<AreaModeEnum>("mode"));
-//    }
-//}
+        // Assert
+        VerifyAllMocks();
+    }
+}
